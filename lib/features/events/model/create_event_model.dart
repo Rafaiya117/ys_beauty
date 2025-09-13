@@ -11,6 +11,8 @@ class CreateEventModel {
   final String? selectedStatus;
   final bool? isPaid;
   final String description;
+  final String startTime;
+  final String endTime;
 
   CreateEventModel({
     this.isLoading = false,
@@ -25,6 +27,8 @@ class CreateEventModel {
     this.selectedStatus,
     this.isPaid,
     this.description = '',
+    this.startTime = '12:00 PM',
+    this.endTime = '6:00 PM',
   });
 
   CreateEventModel copyWith({
@@ -40,6 +44,8 @@ class CreateEventModel {
     String? selectedStatus,
     bool? isPaid,
     String? description,
+    String? startTime,
+    String? endTime,
   }) {
     return CreateEventModel(
       isLoading: isLoading ?? this.isLoading,
@@ -54,6 +60,8 @@ class CreateEventModel {
       selectedStatus: selectedStatus ?? this.selectedStatus,
       isPaid: isPaid ?? this.isPaid,
       description: description ?? this.description,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
     );
   }
 }

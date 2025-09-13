@@ -52,14 +52,10 @@ class RemindersPage extends StatelessWidget {
             child: Container(
               width: 40.w,
               height: 40.h,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
               child: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: 20.sp,
+              Icons.arrow_back,
+              size: 24.sp,
+              color: Colors.black,
               ),
             ),
           ),

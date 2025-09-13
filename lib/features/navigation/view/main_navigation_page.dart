@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../viewmodel/navigation_viewmodel.dart';
 import '../../home/view/home_page.dart';
 import '../../events/view/events_page.dart';
 import '../../finances/view/finances_page.dart';
 import '../../settings/view/settings_page.dart';
 import '../../../core/router.dart';
+import '../../../shared/constants/app_constants.dart';
 
 class MainNavigationPage extends StatelessWidget {
   final int initialIndex;
@@ -45,8 +47,8 @@ class MainNavigationPage extends StatelessWidget {
             padding: EdgeInsets.only(
               left: 16.w,
               right: 16.w,
-              top: 4.h,
-              bottom: 25.h, // Reduced bottom padding
+              top: 10.h,
+              // bottom: 0.h, // Reduced bottom padding
             ),
             child: Stack(
               clipBehavior: Clip.none, // Allow overflow for floating button
@@ -58,7 +60,7 @@ class MainNavigationPage extends StatelessWidget {
                 _buildNavItem(
                   context: context,
                   viewModel: viewModel,
-                  icon: Icons.home,
+                  iconPath: AppConstants.homeIconPath,
                   label: 'Home',
                   index: 0,
                   isActive: viewModel.currentIndex == 0,
@@ -66,7 +68,7 @@ class MainNavigationPage extends StatelessWidget {
                 _buildNavItem(
                   context: context,
                   viewModel: viewModel,
-                  icon: Icons.event,
+                  iconPath: AppConstants.eventsIconPath,
                   label: 'Events',
                   index: 1,
                   isActive: viewModel.currentIndex == 1,
@@ -76,7 +78,7 @@ class MainNavigationPage extends StatelessWidget {
                 _buildNavItem(
                   context: context,
                   viewModel: viewModel,
-                  icon: Icons.account_balance_wallet,
+                  iconPath: AppConstants.financesIconPath,
                   label: 'Finances',
                   index: 2,
                   isActive: viewModel.currentIndex == 2,
@@ -84,7 +86,7 @@ class MainNavigationPage extends StatelessWidget {
                 _buildNavItem(
                   context: context,
                   viewModel: viewModel,
-                  icon: Icons.settings,
+                  iconPath: AppConstants.settingsIconPath,
                   label: 'Setting',
                   index: 3,
                   isActive: viewModel.currentIndex == 3,
@@ -114,7 +116,7 @@ class MainNavigationPage extends StatelessWidget {
   Widget _buildNavItem({
     required BuildContext context,
     required NavigationViewModel viewModel,
-    required IconData icon,
+    required String iconPath,
     required String label,
     required int index,
     required bool isActive,
@@ -128,12 +130,16 @@ class MainNavigationPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 20.sp, // Further reduced icon size
-              color: isActive 
-                  ? const Color(0xFFFF8A00) // Orange for active
-                  : const Color(0xFF424242), // Dark gray for inactive
+            SvgPicture.asset(
+              iconPath,
+              width: 22.w,
+              height: 22.h,
+              colorFilter: isActive 
+                  ? ColorFilter.mode(
+                      const Color(AppConstants.selectedIconColor), // FFA066 for active
+                      BlendMode.srcIn,
+                    )
+                  : null, // Use default SVG color for inactive
             ),
             SizedBox(height: 1.h), // Minimal spacing
             Text(
@@ -142,8 +148,8 @@ class MainNavigationPage extends StatelessWidget {
                 fontSize: 10.sp, // Further reduced font size
                 fontWeight: FontWeight.w500,
                 color: isActive 
-                    ? const Color(0xFFFF8A00) // Orange for active
-                    : const Color(0xFF424242), // Dark gray for inactive
+                    ? const Color(AppConstants.selectedIconColor) // FFA066 for active
+                    : const Color(0xFF010101), // 010101 for inactive (hardcoded since it's the default)
               ),
             ),
           ],

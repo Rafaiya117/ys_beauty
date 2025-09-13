@@ -118,7 +118,7 @@ class EditEventPage extends StatelessWidget {
                                       SizedBox(height: 20.h),
                                       
                                       // Start/End Times section
-                                      _buildTimeSection(viewModel),
+                                      _buildTimeSection(context, viewModel),
                                       
                                       SizedBox(height: 20.h),
                                       
@@ -165,20 +165,23 @@ class EditEventPage extends StatelessWidget {
                                       SizedBox(height: 10.h),
                                       
                                       // Date field
-                                      _buildInputField(
+                                      _buildDateField(
+                                        context: context,
                                         label: 'Enter Date',
                                         icon: Icons.calendar_today_outlined,
                                         controller: viewModel.dateController,
+                                        viewModel: viewModel,
                                       ),
                                       
                                       SizedBox(height: 10.h),
                                       
                                       // Set Reminder field
-                                      _buildInputField(
+                                      _buildReminderField(
+                                        context: context,
                                         label: 'Set Reminder',
                                         icon: Icons.notifications_outlined,
                                         controller: viewModel.reminderController,
-                                        hasDropdown: true,
+                                        viewModel: viewModel,
                                       ),
                                       
                                       SizedBox(height: 10.h),
@@ -315,7 +318,113 @@ class EditEventPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeSection(EditEventViewModel viewModel) {
+  Widget _buildDateField({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    required EditEventViewModel viewModel,
+  }) {
+    return GestureDetector(
+      onTap: () => _showDatePicker(context, viewModel),
+      child: Container(
+        height: 48.h,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF3C4),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: const Color(0xFFE0E0E0),
+            width: 1.w,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 18.sp,
+              color: const Color(0xFF424242),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                controller.text.isEmpty ? label : controller.text,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: controller.text.isEmpty 
+                      ? const Color(0xFF9E9E9E)
+                      : const Color(0xFF424242),
+                  fontWeight: controller.text.isEmpty 
+                      ? FontWeight.w400 
+                      : FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.calendar_today,
+              size: 18.sp,
+              color: const Color(0xFF9E9E9E),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReminderField({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required TextEditingController controller,
+    required EditEventViewModel viewModel,
+  }) {
+    return GestureDetector(
+      onTap: () => _showReminderDropdown(context, viewModel),
+      child: Container(
+        height: 48.h,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF3C4),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: const Color(0xFFE0E0E0),
+            width: 1.w,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 18.sp,
+              color: const Color(0xFF424242),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                controller.text.isEmpty ? label : controller.text,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: controller.text.isEmpty 
+                      ? const Color(0xFF9E9E9E)
+                      : const Color(0xFF424242),
+                  fontWeight: controller.text.isEmpty 
+                      ? FontWeight.w400 
+                      : FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              size: 18.sp,
+              color: const Color(0xFF9E9E9E),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeSection(BuildContext context, EditEventViewModel viewModel) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -376,7 +485,7 @@ class EditEventPage extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   GestureDetector(
-                    onTap: () => _showTimePicker(viewModel, true),
+                    onTap: () => _showTimePicker(context, viewModel, true),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
@@ -445,7 +554,7 @@ class EditEventPage extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   GestureDetector(
-                    onTap: () => _showTimePicker(viewModel, false),
+                    onTap: () => _showTimePicker(context, viewModel, false),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
@@ -475,14 +584,285 @@ class EditEventPage extends StatelessWidget {
     );
   }
 
-  void _showTimePicker(EditEventViewModel viewModel, bool isStartTime) {
-    // In a real app, you would show a time picker dialog
-    // For now, we'll just set some default times
-    if (isStartTime) {
-      viewModel.setStartTime('9:00 AM');
-    } else {
-      viewModel.setEndTime('5:00 PM');
+  Future<void> _showTimePicker(BuildContext context, EditEventViewModel viewModel, bool isStartTime) async {
+    // Parse current time to get initial time for picker
+    String currentTime = isStartTime ? (viewModel.startTime ?? '12:00 PM') : (viewModel.endTime ?? '6:00 PM');
+    TimeOfDay initialTime = _parseTimeString(currentTime);
+
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: const Color(0xFFFF8A00),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      String formattedTime = _formatTimeOfDay(picked);
+      if (isStartTime) {
+        viewModel.setStartTime(formattedTime);
+      } else {
+        viewModel.setEndTime(formattedTime);
+      }
     }
+  }
+
+  TimeOfDay _parseTimeString(String timeString) {
+    try {
+      // Handle formats like "12:00 PM" or "6:00 PM"
+      final parts = timeString.split(' ');
+      if (parts.length == 2) {
+        final timePart = parts[0];
+        final period = parts[1];
+        final timeComponents = timePart.split(':');
+        
+        if (timeComponents.length == 2) {
+          int hour = int.parse(timeComponents[0]);
+          int minute = int.parse(timeComponents[1]);
+          
+          if (period == 'PM' && hour != 12) {
+            hour += 12;
+          } else if (period == 'AM' && hour == 12) {
+            hour = 0;
+          }
+          
+          return TimeOfDay(hour: hour, minute: minute);
+        }
+      }
+    } catch (e) {
+      // If parsing fails, return default time
+    }
+    
+    // Default fallback
+    return const TimeOfDay(hour: 12, minute: 0);
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour;
+    final minute = time.minute;
+    
+    String period = hour >= 12 ? 'PM' : 'AM';
+    int displayHour = hour;
+    
+    if (hour == 0) {
+      displayHour = 12;
+    } else if (hour > 12) {
+      displayHour = hour - 12;
+    }
+    
+    return '${displayHour.toString().padLeft(1)}:${minute.toString().padLeft(2, '0')} $period';
+  }
+
+  Future<void> _showDatePicker(BuildContext context, EditEventViewModel viewModel) async {
+    // Parse current date to get initial date for picker
+    DateTime initialDate = _parseDateString(viewModel.dateController.text);
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: const Color(0xFFFF8A00),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      String formattedDate = _formatDate(picked);
+      viewModel.dateController.text = formattedDate;
+    }
+  }
+
+  DateTime _parseDateString(String dateString) {
+    try {
+      // Handle common date formats
+      if (dateString.isEmpty) {
+        return DateTime.now();
+      }
+      
+      // Try parsing different date formats
+      List<String> possibleFormats = [
+        'MM/dd/yyyy',
+        'dd/MM/yyyy',
+        'yyyy-MM-dd',
+        'MM-dd-yyyy',
+        'dd-MM-yyyy',
+      ];
+      
+      for (String format in possibleFormats) {
+        try {
+          // Simple parsing for common formats
+          if (format == 'MM/dd/yyyy' && dateString.contains('/')) {
+            final parts = dateString.split('/');
+            if (parts.length == 3) {
+              return DateTime(
+                int.parse(parts[2]), // year
+                int.parse(parts[0]), // month
+                int.parse(parts[1]), // day
+              );
+            }
+          } else if (format == 'dd/MM/yyyy' && dateString.contains('/')) {
+            final parts = dateString.split('/');
+            if (parts.length == 3) {
+              return DateTime(
+                int.parse(parts[2]), // year
+                int.parse(parts[1]), // month
+                int.parse(parts[0]), // day
+              );
+            }
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+    } catch (e) {
+      // If parsing fails, return current date
+    }
+    
+    // Default fallback
+    return DateTime.now();
+  }
+
+  String _formatDate(DateTime date) {
+    // Format as MM/dd/yyyy
+    return '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  Future<void> _showReminderDropdown(BuildContext context, EditEventViewModel viewModel) async {
+    final List<String> reminderOptions = [
+      'No Reminder',
+      '1 day before',
+      '2 days before',
+      '3 days before',
+      '1 week before',
+      '2 weeks before',
+      '1 month before',
+    ];
+
+    final String? selectedReminder = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                margin: EdgeInsets.only(top: 12.h),
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE0E0E0),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              
+              // Title
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                child: Text(
+                  'Select Reminder',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              
+              // Options list
+              ...reminderOptions.map((option) => _buildReminderOption(
+                context: context,
+                option: option,
+                onTap: () {
+                  Navigator.pop(context, option);
+                },
+              )),
+              
+              SizedBox(height: 20.h),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (selectedReminder != null) {
+      viewModel.reminderController.text = selectedReminder;
+    }
+  }
+
+  Widget _buildReminderOption({
+    required BuildContext context,
+    required String option,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        child: Row(
+          children: [
+            Icon(
+              Icons.notifications_outlined,
+              size: 20.sp,
+              color: const Color(0xFF424242),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Text(
+                option,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: const Color(0xFF424242),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            if (option == 'No Reminder')
+              Icon(
+                Icons.close,
+                size: 18.sp,
+                color: const Color(0xFF9E9E9E),
+              )
+            else
+              Icon(
+                Icons.schedule,
+                size: 18.sp,
+                color: const Color(0xFFFF8A00),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildStatusSection(EditEventViewModel viewModel) {

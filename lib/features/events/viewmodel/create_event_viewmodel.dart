@@ -29,6 +29,8 @@ class CreateEventViewModel extends ChangeNotifier {
   String? get errorMessage => _createEventModel.errorMessage;
   String? get selectedStatus => _createEventModel.selectedStatus;
   bool? get isPaid => _createEventModel.isPaid;
+  String get startTime => _createEventModel.startTime;
+  String get endTime => _createEventModel.endTime;
 
   void _initializeControllers() {
     // Add listeners to update model when text changes
@@ -89,6 +91,16 @@ class CreateEventViewModel extends ChangeNotifier {
 
   void setPaid(bool paid) {
     _createEventModel = _createEventModel.copyWith(isPaid: paid);
+    notifyListeners();
+  }
+
+  void setStartTime(String time) {
+    _createEventModel = _createEventModel.copyWith(startTime: time);
+    notifyListeners();
+  }
+
+  void setEndTime(String time) {
+    _createEventModel = _createEventModel.copyWith(endTime: time);
     notifyListeners();
   }
 
@@ -176,6 +188,22 @@ class CreateEventViewModel extends ChangeNotifier {
     if (_createEventModel.isPaid == null) {
       _createEventModel = _createEventModel.copyWith(
         errorMessage: 'Please select payment status',
+      );
+      notifyListeners();
+      return false;
+    }
+
+    if (_createEventModel.startTime.isEmpty) {
+      _createEventModel = _createEventModel.copyWith(
+        errorMessage: 'Please select start time',
+      );
+      notifyListeners();
+      return false;
+    }
+
+    if (_createEventModel.endTime.isEmpty) {
+      _createEventModel = _createEventModel.copyWith(
+        errorMessage: 'Please select end time',
       );
       notifyListeners();
       return false;

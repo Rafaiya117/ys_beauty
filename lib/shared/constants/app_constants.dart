@@ -44,6 +44,12 @@ class AppConstants {
   static const String googleLogoPath = 'assets/logIn/google_logo.png';
   static const String cardBgPath = 'assets/card/card_bg.png';
   
+  // Navigation icon paths
+  static const String homeIconPath = 'assets/navigation_icon/home.svg';
+  static const String eventsIconPath = 'assets/navigation_icon/Events.svg';
+  static const String financesIconPath = 'assets/navigation_icon/Finances.svg';
+  static const String settingsIconPath = 'assets/navigation_icon/Setting.svg';
+  
   // UI dimensions
   static const double imageContainerSize = 200.0;
   static const double borderRadius = 20.0;
@@ -64,6 +70,9 @@ class AppConstants {
   // Text sizes
   static const double largeTextSize = 24.0;
   static const double mediumTextSize = 16.0;
+  
+  // Navigation colors
+  static const int selectedIconColor = 0xFFFFA066; // Selected color: FFA066
   
   // App info
   static const String appTitle = 'Animation App';

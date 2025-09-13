@@ -144,7 +144,7 @@ class FinancesPage extends StatelessWidget {
 
   Widget _buildFinancialSummaryCards(FinancesViewModel viewModel) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Row(
         children: [
           Expanded(
@@ -223,7 +223,7 @@ class FinancesPage extends StatelessWidget {
     }
 
     return Container(
-      height: 100.h, // Fixed height for all cards
+      height: 110.h, // Increased height to prevent overflow
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -292,109 +292,236 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationTabs(FinancesViewModel viewModel) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(
-          color: const Color(0xFFF8BBD9),
-          width: 1.w,
+  // Widget _buildNavigationTabs(FinancesViewModel viewModel) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 10.w),
+  //     padding: EdgeInsets.all(8.w),
+  //     height: 60.h, // Reduced height for horizontal layout
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFFFFF8E1),
+  //       borderRadius: BorderRadius.circular(16.r), // Match card border radius
+  //       border: Border.all(
+  //         color: const Color(0xFFF8BBD9),
+  //         width: 1.w,
+  //       ),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withValues(alpha: 0.05),
+  //           blurRadius: 8.r,
+  //           offset: Offset(0, 2.h),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Overview',
+  //             Icons.grid_view,
+  //             0,
+  //             viewModel.selectedTabIndex == 0,
+  //             () => viewModel.selectTab(0),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Booth Fees',
+  //             Icons.storefront,
+  //             1,
+  //             viewModel.selectedTabIndex == 1,
+  //             () => viewModel.selectTab(1),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Sales',
+  //             Icons.trending_up,
+  //             2,
+  //             viewModel.selectedTabIndex == 2,
+  //             () => viewModel.selectTab(2),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Expenses',
+  //             Icons.account_balance_wallet,
+  //             3,
+  //             viewModel.selectedTabIndex == 3,
+  //             () => viewModel.selectTab(3),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Widget _buildTab(
+  //   String title,
+  //   IconData icon,
+  //   int index,
+  //   bool isSelected,
+  //   VoidCallback onTap,
+  // ) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+  //       decoration: BoxDecoration(
+  //         color: isSelected ? const Color(0xFFFFF3C4) : Colors.white,
+  //         borderRadius: BorderRadius.circular(16.r), // Match card border radius
+  //         border: Border.all(
+  //           color: isSelected ? const Color(0xFFFF8A00) : const Color(0xFFE0E0E0),
+  //           width: 1.w,
+  //         ),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black.withValues(alpha: 0.05),
+  //             blurRadius: 8.r,
+  //             offset: Offset(0, 2.h),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Icon(
+  //             icon,
+  //             size: 14.sp,
+  //             color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+  //           ),
+  //           SizedBox(width: 6.w),
+  //           Flexible(
+  //             child: Text(
+  //               title,
+  //               style: TextStyle(
+  //                 fontSize: 11.sp,
+  //                 fontWeight: FontWeight.w500,
+  //                 color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+  //               ),
+  //               textAlign: TextAlign.center,
+  //               overflow: TextOverflow.visible,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
+
+
+Widget _buildNavigationTabs(FinancesViewModel viewModel) {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 5.w),
+    padding: EdgeInsets.all(8.w),
+    height: 55.h,
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFE8E8),
+      borderRadius: BorderRadius.circular(30.r),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: _buildTab(
+            'Overview',
+            Icons.grid_view_rounded,
+            0,
+            viewModel.selectedTabIndex == 0,
+            () => viewModel.selectTab(0),
+          ),
         ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: _buildTab(
+            'Booth Fees',
+            Icons.storefront_outlined, // closer to screenshot
+            1,
+            viewModel.selectedTabIndex == 1,
+            () => viewModel.selectTab(1),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: _buildTab(
+            'Sales',
+            Icons.show_chart, // bar chart style
+            2,
+            viewModel.selectedTabIndex == 2,
+            () => viewModel.selectTab(2),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: _buildTab(
+            'Expenses',
+            Icons.attach_money, // cash icon
+            3,
+            viewModel.selectedTabIndex == 3,
+            () => viewModel.selectTab(3),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildTab(
+  String title,
+  IconData icon,
+  int index,
+  bool isSelected,
+  VoidCallback onTap,
+) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFFFE58A) : Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 6.r,
+            offset: Offset(0, 3.h),
+          ),
+        ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: _buildTab(
-              'Overview',
-              Icons.grid_view,
-              0,
-              viewModel.selectedTabIndex == 0,
-              () => viewModel.selectTab(0),
-            ),
+          Icon(
+            icon,
+            size: 16.sp,
+            color: isSelected ? Colors.black : Colors.black87,
           ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: _buildTab(
-              'Booth Fees',
-              Icons.storefront,
-              1,
-              viewModel.selectedTabIndex == 1,
-              () => viewModel.selectTab(1),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: _buildTab(
-              'Sales',
-              Icons.trending_up,
-              2,
-              viewModel.selectedTabIndex == 2,
-              () => viewModel.selectTab(2),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: _buildTab(
-              'Expenses',
-              Icons.account_balance_wallet,
-              3,
-              viewModel.selectedTabIndex == 3,
-              () => viewModel.selectTab(3),
+          SizedBox(width: 3.w),
+          Flexible(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 8.sp,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.black : Colors.black87,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildTab(
-    String title,
-    IconData icon,
-    int index,
-    bool isSelected,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFFF3C4) : Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isSelected ? const Color(0xFFFF8A00) : const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 14.sp,
-              color: Colors.black,
-            ),
-            SizedBox(width: 6.w),
-            Flexible(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
+
+
+
 
   Widget _buildTabContent(FinancesViewModel viewModel) {
     switch (viewModel.selectedTabIndex) {
