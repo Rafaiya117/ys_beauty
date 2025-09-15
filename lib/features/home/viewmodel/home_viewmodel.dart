@@ -15,6 +15,7 @@ class HomeViewModel extends ChangeNotifier {
   
   // Search properties
   String _searchQuery = '';
+  String? _searchFilterType;
   final TextEditingController _searchController = TextEditingController();
 
   // Constructor - initialize data immediately
@@ -35,6 +36,7 @@ class HomeViewModel extends ChangeNotifier {
   
   // Search getters
   String get searchQuery => _searchQuery;
+  String? get searchFilterType => _searchFilterType;
   TextEditingController get searchController => _searchController;
 
   void _initializeData() {
@@ -116,7 +118,22 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
   
+  void setSearchFilterType(String? filterType) {
+    _searchFilterType = filterType;
+    // Clear search when changing filter type
+    _searchQuery = '';
+    _searchController.clear();
+    notifyListeners();
+  }
+  
   void clearSearch() {
+    _searchQuery = '';
+    _searchController.clear();
+    notifyListeners();
+  }
+  
+  void clearSearchFilter() {
+    _searchFilterType = null;
     _searchQuery = '';
     _searchController.clear();
     notifyListeners();

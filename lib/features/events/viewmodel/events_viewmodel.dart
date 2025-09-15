@@ -8,11 +8,17 @@ class EventsViewModel extends ChangeNotifier {
   EventsModel _model = EventsModel();
   EventsModel get model => _model;
 
+  // Search properties
+  String? _searchFilterType;
+  final TextEditingController _searchController = TextEditingController();
+
   bool get isLoading => _model.isLoading;
   String? get errorMessage => _model.errorMessage;
   List<EventItem> get events => _model.events;
   String get selectedTab => _model.selectedTab;
   String get searchQuery => _model.searchQuery;
+  String? get searchFilterType => _searchFilterType;
+  TextEditingController get searchController => _searchController;
 
   List<EventItem> get filteredEvents {
     List<EventItem> filtered = events.where((event) => event.category == selectedTab).toList();
@@ -50,6 +56,28 @@ class EventsViewModel extends ChangeNotifier {
 
   void setSearchQuery(String query) {
     _updateModel(_model.copyWith(searchQuery: query));
+    _searchController.text = query;
+  }
+
+  void setSearchFilterType(String? filterType) {
+    _searchFilterType = filterType;
+    // Clear search when changing filter type
+    _updateModel(_model.copyWith(searchQuery: ''));
+    _searchController.clear();
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _updateModel(_model.copyWith(searchQuery: ''));
+    _searchController.clear();
+    notifyListeners();
+  }
+
+  void clearSearchFilter() {
+    _searchFilterType = null;
+    _updateModel(_model.copyWith(searchQuery: ''));
+    _searchController.clear();
+    notifyListeners();
   }
 
   void _updateModel(EventsModel newModel) {
@@ -60,17 +88,24 @@ class EventsViewModel extends ChangeNotifier {
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
-        return Colors.yellow;
+        return const Color(0xFFEEBC20); // Yellow background for Pending
       case 'approved':
-        return Colors.green;
+        return const Color(0xFF00BF63); // Green background for Approved
       case 'paid':
-        return Colors.green;
+        return const Color(0xFF00703A); // Dark green background for Paid
       case 'denied':
-        return Colors.red;
+        return const Color(0xFFFF5151);
       case 'unpaid':
-        return Colors.red;
+        return const Color(0xFFEF4444);
       default:
         return Colors.grey;
     }
+  }
+
+  // Dispose method to clean up controller
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../viewmodel/finances_viewmodel.dart';
 import '../../../shared/constants/app_constants.dart';
 import '../../../shared/widgets/global_drawer.dart';
@@ -152,7 +153,7 @@ class FinancesPage extends StatelessWidget {
               title: 'Total Sales',
               amount: '\$${viewModel.totalSales.toStringAsFixed(2)}',
               subtitle: 'Gross revenue',
-              icon: Icons.bar_chart,
+              iconPath: AppConstants.totalSalesIconPath,
               gradientColors: [
                 const Color(0xFFE8F5E8),
                 const Color(0xFFF1F8E9),
@@ -165,7 +166,7 @@ class FinancesPage extends StatelessWidget {
               title: 'Total Expenses',
               amount: '\$${viewModel.totalExpenses.toStringAsFixed(2)}',
               subtitle: 'Operating costs',
-              icon: Icons.money_off,
+              iconPath: AppConstants.totalExpensesIconPath,
               gradientColors: [
                 const Color(0xFFFCE4EC),
                 const Color(0xFFF8BBD9),
@@ -178,7 +179,7 @@ class FinancesPage extends StatelessWidget {
               title: 'Booth Fees',
               amount: '\$${viewModel.boothFees.toStringAsFixed(2)}',
               subtitle: 'Event costs',
-              icon: Icons.storefront,
+              iconPath: AppConstants.boothFeesIconPath,
               gradientColors: [
                 const Color(0xFFFFF9C4),
                 const Color(0xFFFFF176),
@@ -191,7 +192,7 @@ class FinancesPage extends StatelessWidget {
               title: 'Net Profit',
               amount: '\$${viewModel.netProfit.toStringAsFixed(2)}',
               subtitle: 'Profit margin',
-              icon: Icons.account_balance_wallet,
+              iconPath: AppConstants.netProfitIconPath,
               gradientColors: [
                 const Color(0xFFE3F2FD),
                 const Color(0xFFBBDEFB),
@@ -207,7 +208,7 @@ class FinancesPage extends StatelessWidget {
     required String title,
     required String amount,
     required String subtitle,
-    required IconData icon,
+    required String iconPath,
     required List<Color> gradientColors,
   }) {
     // Determine icon color based on card type
@@ -222,6 +223,7 @@ class FinancesPage extends StatelessWidget {
       iconColor = const Color(0xFF2196F3);
     }
 
+// ignore: avoid_unnecessary_containers
     return Container(
       height: 110.h, // Increased height to prevent overflow
       padding: EdgeInsets.all(12.w),
@@ -252,17 +254,21 @@ class FinancesPage extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: 8.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
               ),
               SizedBox(width: 4.w),
-              Icon(
-                icon,
-                size: 16.sp,
-                color: iconColor,
+              SvgPicture.asset(
+                iconPath,
+                width: 12.w,
+                height: 10.h,
+                colorFilter: ColorFilter.mode(
+                  iconColor,
+                  BlendMode.srcIn,
+                ),
               ),
             ],
           ),
@@ -272,7 +278,7 @@ class FinancesPage extends StatelessWidget {
               Text(
                 amount,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -291,127 +297,6 @@ class FinancesPage extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _buildNavigationTabs(FinancesViewModel viewModel) {
-  //   return Container(
-  //     margin: EdgeInsets.symmetric(horizontal: 10.w),
-  //     padding: EdgeInsets.all(8.w),
-  //     height: 60.h, // Reduced height for horizontal layout
-  //     decoration: BoxDecoration(
-  //       color: const Color(0xFFFFF8E1),
-  //       borderRadius: BorderRadius.circular(16.r), // Match card border radius
-  //       border: Border.all(
-  //         color: const Color(0xFFF8BBD9),
-  //         width: 1.w,
-  //       ),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withValues(alpha: 0.05),
-  //           blurRadius: 8.r,
-  //           offset: Offset(0, 2.h),
-  //         ),
-  //       ],
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: _buildTab(
-  //             'Overview',
-  //             Icons.grid_view,
-  //             0,
-  //             viewModel.selectedTabIndex == 0,
-  //             () => viewModel.selectTab(0),
-  //           ),
-  //         ),
-  //         SizedBox(width: 8.w),
-  //         Expanded(
-  //           child: _buildTab(
-  //             'Booth Fees',
-  //             Icons.storefront,
-  //             1,
-  //             viewModel.selectedTabIndex == 1,
-  //             () => viewModel.selectTab(1),
-  //           ),
-  //         ),
-  //         SizedBox(width: 8.w),
-  //         Expanded(
-  //           child: _buildTab(
-  //             'Sales',
-  //             Icons.trending_up,
-  //             2,
-  //             viewModel.selectedTabIndex == 2,
-  //             () => viewModel.selectTab(2),
-  //           ),
-  //         ),
-  //         SizedBox(width: 8.w),
-  //         Expanded(
-  //           child: _buildTab(
-  //             'Expenses',
-  //             Icons.account_balance_wallet,
-  //             3,
-  //             viewModel.selectedTabIndex == 3,
-  //             () => viewModel.selectTab(3),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildTab(
-  //   String title,
-  //   IconData icon,
-  //   int index,
-  //   bool isSelected,
-  //   VoidCallback onTap,
-  // ) {
-  //   return GestureDetector(
-  //     onTap: onTap,
-  //     child: Container(
-  //       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-  //       decoration: BoxDecoration(
-  //         color: isSelected ? const Color(0xFFFFF3C4) : Colors.white,
-  //         borderRadius: BorderRadius.circular(16.r), // Match card border radius
-  //         border: Border.all(
-  //           color: isSelected ? const Color(0xFFFF8A00) : const Color(0xFFE0E0E0),
-  //           width: 1.w,
-  //         ),
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: Colors.black.withValues(alpha: 0.05),
-  //             blurRadius: 8.r,
-  //             offset: Offset(0, 2.h),
-  //           ),
-  //         ],
-  //       ),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: [
-  //           Icon(
-  //             icon,
-  //             size: 14.sp,
-  //             color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
-  //           ),
-  //           SizedBox(width: 6.w),
-  //           Flexible(
-  //             child: Text(
-  //               title,
-  //               style: TextStyle(
-  //                 fontSize: 11.sp,
-  //                 fontWeight: FontWeight.w500,
-  //                 color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
-  //               ),
-  //               textAlign: TextAlign.center,
-  //               overflow: TextOverflow.visible,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
 
 
 

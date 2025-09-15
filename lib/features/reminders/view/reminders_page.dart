@@ -53,7 +53,7 @@ class RemindersPage extends StatelessWidget {
               width: 40.w,
               height: 40.h,
               child: Icon(
-              Icons.arrow_back,
+              Icons.arrow_back_ios,
               size: 24.sp,
               color: Colors.black,
               ),

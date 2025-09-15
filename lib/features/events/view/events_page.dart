@@ -44,24 +44,24 @@ class EventsPage extends StatelessWidget {
                     
                     SizedBox(height: 24.h),
                     
-                    // Scrollable content (Events + Reminders)
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            // Events list
-                            _buildEventsList(viewModel),
-                            
-                            SizedBox(height: 24.h),
-                            
-                            // Reminders & Notifications section
-                            _buildRemindersSection(),
-                            
-                            SizedBox(height: 24.h),
-                          ],
-                        ),
-                      ),
-                    ),
+                     // Scrollable content (Events + Reminders)
+                     Expanded(
+                       child: SingleChildScrollView(
+                         child: Column(
+                           children: [
+                             // Events list
+                             _buildEventsList(viewModel),
+                             
+                             SizedBox(height: 24.h),
+                             
+                             // Reminders & Notifications section
+                             _buildRemindersSection(),
+                             
+                             SizedBox(height: 24.h),
+                           ],
+                         ),
+                       ),
+                     ),
                   ],
                 ),
               ),
@@ -158,12 +158,21 @@ class EventsPage extends StatelessWidget {
             child: Container(
               height: 48.h,
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
+                  color: viewModel.searchFilterType != null 
+                    ? const Color(0xFFFF8A00) 
+                    : Colors.black,
+                  width: 1.5.w,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
@@ -171,33 +180,75 @@ class EventsPage extends StatelessWidget {
                   Icon(
                     Icons.search,
                     size: 20.sp,
-                    color: Colors.black,
+                    color: viewModel.searchFilterType != null 
+                      ? const Color(0xFFFF8A00) 
+                      : Colors.black,
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () => AppRouter.navigateToSearch(),
-                      child: Container(
-                        child: Text(
-                          'Search',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.black,
-                          ),
+                    child: TextField(
+                      controller: viewModel.searchController,
+                      onChanged: viewModel.setSearchQuery,
+                      onTap: () {
+                        // Navigate to search page when search bar is tapped (only if no filter is selected)
+                        if (viewModel.searchFilterType == null) {
+                          AppRouter.navigateToSearch();
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: _getSearchHint(viewModel.searchFilterType),
+                        hintStyle: TextStyle(
+                          fontSize: 16.sp,
+                          color: const Color(0xFF757575),
                         ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.black,
                       ),
                     ),
                   ),
-                  Icon(
-                    Icons.location_on_outlined,
-                    size: 20.sp,
-                    color: Colors.black,
+                  // Clear search button
+                  if (viewModel.searchQuery.isNotEmpty)
+                    GestureDetector(
+                      onTap: viewModel.clearSearch,
+                      child: Container(
+                        padding: EdgeInsets.all(4.w),
+                        child: Icon(
+                          Icons.clear,
+                          size: 18.sp,
+                          color: const Color(0xFF757575),
+                        ),
+                      ),
+                    ),
+                  // Location icon
+                  GestureDetector(
+                    onTap: () {
+                      AppRouter.navigateToLocation();
+                    },
+                    child: Icon(
+                      Icons.location_on_outlined,
+                      size: 20.sp,
+                      color: viewModel.searchFilterType != null 
+                        ? const Color(0xFFFF8A00) 
+                        : Colors.black,
+                    ),
                   ),
                   SizedBox(width: 8.w),
-                  Icon(
-                    Icons.calendar_today_outlined,
-                    size: 20.sp,
-                    color: Colors.black,
+                  // Calendar icon
+                  GestureDetector(
+                    onTap: () {
+                      AppRouter.navigateToAvailableEvent();
+                    },
+                    child: Icon(
+                      Icons.calendar_today_outlined,
+                      size: 20.sp,
+                      color: viewModel.searchFilterType != null 
+                        ? const Color(0xFFFF8A00) 
+                        : Colors.black,
+                    ),
                   ),
                   SizedBox(width: 16.w),
                 ],
@@ -209,28 +260,56 @@ class EventsPage extends StatelessWidget {
           
           // Filter button
           GestureDetector(
-            onTap: () => _showFilterModal(context),
+            onTap: () => _showFilterModal(context, viewModel),
             child: Container(
               width: 48.w,
               height: 48.h,
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: viewModel.searchFilterType != null 
+                  ? const Color(0xFFFF8A00) 
+                  : Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
+                  color: viewModel.searchFilterType != null 
+                    ? const Color(0xFFFF8A00) 
+                    : Colors.black,
+                  width: 1.5.w,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
               child: Icon(
                 Icons.tune,
                 size: 20.sp,
-                color: Colors.black,
+                color: viewModel.searchFilterType != null 
+                  ? Colors.white 
+                  : Colors.black,
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _getSearchHint(String? filterType) {
+    switch (filterType) {
+      case 'Events':
+        return 'Search events...';
+      case 'Coordinator':
+        return 'Search coordinator...';
+      case 'Date':
+        return 'Select date...';
+      case 'Location':
+        return 'Search location...';
+      default:
+        return 'Search...';
+    }
   }
 
   Widget _buildCategoryTabs(EventsViewModel viewModel) {
@@ -452,9 +531,9 @@ class EventsPage extends StatelessWidget {
           Text(
             'Booth Size: ${event.boothSize}',
             style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF424242),
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1B1B1B),
             ),
           ),
           
@@ -500,16 +579,18 @@ class EventsPage extends StatelessWidget {
                     Text(
                       'Start: ${event.startTime}',
                       style: TextStyle(
-                        fontSize: 11.sp,
-                        color: const Color(0xFF424242),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1B1B1B),
                       ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       'End: ${event.endTime}',
                       style: TextStyle(
-                        fontSize: 11.sp,
-                        color: const Color(0xFF424242),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1B1B1B),
                       ),
                     ),
                   ],
@@ -523,18 +604,18 @@ class EventsPage extends StatelessWidget {
                   Text(
                     'Space #: ${event.spaceNumber}',
                     style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF424242),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
                     ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     'Cost: ${event.cost}',
                     style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF424242),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
                     ),
                   ),
                 ],
@@ -562,9 +643,9 @@ class EventsPage extends StatelessWidget {
                 child: Text(
                   'Details',
                   style: TextStyle(
-                    fontSize: 11.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    color: Color(0xFF1B1B1B),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -575,7 +656,7 @@ class EventsPage extends StatelessWidget {
     );
   }
 
-  void _showFilterModal(BuildContext context) {
+  void _showFilterModal(BuildContext context, EventsViewModel viewModel) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -652,33 +733,39 @@ class EventsPage extends StatelessWidget {
                           _buildFilterOption(
                             icon: Icons.event_outlined,
                             title: 'Events',
+                            isSelected: viewModel.searchFilterType == 'Events',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Events filter
+                              viewModel.setSearchFilterType('Events');
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.person_outline,
                             title: 'Coordinator',
+                            isSelected: viewModel.searchFilterType == 'Coordinator',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Coordinator filter
+                              viewModel.setSearchFilterType('Coordinator');
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.calendar_today_outlined,
                             title: 'Date',
+                            isSelected: viewModel.searchFilterType == 'Date',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Date filter
+                              viewModel.setSearchFilterType('Date');
+                              AppRouter.navigateToAvailableEvent();
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.location_on_outlined,
                             title: 'Location',
+                            isSelected: viewModel.searchFilterType == 'Location',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Location filter
+                              viewModel.setSearchFilterType('Location');
+                              AppRouter.navigateToLocation();
                             },
                             showDivider: false,
                           ),
@@ -711,6 +798,7 @@ class EventsPage extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    bool isSelected = false,
     bool showDivider = true,
   }) {
     return Column(
@@ -724,22 +812,34 @@ class EventsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFFFF8A00).withValues(alpha: 0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
                 child: Row(
                   children: [
                     Icon(
                       icon,
                       size: 24.sp,
-                      color: Colors.black,
+                      color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
                     ),
                     SizedBox(width: 16.w),
                     Text(
                       title,
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
+                        color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       ),
                     ),
+                    if (isSelected) ...[
+                      const Spacer(),
+                      Icon(
+                        Icons.check_circle,
+                        size: 20.sp,
+                        color: const Color(0xFFFF8A00),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -781,7 +881,7 @@ class EventsPage extends StatelessWidget {
                 title: 'Birthday Party',
                 date: '01 July 2025',
                 status: 'Pending',
-                cardColor: const Color(0xFFFFF8E1), // Light yellow
+                cardColor: const Color(0xFFFFEBA9).withOpacity(0.80), // Light yellow
                 statusColor: Colors.yellow,
               ),
               SizedBox(height: 12.h),
@@ -789,7 +889,7 @@ class EventsPage extends StatelessWidget {
                 title: 'Friendly Party',
                 date: '01 July 2025',
                 status: 'Approved',
-                cardColor: const Color(0xFFE8F5E8), // Light green
+                cardColor: const Color(0xFF00BF63).withOpacity(0.30), // Light green
                 statusColor: Colors.green,
               ),
               SizedBox(height: 12.h),
@@ -797,7 +897,7 @@ class EventsPage extends StatelessWidget {
                 title: 'Conference',
                 date: '01 July 2025',
                 status: 'Denied',
-                cardColor: const Color(0xFFFFE8E8), // Light red
+                cardColor: const Color(0xFFFF3030).withOpacity(0.31), // Light red
                 statusColor: Colors.red,
               ),
             ],
@@ -876,3 +976,4 @@ class EventsPage extends StatelessWidget {
   }
 
 }
+

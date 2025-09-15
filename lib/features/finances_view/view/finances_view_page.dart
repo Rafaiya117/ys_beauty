@@ -57,7 +57,7 @@ class FinancesViewPage extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: Icon(
-              Icons.arrow_back,
+              Icons.arrow_back_ios,
               size: 24.sp,
               color: Colors.black,
             ),

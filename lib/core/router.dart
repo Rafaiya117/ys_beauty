@@ -27,6 +27,8 @@ import '../../features/finances_view/view/finances_view_page.dart';
 import '../../features/edit_financial_details/view/edit_financial_details_page.dart';
 import '../../features/feedback/view/feedback_page.dart';
 import '../../features/search/view/search_page.dart';
+import '../../features/location/view/location_page.dart';
+import '../../features/available_event/view/available_event_page.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -57,6 +59,8 @@ class AppRouter {
   static const String editFinancialDetails = '/edit-financial-details';
   static const String feedback = '/feedback';
   static const String search = '/search';
+  static const String location = '/location';
+  static const String availableEvent = '/available-event';
 
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -229,6 +233,16 @@ class AppRouter {
           builder: (_) => const SearchPage(),
           settings: settings,
         );
+      case location:
+        return MaterialPageRoute(
+          builder: (_) => const LocationPageWrapper(),
+          settings: settings,
+        );
+      case availableEvent:
+        return MaterialPageRoute(
+          builder: (_) => const AvailableEventPageWrapper(),
+          settings: settings,
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => const SplashPage(),
@@ -366,6 +380,14 @@ class AppRouter {
 
   static Future<dynamic> navigateToSearch() {
     return navigator!.pushNamed(search);
+  }
+
+  static Future<dynamic> navigateToLocation() {
+    return navigator!.pushNamed(location);
+  }
+
+  static Future<dynamic> navigateToAvailableEvent() {
+    return navigator!.pushNamed(availableEvent);
   }
 
   static void goBack() {

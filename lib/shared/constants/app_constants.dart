@@ -50,6 +50,15 @@ class AppConstants {
   static const String financesIconPath = 'assets/navigation_icon/Finances.svg';
   static const String settingsIconPath = 'assets/navigation_icon/Setting.svg';
   
+  // Financial summary card icon paths
+  static const String totalSalesIconPath = 'assets/finances/total_sales.svg';
+  static const String totalExpensesIconPath = 'assets/finances/total_expenses.svg';
+  static const String boothFeesIconPath = 'assets/finances/booth_fees.svg';
+  static const String netProfitIconPath = 'assets/finances/net_profit.svg';
+  
+  // Map image path
+  static const String mapImagePath = 'assets/map/map.png';
+  
   // UI dimensions
   static const double imageContainerSize = 200.0;
   static const double borderRadius = 20.0;

@@ -194,12 +194,21 @@ class HomePage extends StatelessWidget {
             child: Container(
               height: 48.h,
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
+                  color: viewModel.searchFilterType != null 
+                    ? const Color(0xFFFF8A00) 
+                    : Colors.black,
+                  width: 1.5.w,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
@@ -207,42 +216,74 @@ class HomePage extends StatelessWidget {
                   Icon(
                     Icons.search,
                     size: 20.sp,
-                    color: Colors.black,
+                    color: viewModel.searchFilterType != null 
+                      ? const Color(0xFFFF8A00) 
+                      : Colors.black,
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () => AppRouter.navigateToSearch(),
-                      child: Container(
-                        child: Text(
-                          'Search',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.black,
-                          ),
+                    child: TextField(
+                      controller: viewModel.searchController,
+                      onChanged: viewModel.setSearchQuery,
+                      onTap: () {
+                        // Navigate to search page when search bar is tapped (only if no filter is selected)
+                        if (viewModel.searchFilterType == null) {
+                          AppRouter.navigateToSearch();
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: _getSearchHint(viewModel.searchFilterType),
+                        hintStyle: TextStyle(
+                          fontSize: 16.sp,
+                          color: const Color(0xFF757575),
                         ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.black,
                       ),
                     ),
                   ),
+                  // Clear search button
+                  if (viewModel.searchQuery.isNotEmpty)
+                    GestureDetector(
+                      onTap: viewModel.clearSearch,
+                      child: Container(
+                        padding: EdgeInsets.all(4.w),
+                        child: Icon(
+                          Icons.clear,
+                          size: 18.sp,
+                          color: const Color(0xFF757575),
+                        ),
+                      ),
+                    ),
+                  // Location icon
                   GestureDetector(
                     onTap: () {
-                      // Handle location search
+                      AppRouter.navigateToLocation();
                     },
                     child: Icon(
                       Icons.location_on_outlined,
                       size: 20.sp,
-                      color: Colors.black,
+                      color: viewModel.searchFilterType != null 
+                        ? const Color(0xFFFF8A00) 
+                        : Colors.black,
                     ),
                   ),
                   SizedBox(width: 8.w),
+                  // Calendar icon
                   GestureDetector(
                     onTap: () {
-                      // Handle calendar search
+                      AppRouter.navigateToAvailableEvent();
                     },
                     child: Icon(
                       Icons.calendar_today_outlined,
                       size: 20.sp,
-                      color: Colors.black,
+                      color: viewModel.searchFilterType != null 
+                        ? const Color(0xFFFF8A00) 
+                        : Colors.black,
                     ),
                   ),
                   SizedBox(width: 16.w),
@@ -255,28 +296,56 @@ class HomePage extends StatelessWidget {
           
           // Filter button
           GestureDetector(
-            onTap: () => _showFilterModal(context),
+            onTap: () => _showFilterModal(context, viewModel),
             child: Container(
               width: 48.w,
               height: 48.h,
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: viewModel.searchFilterType != null 
+                  ? const Color(0xFFFF8A00) 
+                  : Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
+                  color: viewModel.searchFilterType != null 
+                    ? const Color(0xFFFF8A00) 
+                    : Colors.black,
+                  width: 1.5.w,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
               child: Icon(
                 Icons.tune,
                 size: 20.sp,
-                color: Colors.black,
+                color: viewModel.searchFilterType != null 
+                  ? Colors.white 
+                  : Colors.black,
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _getSearchHint(String? filterType) {
+    switch (filterType) {
+      case 'Events':
+        return 'Search events...';
+      case 'Coordinator':
+        return 'Search coordinator...';
+      case 'Date':
+        return 'Select date...';
+      case 'Location':
+        return 'Search location...';
+      default:
+        return 'Search...';
+    }
   }
 
 
@@ -530,13 +599,13 @@ class HomePage extends StatelessWidget {
           
           // Horizontal scrollable event cards
           SizedBox(
-            height: 185.h,
+            height: 180.h,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 3,
               itemBuilder: (context, index) {
                 return Container(
-                  width: 280.w,
+                  width: 266.w,
                   margin: EdgeInsets.only(right: 16.w),
                   child: _buildEventCard(
                     title: 'Friendly Party',
@@ -725,7 +794,7 @@ class HomePage extends StatelessWidget {
     required String endTime,
   }) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         image: const DecorationImage(
           image: AssetImage(AppConstants.cardBgPath),
@@ -753,7 +822,7 @@ class HomePage extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF424242),
                       ),
@@ -795,15 +864,15 @@ class HomePage extends StatelessWidget {
                       'July',
                       style: TextStyle(
                         fontSize: 8.sp,
-                        color: const Color(0xFF757575),
+                        color: const Color(0xFF000000),
                       ),
                     ),
                     Text(
                       '22',
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
+                        color: const Color(0xFF000000),
                       ),
                     ),
                   ],
@@ -812,15 +881,15 @@ class HomePage extends StatelessWidget {
             ],
           ),
           
-          SizedBox(height: 8.h),
+          SizedBox(height: 2.h),
           
           // Location
           Row(
             children: [
               Icon(
                 Icons.location_on,
-                size: 12.sp,
-                color: const Color(0xFF424242),
+                size: 14.sp,
+                color: const Color(0xFF1B1B1B),
               ),
               SizedBox(width: 3.w),
               Expanded(
@@ -828,7 +897,7 @@ class HomePage extends StatelessWidget {
                   location,
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: const Color(0xFF424242),
+                    color: const Color(0xFF1B1B1B),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -837,14 +906,14 @@ class HomePage extends StatelessWidget {
             ],
           ),
           
-          SizedBox(height: 6.h),
+          SizedBox(height: 3.h),
           
           // Booth size
           Text(
             'Booth Size: $boothSize',
             style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w500,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
               color: const Color(0xFF424242),
             ),
           ),
@@ -892,6 +961,7 @@ class HomePage extends StatelessWidget {
                       'Start: $startTime',
                       style: TextStyle(
                         fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
                         color: const Color(0xFF424242),
                       ),
                     ),
@@ -900,6 +970,7 @@ class HomePage extends StatelessWidget {
                       'End: $endTime',
                       style: TextStyle(
                         fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
                         color: const Color(0xFF424242),
                       ),
                     ),
@@ -914,8 +985,8 @@ class HomePage extends StatelessWidget {
                   Text(
                     'Space #: $spaceNumber',
                     style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
                       color: const Color(0xFF424242),
                     ),
                   ),
@@ -923,8 +994,8 @@ class HomePage extends StatelessWidget {
                   Text(
                     'Cost: $cost',
                     style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
                       color: const Color(0xFF424242),
                     ),
                   ),
@@ -953,9 +1024,9 @@ class HomePage extends StatelessWidget {
                 child: Text(
                   'Details',
                   style: TextStyle(
-                    fontSize: 10.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 12.sp,
+                    color: Color(0xFF1B1B1B),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -978,7 +1049,7 @@ class HomePage extends StatelessWidget {
     required String endTime,
   }) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         image: const DecorationImage(
           image: AssetImage(AppConstants.cardBgPath),
@@ -1005,9 +1076,9 @@ class HomePage extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
+                        color: const Color(0xFF1B1B1B),
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -1047,7 +1118,8 @@ class HomePage extends StatelessWidget {
                       'July',
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: const Color(0xFF757575),
+                        color: const Color(0xFF000000),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
@@ -1055,7 +1127,7 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
+                        color: const Color(0xFF000000),
                       ),
                     ),
                   ],
@@ -1064,7 +1136,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           
-          SizedBox(height: 12.h),
+          SizedBox(height: 6.h),
           
           // Location
           Row(
@@ -1072,7 +1144,7 @@ class HomePage extends StatelessWidget {
               Icon(
                 Icons.location_on,
                 size: 16.sp,
-                color: const Color(0xFF424242),
+                color: const Color(0xFF1B1B1B),
               ),
               SizedBox(width: 4.w),
               Expanded(
@@ -1080,26 +1152,26 @@ class HomePage extends StatelessWidget {
                   location,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: const Color(0xFF424242),
+                    color: const Color(0xFF1B1B1B),
                   ),
                 ),
               ),
             ],
           ),
           
-          SizedBox(height: 8.h),
+          SizedBox(height: 4.h),
           
           // Booth size
           Text(
             'Booth Size: $boothSize',
             style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.bold,
               color: const Color(0xFF424242),
             ),
           ),
           
-          SizedBox(height: 12.h),
+          SizedBox(height: 8.h),
           
           // Time and details row
           Row(
@@ -1121,8 +1193,8 @@ class HomePage extends StatelessWidget {
                     color: Colors.black.withValues(alpha: 0.3),
                   ),
                   Container(
-                    width: 8.w,
-                    height: 8.h,
+                    width: 12.w,
+                    height: 12.h,
                     decoration: const BoxDecoration(
                       color: Colors.black,
                       shape: BoxShape.circle,
@@ -1142,7 +1214,8 @@ class HomePage extends StatelessWidget {
                       'Start: $startTime',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: const Color(0xFF424242),
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1B1B1B),
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -1150,7 +1223,8 @@ class HomePage extends StatelessWidget {
                       'End: $endTime',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: const Color(0xFF424242),
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1B1B1B),
                       ),
                     ),
                   ],
@@ -1164,18 +1238,18 @@ class HomePage extends StatelessWidget {
                   Text(
                     'Space #: $spaceNumber',
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF424242),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     'Cost: $cost',
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF424242),
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
                     ),
                   ),
                 ],
@@ -1203,9 +1277,9 @@ class HomePage extends StatelessWidget {
                 child: Text(
                   'Details',
                   style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                    color: Color(0xFF1B1B1B),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -1219,22 +1293,22 @@ class HomePage extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
-        return Colors.yellow;
+        return const Color(0xFFEEBC20); // Yellow background for Pending
       case 'approved':
-        return Colors.green;
+        return const Color(0xFF00BF63); // Green background for Approved
       case 'paid':
-        return Colors.green;
+        return const Color(0xFF00703A); // Dark green background for Paid
       case 'denied':
-        return Colors.red;
+        return Color(0xFFFF5151);
       case 'unpaid':
-        return Colors.red;
+        return Color(0xFFEF4444);
       default:
         return Colors.grey;
     }
   }
 
 
-  void _showFilterModal(BuildContext context) {
+  void _showFilterModal(BuildContext context, HomeViewModel viewModel) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -1311,33 +1385,41 @@ class HomePage extends StatelessWidget {
                           _buildFilterOption(
                             icon: Icons.event_outlined,
                             title: 'Events',
+                            isSelected: viewModel.searchFilterType == 'Events',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Events filter
+                              viewModel.setSearchFilterType('Events');
+                              AppRouter.navigateToMain(initialIndex: 1); // Navigate to Events tab
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.person_outline,
                             title: 'Coordinator',
+                            isSelected: viewModel.searchFilterType == 'Coordinator',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Coordinator filter
+                              viewModel.setSearchFilterType('Coordinator');
+                              AppRouter.navigateToSearch();
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.calendar_today_outlined,
                             title: 'Date',
+                            isSelected: viewModel.searchFilterType == 'Date',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Date filter
+                              viewModel.setSearchFilterType('Date');
+                              AppRouter.navigateToAvailableEvent();
                             },
                           ),
                           _buildFilterOption(
                             icon: Icons.location_on_outlined,
                             title: 'Location',
+                            isSelected: viewModel.searchFilterType == 'Location',
                             onTap: () {
                               Navigator.of(context).pop();
-                              // Handle Location filter
+                              viewModel.setSearchFilterType('Location');
+                              AppRouter.navigateToLocation();
                             },
                             showDivider: false,
                           ),
@@ -1370,6 +1452,7 @@ class HomePage extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    bool isSelected = false,
     bool showDivider = true,
   }) {
     return Column(
@@ -1383,22 +1466,34 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFFFF8A00).withValues(alpha: 0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
                 child: Row(
                   children: [
                     Icon(
                       icon,
                       size: 24.sp,
-                      color: Colors.black,
+                      color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
                     ),
                     SizedBox(width: 16.w),
                     Text(
                       title,
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
+                        color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       ),
                     ),
+                    if (isSelected) ...[
+                      const Spacer(),
+                      Icon(
+                        Icons.check_circle,
+                        size: 20.sp,
+                        color: const Color(0xFFFF8A00),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -1415,3 +1510,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
