@@ -96,7 +96,7 @@ class AuthPage extends StatelessWidget {
                                       : const Text(
                                           'Log In',
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                           ),

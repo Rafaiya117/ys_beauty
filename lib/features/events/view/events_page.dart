@@ -224,18 +224,18 @@ class EventsPage extends StatelessWidget {
                       ),
                     ),
                   // Location icon
-                  GestureDetector(
-                    onTap: () {
-                      AppRouter.navigateToLocation();
-                    },
-                    child: Icon(
-                      Icons.location_on_outlined,
-                      size: 20.sp,
-                      color: viewModel.searchFilterType != null 
-                        ? const Color(0xFFFF8A00) 
-                        : Colors.black,
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     AppRouter.navigateToLocation();
+                  //   },
+                  //   child: Icon(
+                  //     Icons.location_on_outlined,
+                  //     size: 20.sp,
+                  //     color: viewModel.searchFilterType != null 
+                  //       ? const Color(0xFFFF8A00) 
+                  //       : Colors.black,
+                  //   ),
+                  // ),
                   SizedBox(width: 8.w),
                   // Calendar icon
                   GestureDetector(
@@ -758,17 +758,17 @@ class EventsPage extends StatelessWidget {
                               AppRouter.navigateToAvailableEvent();
                             },
                           ),
-                          _buildFilterOption(
-                            icon: Icons.location_on_outlined,
-                            title: 'Location',
-                            isSelected: viewModel.searchFilterType == 'Location',
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              viewModel.setSearchFilterType('Location');
-                              AppRouter.navigateToLocation();
-                            },
-                            showDivider: false,
-                          ),
+                          // _buildFilterOption(
+                          //   icon: Icons.location_on_outlined,
+                          //   title: 'Location',
+                          //   isSelected: viewModel.searchFilterType == 'Location',
+                          //   onTap: () {
+                          //     Navigator.of(context).pop();
+                          //     viewModel.setSearchFilterType('Location');
+                          //     AppRouter.navigateToLocation();
+                          //   },
+                          //   showDivider: false,
+                          // ),
                         ],
                       ),
                     ),

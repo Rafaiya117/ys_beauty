@@ -161,7 +161,7 @@ class EditInformationPage extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.person,
-                                          color: const Color(0xFFFF8A00),
+                                          color: Colors.black,
                                           size: 20.sp,
                                         ),
                                         SizedBox(width: 12.w),
@@ -207,7 +207,7 @@ class EditInformationPage extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.email,
-                                          color: const Color(0xFFFF8A00),
+                                          color: Colors.black,
                                           size: 20.sp,
                                         ),
                                         SizedBox(width: 12.w),
@@ -256,7 +256,7 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.calendar_today,
-                                                color: const Color(0xFFFF8A00),
+                                                color: Colors.black,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
@@ -303,7 +303,7 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.location_city,
-                                                color: const Color(0xFFFF8A00),
+                                                color: Colors.black,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
@@ -514,7 +514,7 @@ class EditInformationPage extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.photo_library,
-                  color: const Color(0xFFFF8A00),
+                  color: Colors.black,
                   size: 24.sp,
                 ),
                 title: Text(

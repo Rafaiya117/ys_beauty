@@ -6,7 +6,7 @@ class AppConstants {
   
   // Animation durations - Faster timing for smoother experience
   static const int imageAnimationDuration = 800; // milliseconds (reduced from 1200)
-  static const int imageChangeInterval = 600; // milliseconds (reduced from 1000)
+  static const int imageChangeInterval = 300; // milliseconds (reduced from 600)
   static const int lastImagePauseDuration = 500; // milliseconds (reduced from 1500)
   static const int navigationDelay = 100; // milliseconds (reduced from 300)
   static const int transitionDuration = 500; // milliseconds (reduced from 800)

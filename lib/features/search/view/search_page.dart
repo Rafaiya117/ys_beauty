@@ -155,16 +155,16 @@ class SearchPage extends StatelessWidget {
                     ),
                   ),
                   // Location icon
-                  GestureDetector(
-                    onTap: () {
-                      AppRouter.navigateToLocation();
-                    },
-                    child: Icon(
-                      Icons.location_on_outlined,
-                      size: 20.sp,
-                      color: Colors.black,
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     AppRouter.navigateToLocation();
+                  //   },
+                  //   child: Icon(
+                  //     Icons.location_on_outlined,
+                  //     size: 20.sp,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
                   SizedBox(width: 8.w),
                   // Calendar icon
                   GestureDetector(
@@ -529,16 +529,16 @@ class SearchPage extends StatelessWidget {
                               AppRouter.navigateToAvailableEvent();
                             },
                           ),
-                          _buildFilterOption(
-                            icon: Icons.location_on_outlined,
-                            title: 'Location',
-                            isSelected: false,
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              AppRouter.navigateToLocation();
-                            },
-                            showDivider: false,
-                          ),
+                          // _buildFilterOption(
+                          //   icon: Icons.location_on_outlined,
+                          //   title: 'Location',
+                          //   isSelected: false,
+                          //   onTap: () {
+                          //     Navigator.of(context).pop();
+                          //     AppRouter.navigateToLocation();
+                          //   },
+                          //   showDivider: false,
+                          // ),
                         ],
                       ),
                     ),

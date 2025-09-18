@@ -199,7 +199,7 @@ class SettingsPage extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 18.sp,
-                color: const Color(0xFFFF8A00),
+                color: Colors.black,
               ),
             ),
             
@@ -222,7 +222,7 @@ class SettingsPage extends StatelessWidget {
               Switch(
                 value: toggleValue,
                 onChanged: isLoading ? null : (value) => onToggle?.call(),
-                activeColor: const Color(0xFFFF8A00),
+                activeColor: Colors.black,
                 inactiveThumbColor: const Color(0xFF9E9E9E),
                 inactiveTrackColor: const Color(0xFFE0E0E0),
               ),
@@ -233,14 +233,14 @@ class SettingsPage extends StatelessWidget {
                   height: 20.h,
                   child: const CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF8A00)),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                   ),
                 ),
               ] else ...[
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 16.sp,
-                  color: const Color(0xFFFF8A00),
+                  color: Colors.black,
                 ),
               ],
             ],

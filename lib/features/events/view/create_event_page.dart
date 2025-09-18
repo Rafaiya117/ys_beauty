@@ -66,7 +66,7 @@ class CreateEventPage extends StatelessWidget {
                                 Expanded(
                                   child: _buildInputField(
                                     label: 'Enter Booth Fee',
-                                    icon: Icons.store_outlined,
+                                    icon: Icons.attach_money,
                                     controller: viewModel.boothFeeController,
                                   ),
                                 ),
@@ -74,11 +74,11 @@ class CreateEventPage extends StatelessWidget {
                                 Expanded(
                                   child: _buildInputField(
                                     label: 'Enter Booth Size',
-                                    icon: Icons.crop_square_outlined,
+                                    icon: Icons.aspect_ratio,
                                     controller: viewModel.boothSizeController,
                                   ),
                                 ),
-                              ],
+                           ],
                             ),
                             
                             SizedBox(height: 10.h),
@@ -192,7 +192,7 @@ class CreateEventPage extends StatelessWidget {
   }) {
     return Container(
       height: 48.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
@@ -208,19 +208,19 @@ class CreateEventPage extends StatelessWidget {
             size: 18.sp,
             color: const Color(0xFF424242),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 10.w),
           Expanded(
             child: TextField(
               controller: controller,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 12.sp,
                 color: const Color(0xFF424242),
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
                 hintText: label,
                 hintStyle: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   color: const Color(0xFF9E9E9E),
                   fontWeight: FontWeight.w400,
                 ),
@@ -1073,14 +1073,20 @@ class CreateEventPage extends StatelessWidget {
                 ),
               ),
               
-              // Options list
-              ...reminderOptions.map((option) => _buildReminderOption(
-                context: context,
-                option: option,
-                onTap: () {
-                  Navigator.pop(context, option);
-                },
-              )),
+              // Options list - Made scrollable
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: reminderOptions.map((option) => _buildReminderOption(
+                      context: context,
+                      option: option,
+                      onTap: () {
+                        Navigator.pop(context, option);
+                      },
+                    )).toList(),
+                  ),
+                ),
+              ),
               
               SizedBox(height: 20.h),
             ],

@@ -197,7 +197,7 @@ class AccountInformationPage extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.email_outlined,
-                                          color: const Color(0xFFFF8A00),
+                                          color: Colors.black,
                                           size: 20.sp,
                                         ),
                                         SizedBox(width: 12.w),
@@ -254,7 +254,7 @@ class AccountInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.calendar_today_outlined,
-                                                color: const Color(0xFFFF8A00),
+                                                color: Colors.black,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
@@ -309,7 +309,7 @@ class AccountInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.location_city_outlined,
-                                                color: const Color(0xFFFF8A00),
+                                                color: Colors.black,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
@@ -366,7 +366,7 @@ class AccountInformationPage extends StatelessWidget {
                                 children: [
                                   Icon(
                                     Icons.lock,
-                                    color: const Color(0xFFFF8A00),
+                                    color: Colors.black,
                                     size: 24.sp,
                                   ),
                                   SizedBox(width: 16.w),
