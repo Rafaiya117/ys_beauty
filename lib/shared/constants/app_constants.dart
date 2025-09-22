@@ -43,7 +43,7 @@ class AppConstants {
   static const String backgroundImagePath = 'assets/background/background.png';
   static const String googleLogoPath = 'assets/logIn/google_logo.png';
   static const String cardBgPath = 'assets/card/card_bg.png';
-  
+  static const String profileImagePath = 'assets/app_logo/img.png';
   // Navigation icon paths
   static const String homeIconPath = 'assets/navigation_icon/home.svg';
   static const String eventsIconPath = 'assets/navigation_icon/Events.svg';

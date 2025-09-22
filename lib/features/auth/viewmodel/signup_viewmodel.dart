@@ -5,7 +5,7 @@ import '../../../core/router.dart';
 
 class SignUpViewModel extends ChangeNotifier {
   final AuthRepository _repository = AuthRepository();
-  
+
   late SignUpModel _signUpModel;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -56,6 +56,12 @@ class SignUpViewModel extends ChangeNotifier {
   }
 
   Future<void> signUp() async {
+    print('Sign Up button pressed.');
+    print('Name: ${_nameController.text.trim()}');
+    print('Phone: ${_phoneController.text.trim()}');
+    print('Email: ${_emailController.text.trim()}');
+    print('Password: ${_passwordController.text.trim()}');
+
     // Validate inputs
     if (_nameController.text.trim().isEmpty) {
       _signUpModel = _signUpModel.copyWith(
@@ -105,7 +111,10 @@ class SignUpViewModel extends ChangeNotifier {
       return;
     }
 
-    _signUpModel = _signUpModel.copyWith(isEmailSignUpLoading: true, errorMessage: null);
+    _signUpModel = _signUpModel.copyWith(
+      isEmailSignUpLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
@@ -115,10 +124,10 @@ class SignUpViewModel extends ChangeNotifier {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
+
       if (success) {
-        // Navigate to main screen or dashboard
-        AppRouter.navigateToMain();
+        // Navigate to login screen after successful signup
+        AppRouter.navigateToLogin();
       } else {
         _signUpModel = _signUpModel.copyWith(
           isEmailSignUpLoading: false,
@@ -136,12 +145,15 @@ class SignUpViewModel extends ChangeNotifier {
   }
 
   Future<void> googleSignUp() async {
-    _signUpModel = _signUpModel.copyWith(isGoogleSignUpLoading: true, errorMessage: null);
+    _signUpModel = _signUpModel.copyWith(
+      isGoogleSignUpLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
-      final success = await _repository.googleSignUp();
-      
+      final success = await _repository.googleLogin();
+
       if (success) {
         // Navigate to main screen or dashboard
         AppRouter.navigateToMain();
@@ -155,7 +167,8 @@ class SignUpViewModel extends ChangeNotifier {
     } catch (e) {
       _signUpModel = _signUpModel.copyWith(
         isGoogleSignUpLoading: false,
-        errorMessage: 'An error occurred during Google sign up. Please try again.',
+        errorMessage:
+            'An error occurred during Google sign up. Please try again.',
       );
       notifyListeners();
     }

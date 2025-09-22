@@ -12,7 +12,7 @@ import '../../../shared/constants/app_constants.dart';
 
 class MainNavigationPage extends StatelessWidget {
   final int initialIndex;
-  
+
   const MainNavigationPage({super.key, this.initialIndex = 0});
 
   final List<Widget> _pages = const [
@@ -30,84 +30,86 @@ class MainNavigationPage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             body: _pages[viewModel.currentIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF8E1), // Light yellow background
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8.r,
-              offset: Offset(0, -2.h),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Container(
-            height: 70.h, // Reduced height to fit content better
-            padding: EdgeInsets.only(
-              left: 16.w,
-              right: 16.w,
-              top: 10.h,
-              // bottom: 0.h, // Reduced bottom padding
-            ),
-            child: Stack(
-              clipBehavior: Clip.none, // Allow overflow for floating button
-              children: [
-                // Navigation items row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                _buildNavItem(
-                  context: context,
-                  viewModel: viewModel,
-                  iconPath: AppConstants.homeIconPath,
-                  label: 'Home',
-                  index: 0,
-                  isActive: viewModel.currentIndex == 0,
-                ),
-                _buildNavItem(
-                  context: context,
-                  viewModel: viewModel,
-                  iconPath: AppConstants.eventsIconPath,
-                  label: 'Events',
-                  index: 1,
-                  isActive: viewModel.currentIndex == 1,
-                ),
-                // Empty space for floating button
-                SizedBox(width: 64.w),
-                _buildNavItem(
-                  context: context,
-                  viewModel: viewModel,
-                  iconPath: AppConstants.financesIconPath,
-                  label: 'Finances',
-                  index: 2,
-                  isActive: viewModel.currentIndex == 2,
-                ),
-                _buildNavItem(
-                  context: context,
-                  viewModel: viewModel,
-                  iconPath: AppConstants.settingsIconPath,
-                  label: 'Setting',
-                  index: 3,
-                  isActive: viewModel.currentIndex == 3,
-                ),
-                  ],
-                ),
-                // Floating button positioned in center
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: -30.h, // Adjusted position for better fit
-                  child: Center(
-                    child: _buildFloatingButton(context, viewModel),
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFFBECBD), // Light yellow background
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8.r,
+                    offset: Offset(0, -2.h),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: Container(
+                  height:
+                      70.h, // Increased height to accommodate floating button
+                  padding: EdgeInsets.only(
+                    left: 15.w,
+                    right: 15.w,
+                    top: 10.h,
+                    // bottom: 0.h, // Reduced bottom padding
+                  ),
+                  child: Stack(
+                    clipBehavior:
+                        Clip.none, // Allow overflow for floating button
+                    children: [
+                      // Navigation items row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildNavItem(
+                            context: context,
+                            viewModel: viewModel,
+                            iconPath: AppConstants.homeIconPath,
+                            label: 'Home',
+                            index: 0,
+                            isActive: viewModel.currentIndex == 0,
+                          ),
+                          _buildNavItem(
+                            context: context,
+                            viewModel: viewModel,
+                            iconPath: AppConstants.eventsIconPath,
+                            label: 'Events',
+                            index: 1,
+                            isActive: viewModel.currentIndex == 1,
+                          ),
+                          // Empty space for floating button
+                          SizedBox(width: 64.w),
+                          _buildNavItem(
+                            context: context,
+                            viewModel: viewModel,
+                            iconPath: AppConstants.financesIconPath,
+                            label: 'Finances',
+                            index: 2,
+                            isActive: viewModel.currentIndex == 2,
+                          ),
+                          _buildNavItem(
+                            context: context,
+                            viewModel: viewModel,
+                            iconPath: AppConstants.settingsIconPath,
+                            label: 'Setting',
+                            index: 3,
+                            isActive: viewModel.currentIndex == 3,
+                          ),
+                        ],
+                      ),
+                      // Custom floating button positioned in center
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: -30.h,
+                        child: Center(
+                          child: _buildFloatingButton(context, viewModel),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
         },
       ),
     );
@@ -126,7 +128,10 @@ class MainNavigationPage extends StatelessWidget {
         viewModel.changeTab(index);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h), // Further reduced padding
+        padding: EdgeInsets.symmetric(
+          horizontal: 8.w,
+          vertical: 2.h,
+        ), // Further reduced padding
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -134,9 +139,11 @@ class MainNavigationPage extends StatelessWidget {
               iconPath,
               width: 22.w,
               height: 22.h,
-              colorFilter: isActive 
+              colorFilter: isActive
                   ? ColorFilter.mode(
-                      const Color(AppConstants.selectedIconColor), // FFA066 for active
+                      const Color(
+                        AppConstants.selectedIconColor,
+                      ), // FFA066 for active
                       BlendMode.srcIn,
                     )
                   : null, // Use default SVG color for inactive
@@ -147,9 +154,13 @@ class MainNavigationPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10.sp, // Further reduced font size
                 fontWeight: FontWeight.w500,
-                color: isActive 
-                    ? const Color(AppConstants.selectedIconColor) // FFA066 for active
-                    : const Color(0xFF010101), // 010101 for inactive (hardcoded since it's the default)
+                color: isActive
+                    ? const Color(
+                        AppConstants.selectedIconColor,
+                      ) // FFA066 for active
+                    : const Color(
+                        0xFF010101,
+                      ), // 010101 for inactive (hardcoded since it's the default)
               ),
             ),
           ],
@@ -158,30 +169,38 @@ class MainNavigationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFloatingButton(BuildContext context, NavigationViewModel viewModel) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate directly to create event page
-        AppRouter.navigateToCreateEvent();
-      },
-      child: Container(
-        width: 64.w, // Restored to larger size
-        height: 64.h,
-        decoration: BoxDecoration(
-          color: const Color(0xFFFF8A00), // Orange background
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF8A00).withValues(alpha: 0.4),
-              blurRadius: 12.r,
-              offset: Offset(0, 6.h),
-            ),
-          ],
-        ),
-        child: Icon(
-          Icons.add,
-          size: 28.sp, // Restored to larger icon size
-          color: Colors.white,
+  Widget _buildFloatingButton(
+    BuildContext context,
+    NavigationViewModel viewModel,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          print('✅ Custom floating button tapped successfully!');
+          try {
+            AppRouter.navigateToCreateEvent();
+            print('✅ Navigation to CreateEvent initiated');
+          } catch (e) {
+            print('❌ Navigation error: $e');
+          }
+        },
+        borderRadius: BorderRadius.circular(32.r),
+        child: Container(
+          width: 56.w,
+          height: 56.h,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFF8A00), // Orange background
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF8A00).withValues(alpha: 0.4),
+                blurRadius: 12.r,
+                offset: Offset(0, 6.h),
+              ),
+            ],
+          ),
+          child: Icon(Icons.add, size: 28.sp, color: Colors.white),
         ),
       ),
     );
@@ -274,10 +293,7 @@ class MainNavigationPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF8E1),
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
+          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
         ),
         child: Row(
           children: [
@@ -288,11 +304,7 @@ class MainNavigationPage extends StatelessWidget {
                 color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20.r),
               ),
-              child: Icon(
-                icon,
-                size: 20.sp,
-                color: const Color(0xFFFF8A00),
-              ),
+              child: Icon(icon, size: 20.sp, color: const Color(0xFFFF8A00)),
             ),
             SizedBox(width: 12.w),
             Expanded(

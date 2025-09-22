@@ -1,17 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:io';
 import '../viewmodel/account_viewmodel.dart';
 import '../../../shared/constants/app_constants.dart';
 import '../../../core/router.dart';
 
-class AccountInformationPage extends StatelessWidget {
+class AccountInformationPage extends StatefulWidget {
   const AccountInformationPage({super.key});
 
   @override
+  State<AccountInformationPage> createState() => _AccountInformationPageState();
+}
+
+class _AccountInformationPageState extends State<AccountInformationPage> {
+  late AccountViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = AccountViewModel();
+    _loadAccountData();
+  }
+
+  Future<void> _loadAccountData() async {
+    await _viewModel.fetchAccountInformation();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AccountViewModel(),
+    return ChangeNotifierProvider.value(
+      value: _viewModel,
       child: Consumer<AccountViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -27,7 +52,10 @@ class AccountInformationPage extends StatelessWidget {
                   children: [
                     // Header
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: 16.h,
+                      ),
                       child: Row(
                         children: [
                           IconButton(
@@ -53,9 +81,9 @@ class AccountInformationPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     SizedBox(height: 20.h),
-                    
+
                     // Profile and Basic Information Section
                     Expanded(
                       child: SingleChildScrollView(
@@ -67,7 +95,9 @@ class AccountInformationPage extends StatelessWidget {
                               width: double.infinity,
                               padding: EdgeInsets.all(20.w),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFF3C4), // Light yellow background
+                                color: const Color(
+                                  0xFFFFF3C4,
+                                ), // Light yellow background
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
                                   color: const Color(0xFFE0E0E0),
@@ -84,15 +114,27 @@ class AccountInformationPage extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       color: const Color(0xFFE0E0E0),
                                     ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: Color(0xFF9E9E9E),
-                                    ),
+                                    child:
+                                        viewModel
+                                                .accountModel
+                                                .profileImagePath !=
+                                            null
+                                        ? ClipOval(
+                                            child: _buildProfileImage(
+                                              viewModel
+                                                  .accountModel
+                                                  .profileImagePath!,
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.person,
+                                            size: 50,
+                                            color: Color(0xFF9E9E9E),
+                                          ),
                                   ),
-                                  
+
                                   SizedBox(height: 16.h),
-                                  
+
                                   // Name and Edit Button
                                   Row(
                                     children: [
@@ -101,32 +143,47 @@ class AccountInformationPage extends StatelessWidget {
                                         child: Center(
                                           child: viewModel.isEditing
                                               ? TextField(
-                                                  controller: viewModel.nameController,
+                                                  controller:
+                                                      viewModel.nameController,
                                                   style: TextStyle(
                                                     fontSize: 20.sp,
                                                     fontWeight: FontWeight.bold,
-                                                    color: const Color(0xFF424242),
+                                                    color: const Color(
+                                                      0xFF424242,
+                                                    ),
                                                   ),
                                                   textAlign: TextAlign.center,
                                                   decoration: InputDecoration(
                                                     border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(8.r),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8.r,
+                                                          ),
                                                       borderSide: BorderSide(
-                                                        color: const Color(0xFFFF8A00),
+                                                        color: const Color(
+                                                          0xFFFF8A00,
+                                                        ),
                                                         width: 1.w,
                                                       ),
                                                     ),
-                                                    focusedBorder: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(8.r),
-                                                      borderSide: BorderSide(
-                                                        color: const Color(0xFFFF8A00),
-                                                        width: 2.w,
-                                                      ),
-                                                    ),
-                                                    contentPadding: EdgeInsets.symmetric(
-                                                      horizontal: 12.w,
-                                                      vertical: 8.h,
-                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8.r,
+                                                              ),
+                                                          borderSide: BorderSide(
+                                                            color: const Color(
+                                                              0xFFFF8A00,
+                                                            ),
+                                                            width: 2.w,
+                                                          ),
+                                                        ),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 12.w,
+                                                          vertical: 8.h,
+                                                        ),
                                                   ),
                                                 )
                                               : Text(
@@ -134,17 +191,22 @@ class AccountInformationPage extends StatelessWidget {
                                                   style: TextStyle(
                                                     fontSize: 20.sp,
                                                     fontWeight: FontWeight.bold,
-                                                    color: const Color(0xFF424242),
+                                                    color: const Color(
+                                                      0xFF424242,
+                                                    ),
                                                   ),
                                                 ),
                                         ),
                                       ),
-                                      
+
                                       // Edit Button (right side)
                                       GestureDetector(
-                                        onTap: viewModel.isEditing 
-                                            ? viewModel.saveChanges 
-                                            : () => _navigateToEditInformation(context, viewModel),
+                                        onTap: viewModel.isEditing
+                                            ? viewModel.saveChanges
+                                            : () => _navigateToEditInformation(
+                                                context,
+                                                viewModel,
+                                              ),
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 16.w,
@@ -152,7 +214,9 @@ class AccountInformationPage extends StatelessWidget {
                                           ),
                                           decoration: BoxDecoration(
                                             color: const Color(0xFF424242),
-                                            borderRadius: BorderRadius.circular(8.r),
+                                            borderRadius: BorderRadius.circular(
+                                              8.r,
+                                            ),
                                           ),
                                           child: viewModel.isLoading
                                               ? SizedBox(
@@ -160,11 +224,16 @@ class AccountInformationPage extends StatelessWidget {
                                                   height: 16.h,
                                                   child: const CircularProgressIndicator(
                                                     strokeWidth: 2,
-                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                          Color
+                                                        >(Colors.white),
                                                   ),
                                                 )
                                               : Text(
-                                                  viewModel.isEditing ? 'Save' : 'Edit',
+                                                  viewModel.isEditing
+                                                      ? 'Save'
+                                                      : 'Edit',
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14.sp,
@@ -175,9 +244,9 @@ class AccountInformationPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  
+
                                   SizedBox(height: 20.h),
-                                  
+
                                   // Email Field
                                   Container(
                                     width: double.infinity,
@@ -204,7 +273,8 @@ class AccountInformationPage extends StatelessWidget {
                                         if (viewModel.isEditing) ...[
                                           Flexible(
                                             child: TextField(
-                                              controller: viewModel.emailController,
+                                              controller:
+                                                  viewModel.emailController,
                                               style: TextStyle(
                                                 fontSize: 14.sp,
                                                 color: const Color(0xFF424242),
@@ -229,9 +299,9 @@ class AccountInformationPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  
+
                                   SizedBox(height: 12.h),
-                                  
+
                                   // Date of Birth and Location Row
                                   Row(
                                     children: [
@@ -244,7 +314,9 @@ class AccountInformationPage extends StatelessWidget {
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(12.r),
+                                            borderRadius: BorderRadius.circular(
+                                              12.r,
+                                            ),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -261,23 +333,32 @@ class AccountInformationPage extends StatelessWidget {
                                               if (viewModel.isEditing) ...[
                                                 Flexible(
                                                   child: TextField(
-                                                    controller: viewModel.dateOfBirthController,
+                                                    controller: viewModel
+                                                        .dateOfBirthController,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(0xFF424242),
+                                                      color: const Color(
+                                                        0xFF424242,
+                                                      ),
                                                     ),
-                                                    decoration: const InputDecoration(
-                                                      border: InputBorder.none,
-                                                    ),
+                                                    decoration:
+                                                        const InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
                                                   ),
                                                 ),
                                               ] else ...[
                                                 Flexible(
                                                   child: Text(
-                                                    viewModel.accountModel.dateOfBirth,
+                                                    viewModel
+                                                        .accountModel
+                                                        .dateOfBirth,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(0xFF424242),
+                                                      color: const Color(
+                                                        0xFF424242,
+                                                      ),
                                                     ),
                                                     maxLines: 1,
                                                   ),
@@ -287,9 +368,9 @@ class AccountInformationPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      
+
                                       SizedBox(width: 12.w),
-                                      
+
                                       // Location
                                       Expanded(
                                         child: Container(
@@ -299,7 +380,9 @@ class AccountInformationPage extends StatelessWidget {
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(12.r),
+                                            borderRadius: BorderRadius.circular(
+                                              12.r,
+                                            ),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -316,23 +399,32 @@ class AccountInformationPage extends StatelessWidget {
                                               if (viewModel.isEditing) ...[
                                                 Flexible(
                                                   child: TextField(
-                                                    controller: viewModel.locationController,
+                                                    controller: viewModel
+                                                        .locationController,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(0xFF424242),
+                                                      color: const Color(
+                                                        0xFF424242,
+                                                      ),
                                                     ),
-                                                    decoration: const InputDecoration(
-                                                      border: InputBorder.none,
-                                                    ),
+                                                    decoration:
+                                                        const InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
                                                   ),
                                                 ),
                                               ] else ...[
                                                 Flexible(
                                                   child: Text(
-                                                    viewModel.accountModel.location,
+                                                    viewModel
+                                                        .accountModel
+                                                        .location,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(0xFF424242),
+                                                      color: const Color(
+                                                        0xFF424242,
+                                                      ),
                                                     ),
                                                     maxLines: 1,
                                                   ),
@@ -347,15 +439,17 @@ class AccountInformationPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            
+
                             SizedBox(height: 16.h),
-                            
+
                             // Change Password Section
                             Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(20.w),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFF3C4), // Light yellow background
+                                color: const Color(
+                                  0xFFFFF3C4,
+                                ), // Light yellow background
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
                                   color: const Color(0xFFE0E0E0),
@@ -381,7 +475,8 @@ class AccountInformationPage extends StatelessWidget {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => _navigateToEditPassword(context),
+                                    onTap: () =>
+                                        _navigateToEditPassword(context),
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 16.w,
@@ -389,7 +484,9 @@ class AccountInformationPage extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF424242),
-                                        borderRadius: BorderRadius.circular(8.r),
+                                        borderRadius: BorderRadius.circular(
+                                          8.r,
+                                        ),
                                       ),
                                       child: Text(
                                         'Change Password',
@@ -404,13 +501,13 @@ class AccountInformationPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            
+
                             SizedBox(height: 20.h),
                           ],
                         ),
                       ),
                     ),
-                    
+
                     // Success message
                     if (viewModel.successMessage != null) ...[
                       Container(
@@ -419,7 +516,9 @@ class AccountInformationPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: Colors.green.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Text(
                           viewModel.successMessage!,
@@ -431,7 +530,7 @@ class AccountInformationPage extends StatelessWidget {
                         ),
                       ),
                     ],
-                    
+
                     // Error message
                     if (viewModel.errorMessage != null) ...[
                       Container(
@@ -440,14 +539,13 @@ class AccountInformationPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: Colors.red.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Text(
                           viewModel.errorMessage!,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 14.sp,
-                          ),
+                          style: TextStyle(color: Colors.red, fontSize: 14.sp),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -462,13 +560,61 @@ class AccountInformationPage extends StatelessWidget {
     );
   }
 
-  void _navigateToEditInformation(BuildContext context, AccountViewModel viewModel) {
-    AppRouter.navigateToEditInformation(
+  Widget _buildProfileImage(String imagePath) {
+    // Check if it's a local file path or a URL
+    if (imagePath.startsWith('http')) {
+      // It's a URL, use NetworkImage
+      return Image.network(
+        imagePath,
+        width: 100.w,
+        height: 100.h,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.person, size: 50, color: Color(0xFF9E9E9E));
+        },
+      );
+    } else if (imagePath.startsWith('/')) {
+      // It's a relative URL from API, convert to full URL
+      final fullUrl = 'http://10.10.13.36$imagePath';
+      return Image.network(
+        fullUrl,
+        width: 100.w,
+        height: 100.h,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.person, size: 50, color: Color(0xFF9E9E9E));
+        },
+      );
+    } else {
+      // It's a local file path, use Image.file
+      return Image.file(
+        File(imagePath),
+        width: 100.w,
+        height: 100.h,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.person, size: 50, color: Color(0xFF9E9E9E));
+        },
+      );
+    }
+  }
+
+  void _navigateToEditInformation(
+    BuildContext context,
+    AccountViewModel viewModel,
+  ) async {
+    final result = await AppRouter.navigateToEditInformation(
       name: viewModel.accountModel.name,
       email: viewModel.accountModel.email,
       birthDate: viewModel.accountModel.dateOfBirth,
       city: viewModel.accountModel.location,
+      profileImagePath: viewModel.accountModel.profileImagePath,
     );
+
+    // Refresh account data when returning from edit page
+    if (mounted) {
+      await _loadAccountData();
+    }
   }
 
   void _navigateToEditPassword(BuildContext context) {

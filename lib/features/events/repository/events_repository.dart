@@ -1,10 +1,16 @@
 import '../model/events_model.dart';
+import '../model/event_model.dart';
+import '../../../api/auth_api_service.dart';
+import '../../../shared/utils/datetime_helper.dart';
+import 'package:intl/intl.dart';
 
 class EventsRepository {
+  final AuthApiService _apiService = AuthApiService();
+
   Future<List<EventItem>> getEvents() async {
     // Simulate API call
     await Future.delayed(const Duration(seconds: 1));
-    
+
     return [
       EventItem(
         id: '1',
@@ -98,5 +104,163 @@ class EventsRepository {
         category: 'Past',
       ),
     ];
+  }
+
+  Future<List<EventItem>> getTodayEvents() async {
+    try {
+      final response = await _apiService.getTodayEvents();
+
+      if (response == null || response['success'] != true) {
+        throw Exception(
+          response?['error'] ?? 'Failed to fetch today\'s events',
+        );
+      }
+
+      final List<dynamic> eventsData = response['events'] ?? [];
+
+      if (eventsData.isEmpty) {
+        return [];
+      }
+
+      // Convert API response to EventModel objects
+      final List<EventModel> eventModels = eventsData
+          .map((json) => EventModel.fromJson(json))
+          .toList();
+
+      // Filter events that are active (show all active events regardless of status)
+      final filteredEvents = eventModels
+          .where((event) => event.isActive)
+          .toList();
+
+      // Convert EventModel to EventItem
+      return filteredEvents
+          .map((event) => _convertToEventItem(event, 'Today'))
+          .toList();
+    } catch (e) {
+      print('Error in getTodayEvents: $e');
+      throw Exception('Failed to load today\'s events: $e');
+    }
+  }
+
+  Future<List<EventItem>> getUpcomingEvents() async {
+    try {
+      final response = await _apiService.getUpcomingEvents();
+
+      if (response == null || response['success'] != true) {
+        throw Exception(
+          response?['error'] ?? 'Failed to fetch upcoming events',
+        );
+      }
+
+      final List<dynamic> eventsData = response['events'] ?? [];
+
+      if (eventsData.isEmpty) {
+        return [];
+      }
+
+      // Convert API response to EventModel objects
+      final List<EventModel> eventModels = eventsData
+          .map((json) => EventModel.fromJson(json))
+          .toList();
+
+      // Filter events that are active
+      final filteredEvents = eventModels
+          .where((event) => event.isActive)
+          .toList();
+
+      // Convert EventModel to EventItem with 'Upcoming' category
+      return filteredEvents
+          .map((event) => _convertToEventItem(event, 'Upcoming'))
+          .toList();
+    } catch (e) {
+      print('Error in getUpcomingEvents: $e');
+      throw Exception('Failed to load upcoming events: $e');
+    }
+  }
+
+  Future<List<EventItem>> getPastEvents() async {
+    try {
+      final response = await _apiService.getPastEvents();
+
+      if (response == null || response['success'] != true) {
+        throw Exception(response?['error'] ?? 'Failed to fetch past events');
+      }
+
+      final List<dynamic> eventsData = response['events'] ?? [];
+
+      if (eventsData.isEmpty) {
+        return [];
+      }
+
+      // Convert API response to EventModel objects
+      final List<EventModel> eventModels = eventsData
+          .map((json) => EventModel.fromJson(json))
+          .toList();
+
+      // Filter events that are active
+      final filteredEvents = eventModels
+          .where((event) => event.isActive)
+          .toList();
+
+      // Convert EventModel to EventItem with 'Past' category
+      return filteredEvents
+          .map((event) => _convertToEventItem(event, 'Past'))
+          .toList();
+    } catch (e) {
+      print('Error in getPastEvents: $e');
+      throw Exception('Failed to load past events: $e');
+    }
+  }
+
+  EventItem _convertToEventItem(EventModel event, String category) {
+    // Format booth fee
+    final formattedCost = '\$${event.boothFee.toString()}';
+
+    // Create status list based on payment and approval
+    final List<String> statusList = [];
+    if (event.status == 'APP') {
+      statusList.add('Approved');
+    } else if (event.status == 'PEN') {
+      statusList.add('Pending');
+    } else if (event.status == 'DEN') {
+      statusList.add('Denied');
+    }
+
+    if (event.paid) {
+      statusList.add('Paid');
+    } else {
+      statusList.add('Unpaid');
+    }
+
+    // Format date for display
+    String displayDate;
+    try {
+      final parsedDate = DateTime.parse(event.date);
+      displayDate = DateFormat(
+        'MMMM d',
+      ).format(parsedDate); // e.g., "September 22"
+    } catch (e) {
+      // If parsing fails, try to use the raw date or fallback to current date
+      displayDate = event.date.isNotEmpty
+          ? event.date
+          : DateFormat('MMMM d').format(DateTime.now());
+    }
+
+    return EventItem(
+      id: event.id?.toString() ?? '0',
+      title: event.eventName,
+      location: event.address,
+      boothSize: event.boothSize,
+      spaceNumber: event.boothSpace.replaceFirst(
+        '#',
+        '',
+      ), // Remove # prefix if present
+      cost: formattedCost,
+      startTime: event.startTimeUi,
+      endTime: event.endTimeUi,
+      date: displayDate,
+      status: statusList,
+      category: category,
+    );
   }
 }

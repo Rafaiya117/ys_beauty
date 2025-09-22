@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../viewmodel/finances_viewmodel.dart';
 import '../../../shared/constants/app_constants.dart';
 import '../../../shared/widgets/global_drawer.dart';
@@ -37,19 +36,19 @@ class FinancesPage extends StatelessWidget {
                     children: [
                       // Header with profile, greeting, and icons
                       _buildHeader(context),
-                      
+
                       SizedBox(height: 20.h),
-                      
+
                       // Financial summary cards
                       _buildFinancialSummaryCards(viewModel),
-                      
+
                       SizedBox(height: 20.h),
-                      
+
                       // Navigation tabs
                       _buildNavigationTabs(viewModel),
-                      
+
                       SizedBox(height: 20.h),
-                      
+
                       // Content based on selected tab
                       _buildTabContent(viewModel),
                     ],
@@ -72,19 +71,12 @@ class FinancesPage extends StatelessWidget {
           Container(
             width: 40.w,
             height: 40.h,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person,
-              size: 24.sp,
-              color: Colors.white,
-            ),
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            child: Image.asset(AppConstants.profileImagePath),
           ),
-          
+
           SizedBox(width: 16.w),
-          
+
           // Greeting text
           Expanded(
             child: Column(
@@ -111,7 +103,7 @@ class FinancesPage extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Notification and menu icons
           Row(
             children: [
@@ -153,11 +145,10 @@ class FinancesPage extends StatelessWidget {
               title: 'Total Sales',
               amount: '\$${viewModel.totalSales.toStringAsFixed(2)}',
               subtitle: 'Gross revenue',
-              iconPath: AppConstants.totalSalesIconPath,
-              gradientColors: [
-                const Color(0xFFE8F5E8),
-                const Color(0xFFF1F8E9),
-              ],
+              icon: Icons.bar_chart,
+              backgroundColor: const Color(0xFFE6FFF3),
+              borderColor: const Color(0xFF75FFBC),
+
             ),
           ),
           SizedBox(width: 8.w),
@@ -166,11 +157,9 @@ class FinancesPage extends StatelessWidget {
               title: 'Total Expenses',
               amount: '\$${viewModel.totalExpenses.toStringAsFixed(2)}',
               subtitle: 'Operating costs',
-              iconPath: AppConstants.totalExpensesIconPath,
-              gradientColors: [
-                const Color(0xFFFCE4EC),
-                const Color(0xFFF8BBD9),
-              ],
+              icon: Icons.money_off,
+              backgroundColor: const Color(0xFFFFE1E1),
+              borderColor: const Color(0xFFFF8181),
             ),
           ),
           SizedBox(width: 8.w),
@@ -179,11 +168,9 @@ class FinancesPage extends StatelessWidget {
               title: 'Booth Fees',
               amount: '\$${viewModel.boothFees.toStringAsFixed(2)}',
               subtitle: 'Event costs',
-              iconPath: AppConstants.boothFeesIconPath,
-              gradientColors: [
-                const Color(0xFFFFF9C4),
-                const Color(0xFFFFF176),
-              ],
+              icon: Icons.storefront,
+              backgroundColor: const Color(0xFFFFF6DB),
+              borderColor: const Color(0xFFFFDE7D),
             ),
           ),
           SizedBox(width: 8.w),
@@ -192,11 +179,9 @@ class FinancesPage extends StatelessWidget {
               title: 'Net Profit',
               amount: '\$${viewModel.netProfit.toStringAsFixed(2)}',
               subtitle: 'Profit margin',
-              iconPath: AppConstants.netProfitIconPath,
-              gradientColors: [
-                const Color(0xFFE3F2FD),
-                const Color(0xFFBBDEFB),
-              ],
+              icon: Icons.account_balance_wallet,
+              backgroundColor: const Color(0xFFEAEFFF),
+              borderColor: const Color(0xFF80D0FF),
             ),
           ),
         ],
@@ -208,8 +193,9 @@ class FinancesPage extends StatelessWidget {
     required String title,
     required String amount,
     required String subtitle,
-    required String iconPath,
-    required List<Color> gradientColors,
+    required IconData icon,
+    required Color backgroundColor,
+    required Color borderColor,
   }) {
     // Determine icon color based on card type
     Color iconColor;
@@ -223,28 +209,27 @@ class FinancesPage extends StatelessWidget {
       iconColor = const Color(0xFF2196F3);
     }
 
-// ignore: avoid_unnecessary_containers
     return Container(
-      height: 110.h, // Increased height to prevent overflow
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      width: 77.w,
+      height: 80.h,
+      decoration: ShapeDecoration(
+        color: backgroundColor,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 0.50, color: borderColor),
+          borderRadius: BorderRadius.circular(10),
         ),
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
+        shadows: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
         ],
       ),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,22 +239,14 @@ class FinancesPage extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 8.sp,
+                    fontSize: 9.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
               ),
               SizedBox(width: 4.w),
-              SvgPicture.asset(
-                iconPath,
-                width: 12.w,
-                height: 10.h,
-                colorFilter: ColorFilter.mode(
-                  iconColor,
-                  BlendMode.srcIn,
-                ),
-              ),
+              Icon(icon, size: 16.sp, color: iconColor),
             ],
           ),
           Column(
@@ -283,12 +260,12 @@ class FinancesPage extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 2.h),
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 9.sp,
-                  color: Colors.black.withValues(alpha: 0.7),
+                  fontSize: 8.sp,
+                  color: Colors.black.withOpacity(0.7),
                 ),
               ),
             ],
@@ -298,115 +275,228 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
+  // Widget _buildNavigationTabs(FinancesViewModel viewModel) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 10.w),
+  //     padding: EdgeInsets.all(8.w),
+  //     height: 60.h, // Reduced height for horizontal layout
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFFFFF8E1),
+  //       borderRadius: BorderRadius.circular(16.r), // Match card border radius
+  //       border: Border.all(
+  //         color: const Color(0xFFF8BBD9),
+  //         width: 1.w,
+  //       ),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withValues(alpha: 0.05),
+  //           blurRadius: 8.r,
+  //           offset: Offset(0, 2.h),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Overview',
+  //             Icons.grid_view,
+  //             0,
+  //             viewModel.selectedTabIndex == 0,
+  //             () => viewModel.selectTab(0),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Booth Fees',
+  //             Icons.storefront,
+  //             1,
+  //             viewModel.selectedTabIndex == 1,
+  //             () => viewModel.selectTab(1),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Sales',
+  //             Icons.trending_up,
+  //             2,
+  //             viewModel.selectedTabIndex == 2,
+  //             () => viewModel.selectTab(2),
+  //           ),
+  //         ),
+  //         SizedBox(width: 8.w),
+  //         Expanded(
+  //           child: _buildTab(
+  //             'Expenses',
+  //             Icons.account_balance_wallet,
+  //             3,
+  //             viewModel.selectedTabIndex == 3,
+  //             () => viewModel.selectTab(3),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
+  // Widget _buildTab(
+  //   String title,
+  //   IconData icon,
+  //   int index,
+  //   bool isSelected,
+  //   VoidCallback onTap,
+  // ) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+  //       decoration: BoxDecoration(
+  //         color: isSelected ? const Color(0xFFFFF3C4) : Colors.white,
+  //         borderRadius: BorderRadius.circular(16.r), // Match card border radius
+  //         border: Border.all(
+  //           color: isSelected ? const Color(0xFFFF8A00) : const Color(0xFFE0E0E0),
+  //           width: 1.w,
+  //         ),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black.withValues(alpha: 0.05),
+  //             blurRadius: 8.r,
+  //             offset: Offset(0, 2.h),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Icon(
+  //             icon,
+  //             size: 14.sp,
+  //             color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+  //           ),
+  //           SizedBox(width: 6.w),
+  //           Flexible(
+  //             child: Text(
+  //               title,
+  //               style: TextStyle(
+  //                 fontSize: 11.sp,
+  //                 fontWeight: FontWeight.w500,
+  //                 color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+  //               ),
+  //               textAlign: TextAlign.center,
+  //               overflow: TextOverflow.visible,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-Widget _buildNavigationTabs(FinancesViewModel viewModel) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 5.w),
-    padding: EdgeInsets.all(8.w),
-    height: 55.h,
-    decoration: BoxDecoration(
-      color: const Color(0xFFFFE8E8),
-      borderRadius: BorderRadius.circular(30.r),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: _buildTab(
-            'Overview',
-            Icons.grid_view_rounded,
-            0,
-            viewModel.selectedTabIndex == 0,
-            () => viewModel.selectTab(0),
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: _buildTab(
-            'Booth Fees',
-            Icons.storefront_outlined, // closer to screenshot
-            1,
-            viewModel.selectedTabIndex == 1,
-            () => viewModel.selectTab(1),
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: _buildTab(
-            'Sales',
-            Icons.show_chart, // bar chart style
-            2,
-            viewModel.selectedTabIndex == 2,
-            () => viewModel.selectTab(2),
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: _buildTab(
-            'Expenses',
-            Icons.attach_money, // cash icon
-            3,
-            viewModel.selectedTabIndex == 3,
-            () => viewModel.selectTab(3),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildTab(
-  String title,
-  IconData icon,
-  int index,
-  bool isSelected,
-  VoidCallback onTap,
-) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+  Widget _buildNavigationTabs(FinancesViewModel viewModel) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      padding: EdgeInsets.all(8.w),
+      height: 55.h,
       decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFFFFE58A) : Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 6.r,
-            offset: Offset(0, 3.h),
-          ),
-        ],
+        color: const Color(0xFFFFE8E8),
+        borderRadius: BorderRadius.circular(30.r),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 16.sp,
-            color: isSelected ? Colors.black : Colors.black87,
+          Expanded(
+            child: _buildTab(
+              'Overview',
+              Icons.grid_view_rounded,
+              0,
+              viewModel.selectedTabIndex == 0,
+                  () => viewModel.selectTab(0),
+            ),
           ),
-          SizedBox(width: 3.w),
-          Flexible(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 8.sp,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.black : Colors.black87,
-              ),
-              overflow: TextOverflow.ellipsis,
+          SizedBox(width: 8.w),
+          Expanded(
+            child: _buildTab(
+              'Booth Fees',
+              Icons.storefront_outlined, // closer to screenshot
+              1,
+              viewModel.selectedTabIndex == 1,
+                  () => viewModel.selectTab(1),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: _buildTab(
+              'Sales',
+              Icons.show_chart, // bar chart style
+              2,
+              viewModel.selectedTabIndex == 2,
+                  () => viewModel.selectTab(2),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: _buildTab(
+              'Expenses',
+              Icons.attach_money, // cash icon
+              3,
+              viewModel.selectedTabIndex == 3,
+                  () => viewModel.selectTab(3),
             ),
           ),
         ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-
-
-
-
+  Widget _buildTab(
+      String title,
+      IconData icon,
+      int index,
+      bool isSelected,
+      VoidCallback onTap,
+      ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFFFE58A) : Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 6.r,
+              offset: Offset(0, 3.h),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16.sp,
+              color: isSelected ? Colors.black : Colors.black87,
+            ),
+            SizedBox(width: 3.w),
+            Flexible(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 8.sp,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? Colors.black : Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildTabContent(FinancesViewModel viewModel) {
     switch (viewModel.selectedTabIndex) {
@@ -438,9 +528,9 @@ Widget _buildTab(
               color: const Color(0xFF424242),
             ),
           ),
-          
+
           SizedBox(height: 16.h),
-          
+
           // Chart
           Container(
             height: 200.h,
@@ -563,7 +653,8 @@ Widget _buildTab(
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
-                        if (index == 6) { // July - highlighted
+                        if (index == 6) {
+                          // July - highlighted
                           return FlDotCirclePainter(
                             radius: 6.r,
                             color: Colors.black,
@@ -609,9 +700,9 @@ Widget _buildTab(
               ),
             ),
           ),
-          
+
           SizedBox(height: 24.h),
-          
+
           // Event History
           _buildEventHistory(viewModel),
         ],
@@ -647,22 +738,19 @@ Widget _buildTab(
             ),
           ],
         ),
-        
+
         SizedBox(height: 16.h),
-        
+
         // Event cards
         Column(
           children: viewModel.eventHistory.map((event) {
             return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              padding: EdgeInsets.all(16.w),
+              margin: EdgeInsets.only(bottom: 10.h),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF3C4),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: const Color(0xFFE0E0E0),
-                  width: 1.w,
-                ),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
               ),
               child: Row(
                 children: [
@@ -673,16 +761,16 @@ Widget _buildTab(
                         Text(
                           event.title,
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF424242),
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 2.h),
                         Text(
                           event.date,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 12.sp,
                             color: const Color(0xFF757575),
                           ),
                         ),
@@ -693,18 +781,19 @@ Widget _buildTab(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
+                        onTap: () =>
+                            AppRouter.navigateToFinancesView(eventId: event.id),
                         child: Icon(
                           Icons.visibility,
-                          size: 20.sp,
+                          size: 18.sp,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 2.h),
                       Text(
                         '\$${event.amount.toStringAsFixed(0)}',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -737,9 +826,9 @@ Widget _buildTab(
                   color: const Color(0xFF424242),
                 ),
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Form Input Fields
               _buildInputField(
                 icon: Icons.event,
@@ -747,34 +836,34 @@ Widget _buildTab(
                 controller: viewModel.boothEventController,
                 isRequired: true,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.calendar_today,
                 hintText: 'Enter Date',
                 controller: viewModel.boothDateController,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.aspect_ratio,
                 hintText: 'Enter Booth Size',
                 controller: viewModel.boothSizeController,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.storefront,
                 hintText: 'Enter Booth Fee',
                 controller: viewModel.boothFeeController,
                 keyboardType: TextInputType.number,
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Add Booth Fee Button
               _buildActionButton(
                 title: 'Add Booth Fee',
@@ -807,9 +896,9 @@ Widget _buildTab(
                   color: const Color(0xFF424242),
                 ),
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Form Input Fields
               _buildInputField(
                 icon: Icons.event,
@@ -817,26 +906,26 @@ Widget _buildTab(
                 controller: viewModel.salesEventController,
                 isRequired: true,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.calendar_today,
                 hintText: 'Enter Date',
                 controller: viewModel.salesDateController,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.attach_money,
                 hintText: 'Enter Gross sales',
                 controller: viewModel.salesAmountController,
                 keyboardType: TextInputType.number,
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Record Sale Button
               _buildActionButton(
                 title: 'Record Sale',
@@ -869,9 +958,9 @@ Widget _buildTab(
                   color: const Color(0xFF424242),
                 ),
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Form Input Fields
               _buildInputField(
                 icon: Icons.event,
@@ -879,26 +968,26 @@ Widget _buildTab(
                 controller: viewModel.expensesEventController,
                 isRequired: true,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.calendar_today,
                 hintText: 'Enter Date',
                 controller: viewModel.expensesDateController,
               ),
-              
+
               SizedBox(height: 12.h),
-              
+
               _buildInputField(
                 icon: Icons.receipt,
                 hintText: 'Enter Expenses',
                 controller: viewModel.expensesAmountController,
                 keyboardType: TextInputType.number,
               ),
-              
+
               SizedBox(height: 20.h),
-              
+
               // Add Expenses Button
               _buildActionButton(
                 title: 'Add Expenses',
@@ -927,10 +1016,7 @@ Widget _buildTab(
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -938,11 +1024,7 @@ Widget _buildTab(
           Stack(
             alignment: Alignment.center,
             children: [
-              Icon(
-                icon,
-                size: 18.sp,
-                color: const Color(0xFF424242),
-              ),
+              Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
               if (isRequired)
                 Positioned(
                   right: -2,
@@ -1009,11 +1091,7 @@ Widget _buildTab(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  icon,
-                  color: Colors.black,
-                  size: 20.sp,
-                ),
+                Icon(icon, color: Colors.black, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
                   title,

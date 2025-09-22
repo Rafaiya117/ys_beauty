@@ -4,7 +4,7 @@ import '../repository/events_repository.dart';
 
 class EventsViewModel extends ChangeNotifier {
   final EventsRepository _repository = EventsRepository();
-  
+
   EventsModel _model = EventsModel();
   EventsModel get model => _model;
 
@@ -21,37 +21,73 @@ class EventsViewModel extends ChangeNotifier {
   TextEditingController get searchController => _searchController;
 
   List<EventItem> get filteredEvents {
-    List<EventItem> filtered = events.where((event) => event.category == selectedTab).toList();
-    
-    if (searchQuery.isNotEmpty) {
-      filtered = filtered.where((event) => 
-        event.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        event.location.toLowerCase().contains(searchQuery.toLowerCase())
-      ).toList();
+    List<EventItem> filtered;
+
+    if (selectedTab == 'Today' ||
+        selectedTab == 'Upcoming' ||
+        selectedTab == 'Past') {
+      // For Today, Upcoming, and Past tabs, events are already filtered from API
+      filtered = events;
+    } else {
+      // For other tabs, filter by category
+      filtered = events
+          .where((event) => event.category == selectedTab)
+          .toList();
     }
-    
+
+    if (searchQuery.isNotEmpty) {
+      filtered = filtered
+          .where(
+            (event) =>
+                event.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                event.location.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ),
+          )
+          .toList();
+    }
+
     return filtered;
   }
 
   Future<void> loadEvents() async {
     _updateModel(_model.copyWith(isLoading: true, errorMessage: null));
-    
+
     try {
-      final events = await _repository.getEvents();
-      _updateModel(_model.copyWith(
-        isLoading: false,
-        events: events,
-      ));
+      List<EventItem> events;
+
+      if (selectedTab == 'Today') {
+        // Load today's events from API
+        events = await _repository.getTodayEvents();
+      } else if (selectedTab == 'Upcoming') {
+        // Load upcoming events from API
+        events = await _repository.getUpcomingEvents();
+      } else if (selectedTab == 'Past') {
+        // Load past events from API
+        events = await _repository.getPastEvents();
+      } else {
+        // Fallback to dummy events for unknown tabs
+        final allEvents = await _repository.getEvents();
+        events = allEvents
+            .where((event) => event.category == selectedTab)
+            .toList();
+      }
+
+      _updateModel(_model.copyWith(isLoading: false, events: events));
     } catch (e) {
-      _updateModel(_model.copyWith(
-        isLoading: false,
-        errorMessage: 'Failed to load events: ${e.toString()}',
-      ));
+      _updateModel(
+        _model.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to load events: ${e.toString()}',
+        ),
+      );
     }
   }
 
   void setSelectedTab(String tab) {
     _updateModel(_model.copyWith(selectedTab: tab));
+    // Reload events when tab changes to get fresh data for Today tab
+    loadEvents();
   }
 
   void setSearchQuery(String query) {

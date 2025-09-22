@@ -5,7 +5,7 @@ import '../../../core/router.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository _repository = AuthRepository();
-  
+
   late LoginModel _loginModel;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -68,22 +68,27 @@ class LoginViewModel extends ChangeNotifier {
       return;
     }
 
-    _loginModel = _loginModel.copyWith(isEmailLoginLoading: true, errorMessage: null);
+    _loginModel = _loginModel.copyWith(
+      isEmailLoginLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
-      final success = await _repository.loginWithEmailAndPassword(
+      final result = await _repository.loginWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
-      if (success) {
+
+      if (result['success'] == true) {
         // Navigate to main screen or dashboard
         AppRouter.navigateToMain();
       } else {
+        final errorMessage =
+            result['error'] ?? 'Login failed. Please try again.';
         _loginModel = _loginModel.copyWith(
           isEmailLoginLoading: false,
-          errorMessage: 'Invalid email or password. Please try again.',
+          errorMessage: errorMessage,
         );
         notifyListeners();
       }
@@ -97,12 +102,15 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   Future<void> googleLogin() async {
-    _loginModel = _loginModel.copyWith(isGoogleLoginLoading: true, errorMessage: null);
+    _loginModel = _loginModel.copyWith(
+      isGoogleLoginLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
       final success = await _repository.googleLogin();
-      
+
       if (success) {
         // Navigate to main screen or dashboard
         AppRouter.navigateToMain();
@@ -116,7 +124,8 @@ class LoginViewModel extends ChangeNotifier {
     } catch (e) {
       _loginModel = _loginModel.copyWith(
         isGoogleLoginLoading: false,
-        errorMessage: 'An error occurred during Google login. Please try again.',
+        errorMessage:
+            'An error occurred during Google login. Please try again.',
       );
       notifyListeners();
     }

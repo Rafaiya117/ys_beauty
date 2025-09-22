@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../model/edit_information_model.dart';
-import '../repository/edit_information_repository.dart';
+import '../model/profile_model.dart';
+import '../repository/profile_repository.dart';
 import '../../../core/router.dart';
 
 class EditInformationViewModel extends ChangeNotifier {
   late EditInformationModel _editInformationModel;
-  final EditInformationRepository _editInformationRepository = EditInformationRepository();
+  final ProfileRepository _profileRepository = ProfileRepository();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
@@ -17,12 +18,14 @@ class EditInformationViewModel extends ChangeNotifier {
     String? email,
     String? birthDate,
     String? city,
+    String? profileImagePath,
   }) {
     _initializeData(
       name: name,
       email: email,
       birthDate: birthDate,
       city: city,
+      profileImagePath: profileImagePath,
     );
   }
 
@@ -41,12 +44,14 @@ class EditInformationViewModel extends ChangeNotifier {
     String? email,
     String? birthDate,
     String? city,
+    String? profileImagePath,
   }) {
     _editInformationModel = EditInformationModel(
       name: name ?? 'Nicolas Smith',
       email: email ?? 'nicolassmith1234@gmail.com',
       birthDate: birthDate ?? 'Mar 11, 1993',
       city: city ?? 'Colorado',
+      profileImagePath: profileImagePath,
     );
     _nameController.text = _editInformationModel.name;
     _emailController.text = _editInformationModel.email;
@@ -67,60 +72,66 @@ class EditInformationViewModel extends ChangeNotifier {
   // Save changes
   Future<void> saveChanges() async {
     if (_nameController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty ||
-        _birthDateController.text.trim().isEmpty ||
-        _cityController.text.trim().isEmpty) {
+        _emailController.text.trim().isEmpty) {
       _editInformationModel = _editInformationModel.copyWith(
-        errorMessage: 'Please fill in all fields',
+        errorMessage: 'Name and Email are required',
       );
       notifyListeners();
       return;
     }
 
-    _editInformationModel = _editInformationModel.copyWith(isLoading: true);
+    // Basic email validation
+    if (!RegExp(
+      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+    ).hasMatch(_emailController.text.trim())) {
+      _editInformationModel = _editInformationModel.copyWith(
+        errorMessage: 'Please enter a valid email address',
+      );
+      notifyListeners();
+      return;
+    }
+
+    _editInformationModel = _editInformationModel.copyWith(
+      isLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
-      // Validate email format
-      final isEmailValid = await _editInformationRepository.validateEmail(_emailController.text.trim());
-      if (!isEmailValid) {
-        _editInformationModel = _editInformationModel.copyWith(
-          isLoading: false,
-          errorMessage: 'Please enter a valid email address',
-        );
-        notifyListeners();
-        return;
-      }
-
-      // Check if email is available
-      final isEmailAvailable = await _editInformationRepository.isEmailAvailable(_emailController.text.trim());
-      if (!isEmailAvailable) {
-        _editInformationModel = _editInformationModel.copyWith(
-          isLoading: false,
-          errorMessage: 'This email address is already taken',
-        );
-        notifyListeners();
-        return;
-      }
-
-      // Update user information
-      final updatedInfo = await _editInformationRepository.updateUserInformation(
-        name: _nameController.text.trim(),
+      // Create updated profile model
+      final updatedProfile = ProfileModel(
+        firstName: _nameController.text.trim(),
         email: _emailController.text.trim(),
-        birthDate: _birthDateController.text.trim(),
-        city: _cityController.text.trim(),
-        profileImagePath: _editInformationModel.profileImagePath,
+        city: _cityController.text.trim().isEmpty
+            ? null
+            : _cityController.text.trim(),
+        dateOfBirth: _birthDateController.text.trim().isEmpty
+            ? null
+            : _birthDateController.text.trim(),
+        profilePhoto: _editInformationModel.profileImagePath,
+        phone: null, // Phone is not in edit information form
       );
-      
-      _editInformationModel = updatedInfo.copyWith(
+
+      // Update profile via API
+      final result = await _profileRepository.updateUserProfile(updatedProfile);
+
+      _editInformationModel = EditInformationModel(
+        name: result.firstName,
+        email: result.email,
+        birthDate: result.dateOfBirth ?? '',
+        city: result.city ?? '',
+        profileImagePath: result.profilePhoto,
         isLoading: false,
         successMessage: 'Information updated successfully!',
       );
+
+      print('Profile updated successfully: $result');
     } catch (e) {
       _editInformationModel = _editInformationModel.copyWith(
         isLoading: false,
         errorMessage: e.toString().replaceFirst('Exception: ', ''),
       );
+      print('Profile update error: ${e.toString()}');
     }
     notifyListeners();
 
@@ -137,66 +148,40 @@ class EditInformationViewModel extends ChangeNotifier {
     AppRouter.goBack();
   }
 
-  // Change profile picture
-  Future<void> changeProfilePicture() async {
-    _editInformationModel = _editInformationModel.copyWith(isLoading: true);
-    notifyListeners();
-
-    try {
-      // In a real app, you would get the image path from image picker
-      const mockImagePath = 'assets/profile_images/user_profile.jpg';
-      final imageUrl = await _editInformationRepository.updateProfilePicture(mockImagePath);
-      
-      _editInformationModel = _editInformationModel.copyWith(
-        profileImagePath: imageUrl,
-        isLoading: false,
-        successMessage: 'Profile picture updated successfully!',
-      );
-    } catch (e) {
-      _editInformationModel = _editInformationModel.copyWith(
-        isLoading: false,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
-      );
-    }
-    notifyListeners();
-    
-    // Clear message after 3 seconds
-    if (_editInformationModel.successMessage != null) {
-      Future.delayed(const Duration(seconds: 3), () {
-        clearSuccess();
-      });
-    }
-  }
-
   // Update profile picture with selected image
   Future<void> updateProfilePicture(String imagePath) async {
-    _editInformationModel = _editInformationModel.copyWith(isLoading: true);
+    _editInformationModel = _editInformationModel.copyWith(
+      isLoading: true,
+      errorMessage: null,
+    );
     notifyListeners();
 
     try {
-      // First, store the local file path to show the image immediately
+      // Upload the image to the API
+      final profilePhotoUrl = await _profileRepository.uploadProfilePicture(
+        imagePath,
+      );
+
+      // Store the uploaded URL from API response
       _editInformationModel = _editInformationModel.copyWith(
-        profileImagePath: imagePath,
+        profileImagePath: profilePhotoUrl,
         isLoading: false,
         successMessage: 'Profile picture updated successfully!',
       );
       notifyListeners();
-      
-      // Then upload to server (simulated)
-      final imageUrl = await _editInformationRepository.updateProfilePicture(imagePath);
-      
-      // Update with server URL if needed (for future use)
-      _editInformationModel = _editInformationModel.copyWith(
-        profileImagePath: imagePath, // Keep local path for display
-      );
+
+      print('Profile picture uploaded successfully: $profilePhotoUrl');
     } catch (e) {
+      // If API upload fails, store the local file path temporarily
       _editInformationModel = _editInformationModel.copyWith(
+        profileImagePath: imagePath,
         isLoading: false,
         errorMessage: e.toString().replaceFirst('Exception: ', ''),
       );
+      print('Profile picture upload failed: ${e.toString()}');
     }
     notifyListeners();
-    
+
     // Clear message after 3 seconds
     if (_editInformationModel.successMessage != null) {
       Future.delayed(const Duration(seconds: 3), () {
@@ -208,7 +193,9 @@ class EditInformationViewModel extends ChangeNotifier {
   // Clear error message
   void clearError() {
     if (_editInformationModel.errorMessage != null) {
-      _editInformationModel = _editInformationModel.copyWith(errorMessage: null);
+      _editInformationModel = _editInformationModel.copyWith(
+        errorMessage: null,
+      );
       notifyListeners();
     }
   }
@@ -216,7 +203,9 @@ class EditInformationViewModel extends ChangeNotifier {
   // Clear success message
   void clearSuccess() {
     if (_editInformationModel.successMessage != null) {
-      _editInformationModel = _editInformationModel.copyWith(successMessage: null);
+      _editInformationModel = _editInformationModel.copyWith(
+        successMessage: null,
+      );
       notifyListeners();
     }
   }

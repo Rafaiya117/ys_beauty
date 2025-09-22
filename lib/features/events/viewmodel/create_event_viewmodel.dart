@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../model/create_event_model.dart';
+import '../model/event_model.dart';
 import '../repository/create_event_repository.dart';
+import '../../../core/router.dart';
+import '../../../shared/utils/datetime_helper.dart';
 
 class CreateEventViewModel extends ChangeNotifier {
   final CreateEventRepository _repository = CreateEventRepository();
-  
+
   late CreateEventModel _createEventModel;
-  
+
   // Text controllers
   final TextEditingController eventController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
@@ -50,22 +53,30 @@ class CreateEventViewModel extends ChangeNotifier {
   }
 
   void _updateLocation() {
-    _createEventModel = _createEventModel.copyWith(location: locationController.text);
+    _createEventModel = _createEventModel.copyWith(
+      location: locationController.text,
+    );
     notifyListeners();
   }
 
   void _updateBoothFee() {
-    _createEventModel = _createEventModel.copyWith(boothFee: boothFeeController.text);
+    _createEventModel = _createEventModel.copyWith(
+      boothFee: boothFeeController.text,
+    );
     notifyListeners();
   }
 
   void _updateBoothSize() {
-    _createEventModel = _createEventModel.copyWith(boothSize: boothSizeController.text);
+    _createEventModel = _createEventModel.copyWith(
+      boothSize: boothSizeController.text,
+    );
     notifyListeners();
   }
 
   void _updateSpaceNumber() {
-    _createEventModel = _createEventModel.copyWith(spaceNumber: spaceNumberController.text);
+    _createEventModel = _createEventModel.copyWith(
+      spaceNumber: spaceNumberController.text,
+    );
     notifyListeners();
   }
 
@@ -75,12 +86,16 @@ class CreateEventViewModel extends ChangeNotifier {
   }
 
   void _updateReminder() {
-    _createEventModel = _createEventModel.copyWith(reminder: reminderController.text);
+    _createEventModel = _createEventModel.copyWith(
+      reminder: reminderController.text,
+    );
     notifyListeners();
   }
 
   void _updateDescription() {
-    _createEventModel = _createEventModel.copyWith(description: descriptionController.text);
+    _createEventModel = _createEventModel.copyWith(
+      description: descriptionController.text,
+    );
     notifyListeners();
   }
 
@@ -106,24 +121,43 @@ class CreateEventViewModel extends ChangeNotifier {
 
   Future<void> saveEvent() async {
     if (_validateForm()) {
-      _createEventModel = _createEventModel.copyWith(isLoading: true, errorMessage: null);
+      _createEventModel = _createEventModel.copyWith(
+        isLoading: true,
+        errorMessage: null,
+      );
       notifyListeners();
 
       try {
-        await _repository.createEvent(_createEventModel);
-        
-        // Show success message
-        _showSuccessMessage();
-        
-        // Reset form
+        final createdEvent = await _repository.createEvent(_createEventModel);
+
+        // Show success message with event details
+        _createEventModel = _createEventModel.copyWith(
+          isLoading: false,
+          errorMessage: null,
+        );
+        notifyListeners();
+
+        // Show success message (you can implement a snackbar here)
+        print('✅ Event created successfully!');
+        print('Event ID: ${createdEvent.id}');
+        print('Event Name: ${createdEvent.eventName}');
+        print('Date: ${createdEvent.dateUi}');
+        print('Status: ${createdEvent.status}');
+
+        // Reset form after successful creation
         _resetForm();
-        
+
+        // Navigate back to events page or show success dialog
+        Future.delayed(const Duration(seconds: 1), () {
+          AppRouter.goBack();
+        });
       } catch (e) {
         _createEventModel = _createEventModel.copyWith(
           isLoading: false,
-          errorMessage: e.toString(),
+          errorMessage: e.toString().replaceFirst('Exception: ', ''),
         );
         notifyListeners();
+        print('❌ Event creation failed: ${e.toString()}');
       }
     }
   }
@@ -153,6 +187,15 @@ class CreateEventViewModel extends ChangeNotifier {
       return false;
     }
 
+    // Validate booth fee is a valid number
+    if (int.tryParse(boothFeeController.text.trim()) == null) {
+      _createEventModel = _createEventModel.copyWith(
+        errorMessage: 'Please enter a valid booth fee (numbers only)',
+      );
+      notifyListeners();
+      return false;
+    }
+
     if (boothSizeController.text.trim().isEmpty) {
       _createEventModel = _createEventModel.copyWith(
         errorMessage: 'Please enter booth size',
@@ -172,6 +215,15 @@ class CreateEventViewModel extends ChangeNotifier {
     if (dateController.text.trim().isEmpty) {
       _createEventModel = _createEventModel.copyWith(
         errorMessage: 'Please enter date',
+      );
+      notifyListeners();
+      return false;
+    }
+
+    // Validate date format (MM/DD/YYYY)
+    if (!DateTimeHelper.isValidUiDate(dateController.text.trim())) {
+      _createEventModel = _createEventModel.copyWith(
+        errorMessage: 'Please enter date in MM/DD/YYYY format',
       );
       notifyListeners();
       return false;
@@ -231,7 +283,7 @@ class CreateEventViewModel extends ChangeNotifier {
     dateController.clear();
     reminderController.clear();
     descriptionController.clear();
-    
+
     _createEventModel = CreateEventModel();
     notifyListeners();
   }

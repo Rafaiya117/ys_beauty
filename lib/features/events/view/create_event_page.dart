@@ -28,28 +28,72 @@ class CreateEventPage extends StatelessWidget {
                   children: [
                     // Header
                     _buildHeader(context),
-                    
+
                     // Form content
                     Expanded(
                       child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 16.h,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Show error/success messages
+                            if (viewModel.errorMessage != null)
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(12.w),
+                                margin: EdgeInsets.only(bottom: 16.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(color: Colors.red),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      color: Colors.red,
+                                      size: 20.sp,
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Expanded(
+                                      child: Text(
+                                        viewModel.errorMessage!,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: viewModel.clearError,
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                        size: 18.sp,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
                             // Event/Coordinator field
                             _buildInputField(
                               label: 'Enter Event/ Coordinator',
                               icon: Icons.calendar_today_outlined,
                               controller: viewModel.eventController,
                             ),
-                            
+
                             SizedBox(height: 20.h),
-                            
+
                             // Start/End Times section
                             _buildTimeSection(context, viewModel),
-                            
+
                             SizedBox(height: 20.h),
-                            
+
                             // Location field
                             _buildInputField(
                               label: 'Choose Location',
@@ -57,9 +101,9 @@ class CreateEventPage extends StatelessWidget {
                               controller: viewModel.locationController,
                               hasArrow: true,
                             ),
-                            
+
                             SizedBox(height: 20.h),
-                            
+
                             // Booth Fee and Booth Size row
                             Row(
                               children: [
@@ -78,20 +122,20 @@ class CreateEventPage extends StatelessWidget {
                                     controller: viewModel.boothSizeController,
                                   ),
                                 ),
-                           ],
+                              ],
                             ),
-                            
+
                             SizedBox(height: 10.h),
-                            
+
                             // Space # field
                             _buildInputField(
                               label: 'Enter Space #',
                               icon: Icons.place_outlined,
                               controller: viewModel.spaceNumberController,
                             ),
-                            
+
                             SizedBox(height: 10.h),
-                            
+
                             // Date field
                             _buildDateField(
                               context: context,
@@ -100,9 +144,9 @@ class CreateEventPage extends StatelessWidget {
                               controller: viewModel.dateController,
                               viewModel: viewModel,
                             ),
-                            
-                              SizedBox(height: 10.h),
-                            
+
+                            SizedBox(height: 10.h),
+
                             // Set Reminder field
                             _buildReminderField(
                               context: context,
@@ -111,27 +155,27 @@ class CreateEventPage extends StatelessWidget {
                               controller: viewModel.reminderController,
                               viewModel: viewModel,
                             ),
-                            
+
                             SizedBox(height: 10.h),
-                            
+
                             // Status section
                             _buildStatusSection(viewModel),
-                            
+
                             SizedBox(height: 10.h),
-                            
+
                             // Paid section
                             _buildPaidSection(viewModel),
-                            
+
                             SizedBox(height: 10.h),
-                            
+
                             // Description section
                             _buildDescriptionSection(viewModel),
-                            
+
                             SizedBox(height: 32.h),
-                            
+
                             // Save button
                             _buildSaveButton(viewModel),
-                            
+
                             SizedBox(height: 24.h),
                           ],
                         ),
@@ -155,15 +199,11 @@ class CreateEventPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
-            ),
+            child: Icon(Icons.arrow_back_ios, size: 24.sp, color: Colors.black),
           ),
-          
+
           SizedBox(width: 16.w),
-          
+
           // Title
           Expanded(
             child: Text(
@@ -176,7 +216,7 @@ class CreateEventPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          
+
           SizedBox(width: 40.w), // Balance the back button
         ],
       ),
@@ -196,18 +236,11 @@ class CreateEventPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 18.sp,
-            color: const Color(0xFF424242),
-          ),
+          Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
           SizedBox(width: 10.w),
           Expanded(
             child: TextField(
@@ -261,29 +294,22 @@ class CreateEventPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3C4),
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
+          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 18.sp,
-              color: const Color(0xFF424242),
-            ),
+            Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 controller.text.isEmpty ? label : controller.text,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: controller.text.isEmpty 
+                  color: controller.text.isEmpty
                       ? const Color(0xFF9E9E9E)
                       : const Color(0xFF424242),
-                  fontWeight: controller.text.isEmpty 
-                      ? FontWeight.w400 
+                  fontWeight: controller.text.isEmpty
+                      ? FontWeight.w400
                       : FontWeight.w500,
                 ),
               ),
@@ -314,29 +340,22 @@ class CreateEventPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3C4),
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
+          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 18.sp,
-              color: const Color(0xFF424242),
-            ),
+            Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 controller.text.isEmpty ? label : controller.text,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: controller.text.isEmpty 
+                  color: controller.text.isEmpty
                       ? const Color(0xFF9E9E9E)
                       : const Color(0xFF424242),
-                  fontWeight: controller.text.isEmpty 
-                      ? FontWeight.w400 
+                  fontWeight: controller.text.isEmpty
+                      ? FontWeight.w400
                       : FontWeight.w500,
                 ),
               ),
@@ -352,16 +371,16 @@ class CreateEventPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeSection(BuildContext context, CreateEventViewModel viewModel) {
+  Widget _buildTimeSection(
+    BuildContext context,
+    CreateEventViewModel viewModel,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
       ),
       child: Stack(
         children: [
@@ -372,142 +391,146 @@ class CreateEventPage extends StatelessWidget {
             bottom: 20.h,
             child: Container(
               width: 2.w,
-              child: CustomPaint(
-                painter: DottedLinePainter(),
-              ),
+              child: CustomPaint(painter: DottedLinePainter()),
             ),
           ),
           Column(
             children: [
-          // Start time
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Start dot
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFF8A00),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Text(
-                  'Start',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: const Color(0xFF424242),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Text(
-                'Time:',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFF424242),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              GestureDetector(
-                onTap: () => _showTimePicker(context, true, viewModel),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF3C4),
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(
-                      color: const Color(0xFFFF8A00),
-                      width: 1.5.w,
+              // Start time
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Start dot
+                  Container(
+                    width: 8.w,
+                    height: 8.h,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFF8A00),
+                      shape: BoxShape.circle,
                     ),
                   ),
-                  child: Text(
-                    viewModel.startTime,
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Text(
+                      'Start',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: const Color(0xFF424242),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Time:',
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       color: const Color(0xFF424242),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Divider line
-          Container(
-            height: 1.h,
-            color: Colors.black.withValues(alpha: 0.3),
-            margin: EdgeInsets.only(left: 24.w, right: 8.w),
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // End time
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // End dot
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFF8A00),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Text(
-                  'End',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: const Color(0xFF424242),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Text(
-                'Time:',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFF424242),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              GestureDetector(
-                onTap: () => _showTimePicker(context, false, viewModel),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF3C4),
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(
-                      color: const Color(0xFFFF8A00),
-                      width: 1.5.w,
+                  SizedBox(width: 8.w),
+                  GestureDetector(
+                    onTap: () => _showTimePicker(context, true, viewModel),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF3C4),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: const Color(0xFFFF8A00),
+                          width: 1.5.w,
+                        ),
+                      ),
+                      child: Text(
+                        viewModel.startTime,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: const Color(0xFF424242),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
-                  child: Text(
-                    viewModel.endTime,
+                ],
+              ),
+
+              SizedBox(height: 12.h),
+
+              // Divider line
+              Container(
+                height: 1.h,
+                color: Colors.black.withValues(alpha: 0.3),
+                margin: EdgeInsets.only(left: 24.w, right: 8.w),
+              ),
+
+              SizedBox(height: 12.h),
+
+              // End time
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // End dot
+                  Container(
+                    width: 8.w,
+                    height: 8.h,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFF8A00),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Text(
+                      'End',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: const Color(0xFF424242),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Time:',
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       color: const Color(0xFF424242),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
+                  SizedBox(width: 8.w),
+                  GestureDetector(
+                    onTap: () => _showTimePicker(context, false, viewModel),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF3C4),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: const Color(0xFFFF8A00),
+                          width: 1.5.w,
+                        ),
+                      ),
+                      child: Text(
+                        viewModel.endTime,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: const Color(0xFF424242),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          ],
-        ),
-      ],
+        ],
       ),
     );
   }
@@ -592,7 +615,12 @@ class CreateEventPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusOption(String label, Color color, bool isSelected, VoidCallback onTap) {
+  Widget _buildStatusOption(
+    String label,
+    Color color,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -604,10 +632,7 @@ class CreateEventPage extends StatelessWidget {
             height: 16.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.black,
-                width: 1.5.w,
-              ),
+              border: Border.all(color: Colors.black, width: 1.5.w),
               color: isSelected ? Colors.black : Colors.transparent,
             ),
             child: isSelected
@@ -627,10 +652,7 @@ class CreateEventPage extends StatelessWidget {
           Container(
             width: 8.w,
             height: 8.h,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           SizedBox(width: 8.w),
           Text(
@@ -704,7 +726,12 @@ class CreateEventPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPaidOption(String label, Color color, bool isSelected, VoidCallback onTap) {
+  Widget _buildPaidOption(
+    String label,
+    Color color,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -716,10 +743,7 @@ class CreateEventPage extends StatelessWidget {
             height: 16.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.black,
-                width: 1.5.w,
-              ),
+              border: Border.all(color: Colors.black, width: 1.5.w),
               color: isSelected ? Colors.black : Colors.transparent,
             ),
             child: isSelected
@@ -739,10 +763,7 @@ class CreateEventPage extends StatelessWidget {
           Container(
             width: 8.w,
             height: 8.h,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           SizedBox(width: 8.w),
           Text(
@@ -776,18 +797,12 @@ class CreateEventPage extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFFFF3C4),
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: const Color(0xFFE0E0E0),
-              width: 1.w,
-            ),
+            border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
           ),
           child: TextField(
             controller: viewModel.descriptionController,
             maxLines: 4,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: const Color(0xFF424242),
-            ),
+            style: TextStyle(fontSize: 14.sp, color: const Color(0xFF424242)),
             decoration: InputDecoration(
               hintText: 'Parking details + Transfer details + etc.',
               hintStyle: TextStyle(
@@ -859,7 +874,11 @@ class CreateEventPage extends StatelessWidget {
     }
   }
 
-  Future<void> _showTimePicker(BuildContext context, bool isStartTime, CreateEventViewModel viewModel) async {
+  Future<void> _showTimePicker(
+    BuildContext context,
+    bool isStartTime,
+    CreateEventViewModel viewModel,
+  ) async {
     // Parse current time to get initial time for picker
     String currentTime = isStartTime ? viewModel.startTime : viewModel.endTime;
     TimeOfDay initialTime = _parseTimeString(currentTime);
@@ -900,24 +919,24 @@ class CreateEventPage extends StatelessWidget {
         final timePart = parts[0];
         final period = parts[1];
         final timeComponents = timePart.split(':');
-        
+
         if (timeComponents.length == 2) {
           int hour = int.parse(timeComponents[0]);
           int minute = int.parse(timeComponents[1]);
-          
+
           if (period == 'PM' && hour != 12) {
             hour += 12;
           } else if (period == 'AM' && hour == 12) {
             hour = 0;
           }
-          
+
           return TimeOfDay(hour: hour, minute: minute);
         }
       }
     } catch (e) {
       // If parsing fails, return default time
     }
-    
+
     // Default fallback
     return const TimeOfDay(hour: 12, minute: 0);
   }
@@ -925,20 +944,23 @@ class CreateEventPage extends StatelessWidget {
   String _formatTimeOfDay(TimeOfDay time) {
     final hour = time.hour;
     final minute = time.minute;
-    
+
     String period = hour >= 12 ? 'PM' : 'AM';
     int displayHour = hour;
-    
+
     if (hour == 0) {
       displayHour = 12;
     } else if (hour > 12) {
       displayHour = hour - 12;
     }
-    
+
     return '${displayHour.toString().padLeft(1)}:${minute.toString().padLeft(2, '0')} $period';
   }
 
-  Future<void> _showDatePicker(BuildContext context, CreateEventViewModel viewModel) async {
+  Future<void> _showDatePicker(
+    BuildContext context,
+    CreateEventViewModel viewModel,
+  ) async {
     // Parse current date to get initial date for picker
     DateTime initialDate = _parseDateString(viewModel.dateController.text);
 
@@ -974,7 +996,7 @@ class CreateEventPage extends StatelessWidget {
       if (dateString.isEmpty) {
         return DateTime.now();
       }
-      
+
       // Try parsing different date formats
       List<String> possibleFormats = [
         'MM/dd/yyyy',
@@ -983,7 +1005,7 @@ class CreateEventPage extends StatelessWidget {
         'MM-dd-yyyy',
         'dd-MM-yyyy',
       ];
-      
+
       for (String format in possibleFormats) {
         try {
           // Simple parsing for common formats
@@ -1013,7 +1035,7 @@ class CreateEventPage extends StatelessWidget {
     } catch (e) {
       // If parsing fails, return current date
     }
-    
+
     // Default fallback
     return DateTime.now();
   }
@@ -1023,7 +1045,10 @@ class CreateEventPage extends StatelessWidget {
     return '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
   }
 
-  Future<void> _showReminderDropdown(BuildContext context, CreateEventViewModel viewModel) async {
+  Future<void> _showReminderDropdown(
+    BuildContext context,
+    CreateEventViewModel viewModel,
+  ) async {
     final List<String> reminderOptions = [
       'No Reminder',
       '1 day before',
@@ -1059,7 +1084,7 @@ class CreateEventPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              
+
               // Title
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -1072,22 +1097,26 @@ class CreateEventPage extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Options list - Made scrollable
               Flexible(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: reminderOptions.map((option) => _buildReminderOption(
-                      context: context,
-                      option: option,
-                      onTap: () {
-                        Navigator.pop(context, option);
-                      },
-                    )).toList(),
+                    children: reminderOptions
+                        .map(
+                          (option) => _buildReminderOption(
+                            context: context,
+                            option: option,
+                            onTap: () {
+                              Navigator.pop(context, option);
+                            },
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
-              
+
               SizedBox(height: 20.h),
             ],
           ),
@@ -1129,17 +1158,9 @@ class CreateEventPage extends StatelessWidget {
               ),
             ),
             if (option == 'No Reminder')
-              Icon(
-                Icons.close,
-                size: 18.sp,
-                color: const Color(0xFF9E9E9E),
-              )
+              Icon(Icons.close, size: 18.sp, color: const Color(0xFF9E9E9E))
             else
-              Icon(
-                Icons.schedule,
-                size: 18.sp,
-                color: const Color(0xFFFF8A00),
-              ),
+              Icon(Icons.schedule, size: 18.sp, color: const Color(0xFFFF8A00)),
           ],
         ),
       ),
@@ -1160,11 +1181,7 @@ class DottedLinePainter extends CustomPainter {
     double startY = 0.0;
 
     while (startY < size.height) {
-      canvas.drawLine(
-        Offset(0, startY),
-        Offset(0, startY + dashWidth),
-        paint,
-      );
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashWidth), paint);
       startY += dashWidth + dashSpace;
     }
   }

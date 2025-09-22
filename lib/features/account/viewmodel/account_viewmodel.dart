@@ -9,6 +9,7 @@ class AccountViewModel extends ChangeNotifier {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   // Constructor - initialize data immediately
   AccountViewModel() {
@@ -25,6 +26,7 @@ class AccountViewModel extends ChangeNotifier {
   TextEditingController get emailController => _emailController;
   TextEditingController get dateOfBirthController => _dateOfBirthController;
   TextEditingController get locationController => _locationController;
+  TextEditingController get phoneController => _phoneController;
 
   void _initializeData() {
     _accountModel = const AccountModel();
@@ -32,29 +34,33 @@ class AccountViewModel extends ChangeNotifier {
     _emailController.text = _accountModel.email;
     _dateOfBirthController.text = _accountModel.dateOfBirth;
     _locationController.text = _accountModel.location;
+    _phoneController.text = _accountModel.phone ?? '';
     notifyListeners();
   }
 
   // Fetch account information from repository
   Future<void> fetchAccountInformation() async {
-    _accountModel = _accountModel.copyWith(isLoading: true);
+    _accountModel = _accountModel.copyWith(isLoading: true, errorMessage: null);
     notifyListeners();
 
     try {
       final accountData = await _accountRepository.fetchAccountInformation();
-      _accountModel = accountData;
+      _accountModel = accountData.copyWith(isLoading: false);
       _nameController.text = _accountModel.name;
       _emailController.text = _accountModel.email;
       _dateOfBirthController.text = _accountModel.dateOfBirth;
       _locationController.text = _accountModel.location;
+      _phoneController.text = _accountModel.phone ?? '';
+      print('Account data loaded successfully');
     } catch (e) {
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
       _accountModel = _accountModel.copyWith(
-        errorMessage: 'Failed to load account information',
+        isLoading: false,
+        errorMessage: errorMessage,
       );
-    } finally {
-      _accountModel = _accountModel.copyWith(isLoading: false);
-      notifyListeners();
+      print('Account loading error: $errorMessage');
     }
+    notifyListeners();
   }
 
   @override
@@ -63,6 +69,7 @@ class AccountViewModel extends ChangeNotifier {
     _emailController.dispose();
     _dateOfBirthController.dispose();
     _locationController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -85,9 +92,10 @@ class AccountViewModel extends ChangeNotifier {
         email: _emailController.text.trim(),
         dateOfBirth: _dateOfBirthController.text.trim(),
         location: _locationController.text.trim(),
+        phone: _phoneController.text.trim(),
         profileImagePath: _accountModel.profileImagePath,
       );
-      
+
       _accountModel = updatedAccount.copyWith(
         isLoading: false,
         isEditing: false,
@@ -115,7 +123,7 @@ class AccountViewModel extends ChangeNotifier {
       successMessage: 'Change password feature coming soon!',
     );
     notifyListeners();
-    
+
     // Clear message after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       clearSuccess();
@@ -130,8 +138,10 @@ class AccountViewModel extends ChangeNotifier {
     try {
       // In a real app, you would get the image path from image picker
       const mockImagePath = 'assets/profile_images/user_profile.jpg';
-      final imageUrl = await _accountRepository.updateProfilePicture(mockImagePath);
-      
+      final imageUrl = await _accountRepository.updateProfilePicture(
+        mockImagePath,
+      );
+
       _accountModel = _accountModel.copyWith(
         profileImagePath: imageUrl,
         isLoading: false,
@@ -144,7 +154,7 @@ class AccountViewModel extends ChangeNotifier {
       );
     }
     notifyListeners();
-    
+
     // Clear message after 3 seconds
     if (_accountModel.successMessage != null) {
       Future.delayed(const Duration(seconds: 3), () {

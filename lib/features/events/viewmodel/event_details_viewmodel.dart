@@ -31,15 +31,15 @@ class EventDetailsViewModel extends ChangeNotifier {
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
-        return Colors.yellow;
+        return const Color(0xFFEEBC20); // Yellow background for Pending
       case 'approved':
-        return Colors.green;
+        return const Color(0xFF00BF63); // Green background for Approved
       case 'paid':
-        return Colors.green;
+        return const Color(0xFF00703A); // Dark green background for Paid
       case 'denied':
-        return Colors.red;
+        return const Color(0xFFFF5151); // Red background for Denied
       case 'unpaid':
-        return Colors.red;
+        return const Color(0xFFEF4444); // Red background for Unpaid
       default:
         return Colors.grey;
     }

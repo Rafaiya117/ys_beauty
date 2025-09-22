@@ -62,7 +62,8 @@ class AppRouter {
   static const String location = '/location';
   static const String availableEvent = '/available-event';
 
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   static NavigatorState? get navigator => navigatorKey.currentState;
 
@@ -114,16 +115,13 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>?;
         final initialIndex = args?['initialIndex'] as int? ?? 0;
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => 
-            MainNavigationPage(initialIndex: initialIndex),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              MainNavigationPage(initialIndex: initialIndex),
           settings: settings,
           transitionDuration: const Duration(milliseconds: 200),
           reverseTransitionDuration: const Duration(milliseconds: 150),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
+            return FadeTransition(opacity: animation, child: child);
           },
         );
       case accountInformation:
@@ -139,6 +137,7 @@ class AppRouter {
             email: args['email'],
             birthDate: args['birthDate'],
             city: args['city'],
+            profileImagePath: args['profileImagePath'],
           ),
           settings: settings,
         );
@@ -220,7 +219,8 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>?;
         final financialDetailsId = args?['financialDetailsId'] as String?;
         return MaterialPageRoute(
-          builder: (_) => EditFinancialDetailsPage(financialDetailsId: financialDetailsId),
+          builder: (_) =>
+              EditFinancialDetailsPage(financialDetailsId: financialDetailsId),
           settings: settings,
         );
       case feedback:
@@ -296,6 +296,7 @@ class AppRouter {
     String? email,
     String? birthDate,
     String? city,
+    String? profileImagePath,
   }) {
     return navigator!.pushNamed(
       editInformation,
@@ -304,6 +305,7 @@ class AppRouter {
         'email': email,
         'birthDate': birthDate,
         'city': city,
+        'profileImagePath': profileImagePath,
       },
     );
   }
@@ -361,13 +363,12 @@ class AppRouter {
   }
 
   static Future<dynamic> navigateToFinancesView({String? eventId}) {
-    return navigator!.pushNamed(
-      financesView,
-      arguments: {'eventId': eventId},
-    );
+    return navigator!.pushNamed(financesView, arguments: {'eventId': eventId});
   }
 
-  static Future<dynamic> navigateToEditFinancialDetails({String? financialDetailsId}) {
+  static Future<dynamic> navigateToEditFinancialDetails({
+    String? financialDetailsId,
+  }) {
     return navigator!.pushNamed(
       editFinancialDetails,
       arguments: {'financialDetailsId': financialDetailsId},
