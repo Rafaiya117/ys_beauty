@@ -453,8 +453,8 @@ This project is open source and available under the MIT License.
 ---
 
 ## 👨‍💻 Developer
-**Mir Md Mosarof Hossan Showrav**  
-📧 showravofficial@gmail.com
+**Tousif Hasan**  
+📧 tousifwork2424@gmail.com
 
 ---
 
