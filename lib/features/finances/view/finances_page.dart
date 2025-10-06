@@ -653,8 +653,10 @@ class FinancesPage extends StatelessWidget {
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
-                        if (index == 6) {
-                          // July - highlighted
+                        // Get current month index (1–12) → convert to 0-based index
+                        final currentMonthIndex = DateTime.now().month - 1;
+                        if (index == currentMonthIndex) {
+                          // Highlight the current month dot
                           return FlDotCirclePainter(
                             radius: 6.r,
                             color: Colors.black,

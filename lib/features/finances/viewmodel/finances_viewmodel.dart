@@ -9,7 +9,9 @@ class FinancesViewModel extends ChangeNotifier {
 
  //!----------initialize the function ------------!
   FinancesViewModel() {
-    getFinanceSummary(); 
+    //getFinanceSummary(); 
+    fetchFinanceSummary();
+    fetchMonthlyData();
   }
 
   // Financial summary data
@@ -40,20 +42,7 @@ class FinancesViewModel extends ChangeNotifier {
   final TextEditingController _expensesAmountController = TextEditingController();
   
   // Monthly financial data for chart
-  List<MonthlyData> _monthlyData = [
-    MonthlyData(month: 'Jan', sales: 200, expenses: 150, profit: 50),
-    MonthlyData(month: 'Feb', sales: 300, expenses: 200, profit: 100),
-    MonthlyData(month: 'Mar', sales: 250, expenses: 180, profit: 70),
-    MonthlyData(month: 'Apr', sales: 400, expenses: 250, profit: 150),
-    MonthlyData(month: 'May', sales: 350, expenses: 220, profit: 130),
-    MonthlyData(month: 'Jun', sales: 500, expenses: 300, profit: 200),
-    MonthlyData(month: 'Jul', sales: 49.02, expenses: 47.42, profit: 1.60),
-    MonthlyData(month: 'Aug', sales: 450, expenses: 280, profit: 170),
-    MonthlyData(month: 'Sep', sales: 380, expenses: 240, profit: 140),
-    MonthlyData(month: 'Oct', sales: 420, expenses: 260, profit: 160),
-    MonthlyData(month: 'Nov', sales: 480, expenses: 290, profit: 190),
-    MonthlyData(month: 'Dec', sales: 550, expenses: 320, profit: 230),
-  ];
+  List<MonthlyData> _monthlyData = [];
   
   // Event history data
   List<EventHistory> _eventHistory = [
@@ -172,7 +161,7 @@ class FinancesViewModel extends ChangeNotifier {
         // Keep your existing logic
         updateBoothFees(amount);
         _clearBoothForm();
-        await getFinanceSummary(); 
+        // await fetchFinanceSummary(); 
       } else {
         print("Failed to add booth: ${response.statusCode}");
       }
@@ -275,38 +264,95 @@ class FinancesViewModel extends ChangeNotifier {
 
 //!-------------get data ---------------!
 
-Future<void> getFinanceSummary() async {
-  final accessToken = await TokenStorage.getAccessToken();
-    if (_financeId == null) {
-      print("⚠️ No financeId found");
-      return;
+Future<void> fetchFinanceSummary() async {
+    try {
+      final accessToken = await TokenStorage.getAccessToken();
+      final response = await http.get(Uri.parse("$_baseurl/finance/finance/summary/yearly/"),
+         headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+
+        if (data.isNotEmpty) {
+          final item = data.first;
+
+          _totalSales = (item['total_sales'] ?? 0).toDouble();
+          _totalExpenses = (item['total_expense'] ?? 0).toDouble();
+          _boothFees = (item['total_booth_fee'] ?? 0).toDouble();
+          _netProfit = (item['net_profit'] ?? 0).toDouble();
+
+          notifyListeners();
+        }
+      } else {
+        debugPrint('Failed to load finance data: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error fetching finance summary: $e');
     }
+  }
+
+  //!---------------get monthly data -------------!
+  Future<void> fetchMonthlyData() async {
+    String apiUrl = "$_baseurl/finance/finance/summary/monthly/";
 
     try {
+      final accessToken = await TokenStorage.getAccessToken();
       final response = await http.get(
-        Uri.parse('http://10.10.13.36/finance/finance/summary/$_financeId/'),
+        Uri.parse(apiUrl),
         headers: {
-          "accept": "application/json",
-          if (accessToken != null) "Authorization": "Bearer $accessToken",
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken', 
         },
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final List<dynamic> jsonData = json.decode(response.body);
+        if (_monthlyData.isEmpty) {
+          _monthlyData = [
+            MonthlyData(month: 'Jan', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Feb', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Mar', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Apr', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'May', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Jun', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Jul', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Aug', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Sep', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Oct', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Nov', sales: 0, expenses: 0, profit: 0),
+            MonthlyData(month: 'Dec', sales: 0, expenses: 0, profit: 0),
+          ];
+        }
 
-        _boothFees = (data["booth_fee"] ?? 0).toDouble();
-        _totalSales = (data["total_sales"] ?? 0).toDouble();
-        _totalExpenses = (data["total_expense"] ?? 0).toDouble();
-        _netProfit = (data["net_profit"] ?? 0).toDouble();
+        for (final item in jsonData) {
+          final monthStr = item['month']; 
+          if (monthStr == null) continue;
 
-        print("✅ Finance summary updated successfully");
+          final monthNum = int.tryParse(monthStr.split('-').last) ?? 0;
+          if (monthNum < 1 || monthNum > 12) continue;
+
+          final monthName = _monthlyData[monthNum - 1].month;
+
+          final updated = MonthlyData(
+            month: monthName,
+            sales: (item['total_sales'] ?? 0).toDouble(),
+            expenses: (item['total_expense'] ?? 0).toDouble(),
+            profit: (item['net_profit'] ?? 0).toDouble(),
+          );
+          _monthlyData[monthNum - 1] = updated;
+        }
+
         notifyListeners();
       } else {
-        print("❌ Failed to load finance summary: ${response.statusCode}");
-        print("Response body: ${response.body}");
+        debugPrint("Failed to load data: ${response.statusCode}");
+        debugPrint("Response body: ${response.body}");
       }
     } catch (e) {
-      print("⚠️ Error fetching summary: $e");
+      debugPrint("Error fetching monthly data: $e");
     }
   }
 
@@ -338,12 +384,22 @@ Future<void> getFinanceSummary() async {
   }
   
   // Get highlighted month data (July)
+  // MonthlyData? getHighlightedMonthData() {
+  //   return _monthlyData.firstWhere(
+  //     (data) => data.month == 'Jul',
+  //     orElse: () => _monthlyData[6], // Default to July (index 6)
+  //   );
+  // }
   MonthlyData? getHighlightedMonthData() {
-    return _monthlyData.firstWhere(
-      (data) => data.month == 'Jul',
-      orElse: () => _monthlyData[6], // Default to July (index 6)
-    );
-  }
+  // Get the current month abbreviation (e.g., "Oct")
+  final currentMonth = _monthlyData[DateTime.now().month - 1].month;
+
+  return _monthlyData.firstWhere(
+    (data) => data.month == currentMonth,
+    orElse: () => _monthlyData[DateTime.now().month - 1],
+  );
+}
+
   
   @override
   void dispose() {
