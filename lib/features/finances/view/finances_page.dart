@@ -869,7 +869,9 @@ class FinancesPage extends StatelessWidget {
                 title: 'Add Booth Fee',
                 icon: Icons.add,
                 onTap: () {
-                  viewModel.addBoothFee();
+                  final name = viewModel.boothEventController.text;
+                  final size = viewModel.boothSizeController.text;
+                  viewModel.addBoothFee(name:name, boothSize: size);
                 },
               ),
             ],

@@ -30,10 +30,8 @@ class FinancesViewPage extends StatelessWidget {
                 child: Column(
                   children: [
                     // Header
-                    _buildHeader(context),
-                    
-                    SizedBox(height: 20.h),
-                    
+                    _buildHeader(context),                    
+                    SizedBox(height: 20.h),                    
                     // Content
                     Expanded(
                       child: _buildContent(viewModel),

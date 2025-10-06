@@ -1,15 +1,29 @@
+import 'dart:convert';
+
+import 'package:animation/core/token_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:http/http.dart' as http;
 
 class FinancesViewModel extends ChangeNotifier {
+
+ //!----------initialize the function ------------!
+  FinancesViewModel() {
+    getFinanceSummary(); 
+  }
+
   // Financial summary data
-  double _totalSales = 625.00;
-  double _totalExpenses = 175.00;
-  double _boothFees = 175.00;
-  double _netProfit = 275.00;
+  double _totalSales = 0.0;
+  double _totalExpenses = 0.0;
+  double _boothFees = 0.0;
+  double _netProfit = 0.0;
   
   // Selected tab index
   int _selectedTabIndex = 0;
+
+  //!-------added by rafaiya -----------!
+  int? _financeId;
+  final _baseurl = 'http://10.10.13.36';
   
   // TextEditingControllers for form fields
   final TextEditingController _boothEventController = TextEditingController();
@@ -117,30 +131,185 @@ class FinancesViewModel extends ChangeNotifier {
   }
   
   // Form submission methods
-  void addBoothFee() {
-    if (_boothFeeController.text.isNotEmpty) {
-      double amount = double.tryParse(_boothFeeController.text) ?? 0.0;
-      updateBoothFees(amount);
-      _clearBoothForm();
+  // void addBoothFee() {
+  //   if (_boothFeeController.text.isNotEmpty) {
+  //     double amount = double.tryParse(_boothFeeController.text) ?? 0.0;
+  //     updateBoothFees(amount);
+  //     _clearBoothForm();
+  //   }
+  // }
+  
+  //!----------------modified by rafaiya -----------!
+  void addBoothFee({required String name, required String boothSize,}) async {
+  if (_boothFeeController.text.isNotEmpty) {
+
+    final accessToken = await TokenStorage.getAccessToken();
+    double amount = double.tryParse(_boothFeeController.text) ?? 0.0;
+
+    final Map<String, dynamic> data = {
+      "name": name,
+      "booth_size": boothSize,
+      "booth_fee": amount,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse("$_baseurl/finance/finance/create/"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        print("Booth added successfully: $result");
+
+        _financeId = result['id'];
+        print("✅ Booth created with ID: $_financeId");
+
+        // Keep your existing logic
+        updateBoothFees(amount);
+        _clearBoothForm();
+        await getFinanceSummary(); 
+      } else {
+        print("Failed to add booth: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
     }
   }
+}
+  // void recordSale() {
+  //   if (_salesAmountController.text.isNotEmpty) {
+  //     double amount = double.tryParse(_salesAmountController.text) ?? 0.0;
+  //     updateTotalSales(amount);
+  //     _clearSalesForm();
+  //   }
+  // }
+
+  void recordSale() async {
+  if (_salesAmountController.text.isNotEmpty && _financeId != null) {
+    final accessToken = await TokenStorage.getAccessToken();
+    double amount = double.tryParse(_salesAmountController.text) ?? 0.0;
+
+    final Map<String, dynamic> data = {
+      "sales": amount,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.10.13.36/finance/finance/$_financeId/add-sale/"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        print("${result['message']}");
+
+        updateTotalSales(amount);
+        _clearSalesForm();
+      } else {
+        print("Failed to record sale: ${response.statusCode}");
+        print("Response body: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  } else {
+    print("Missing finance_id or empty sales field");
+  }
+}
   
-  void recordSale() {
-    if (_salesAmountController.text.isNotEmpty) {
-      double amount = double.tryParse(_salesAmountController.text) ?? 0.0;
-      updateTotalSales(amount);
-      _clearSalesForm();
+  // void addExpense() {
+  //   if (_expensesAmountController.text.isNotEmpty) {
+  //     double amount = double.tryParse(_expensesAmountController.text) ?? 0.0;
+  //     updateTotalExpenses(amount);
+  //     _clearExpensesForm();
+  //   }
+  // }
+
+  void addExpense() async {
+  if (_expensesAmountController.text.isNotEmpty && _financeId != null) {
+    final accessToken = await TokenStorage.getAccessToken();
+    double amount = double.tryParse(_expensesAmountController.text) ?? 0.0;
+
+    final Map<String, dynamic> data = {
+      "expence": amount,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.10.13.36/finance/finance/$_financeId/add-expense/"), 
+        headers: {
+          "Content-Type": "application/json",
+          if (accessToken != null) "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        print("✅ Expense added: $result");
+
+        // Keep your existing logic
+        updateTotalExpenses(amount);
+        _clearExpensesForm();
+      } else {
+        print("Failed to add expense: ${response.statusCode}");
+        print("Response body: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  } else {
+    print("Missing finance_id or empty expense field");
+  }
+}
+
+
+//!-------------get data ---------------!
+
+Future<void> getFinanceSummary() async {
+  final accessToken = await TokenStorage.getAccessToken();
+    if (_financeId == null) {
+      print("⚠️ No financeId found");
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.10.13.36/finance/finance/summary/$_financeId/'),
+        headers: {
+          "accept": "application/json",
+          if (accessToken != null) "Authorization": "Bearer $accessToken",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        _boothFees = (data["booth_fee"] ?? 0).toDouble();
+        _totalSales = (data["total_sales"] ?? 0).toDouble();
+        _totalExpenses = (data["total_expense"] ?? 0).toDouble();
+        _netProfit = (data["net_profit"] ?? 0).toDouble();
+
+        print("✅ Finance summary updated successfully");
+        notifyListeners();
+      } else {
+        print("❌ Failed to load finance summary: ${response.statusCode}");
+        print("Response body: ${response.body}");
+      }
+    } catch (e) {
+      print("⚠️ Error fetching summary: $e");
     }
   }
-  
-  void addExpense() {
-    if (_expensesAmountController.text.isNotEmpty) {
-      double amount = double.tryParse(_expensesAmountController.text) ?? 0.0;
-      updateTotalExpenses(amount);
-      _clearExpensesForm();
-    }
-  }
-  
+
   // Clear form methods
   void _clearBoothForm() {
     _boothEventController.clear();
