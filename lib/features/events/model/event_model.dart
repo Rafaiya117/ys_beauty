@@ -84,7 +84,7 @@ class EventModel {
     };
   }
 
-  /// Factory constructor to create EventModel from CreateEventModel with date/time conversion
+ 
   factory EventModel.fromCreateEventModel({
     required String eventName,
     required String startTime,
