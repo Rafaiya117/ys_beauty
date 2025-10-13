@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/login_viewmodel.dart';
-import '../../../shared/constants/app_colors.dart';
 import '../../../shared/constants/app_constants.dart';
 
 class LoginPage extends StatelessWidget {
@@ -46,10 +47,10 @@ class LoginPage extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: const Color(0xFF424242),
-                                      size: 20.sp,
+                                    icon:SvgPicture.asset(
+                                      'assets/icons/back_button.svg',
+                                      width:16.w,
+                                      height: 12.h,
                                     ),
                                   ),
                                   const Spacer(),
@@ -58,13 +59,11 @@ class LoginPage extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF424242),
+                                      color: Colors.black,
                                     ),
                                   ),
                                   const Spacer(),
-                                  SizedBox(
-                                    width: 44.w,
-                                  ), // Balance the back button
+                                  SizedBox(width: 44.w,), // Balance the back button
                                 ],
                               ),
                             ),
@@ -84,12 +83,8 @@ class LoginPage extends StatelessWidget {
                                         width: 120.w,
                                         height: 120.h,
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF424242,
-                                          ).withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
+                                          color: const Color(0xFF424242,).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(20.r,),
                                         ),
                                         child: Icon(
                                           Icons.image,
@@ -99,35 +94,30 @@ class LoginPage extends StatelessWidget {
                                       );
                                     },
                                   ),
-
                                   SizedBox(height: 24.h),
-
                                   // App description
                                   Text(
                                     'Made for market entrepreneurs',
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
+                                    style: GoogleFonts.playfair(
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF424242),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-
-                                  SizedBox(height: 8.h),
-
+                                  //SizedBox(height: 8.h),
                                   Text(
                                     'Stay organized. Stay booked. Stay growing.',
-                                    style: TextStyle(
+                                    style: GoogleFonts.workSans(
                                       color: const Color(0xFF1A1A1A),
                                       fontSize: 16,
-                                      fontFamily: 'Work Sans',
                                       fontWeight: FontWeight.w400,
                                       height: 2.25,
                                       letterSpacing: -0.50,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: 40.h),
+                                  SizedBox(height: 30.h),
                                 ],
                               ),
                             ),
@@ -136,7 +126,7 @@ class LoginPage extends StatelessWidget {
                             Container(
                               height: 40.h,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFFF3C6),
+                                color: const Color(0xFFFFF3C7),
                                 borderRadius: BorderRadius.circular(10.r),
                                 border: Border.all(
                                   color: const Color(0xFFFFE8A1),
@@ -147,11 +137,19 @@ class LoginPage extends StatelessWidget {
                                 controller: viewModel.emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/login_email_icon.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.email_outlined,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   hintText: 'Enter Email Address',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF1A1A1A),
@@ -185,11 +183,19 @@ class LoginPage extends StatelessWidget {
                                 controller: viewModel.passwordController,
                                 obscureText: viewModel.isPasswordVisible,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon:Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/login_password.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.lock_outline,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   suffixIcon: IconButton(
                                     onPressed:
                                     viewModel.togglePasswordVisibility,
@@ -243,8 +249,8 @@ class LoginPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFD700), // Yellow
+                                    Color(0xFFFFA167), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -274,9 +280,9 @@ class LoginPage extends StatelessWidget {
                                     )
                                         : Text(
                                       'Log In',
-                                      style: TextStyle(
+                                      style: GoogleFonts.poppins(
                                         color: Colors.black,
-                                        fontSize: 16.sp,
+                                        fontSize: 20.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -298,7 +304,7 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
 
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 10.h),
 
                             // Google login button
                             Center(
@@ -321,8 +327,8 @@ class LoginPage extends StatelessWidget {
                                 )
                                     : Image.asset(
                                   AppConstants.googleLogoPath,
-                                  width: 50.w,
-                                  height: 50.h,
+                                  width: 24.w,
+                                  height: 24.h,
                                   errorBuilder:
                                       (context, error, stackTrace) {
                                     return Icon(

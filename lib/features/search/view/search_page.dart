@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -191,18 +192,10 @@ class SearchPage extends StatelessWidget {
             child: Container(
               width: 48.w,
               height: 48.h,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
-                ),
-              ),
-              child: Icon(
-                Icons.tune,
-                size: 20.sp,
-                color: Colors.black,
+              child: SvgPicture.asset(
+                'assets/icons/settings.svg',
+                width:40.w ,
+                height:40.h ,
               ),
             ),
           ),

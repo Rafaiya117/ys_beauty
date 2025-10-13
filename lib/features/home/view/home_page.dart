@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -143,9 +144,9 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Nicolas Smith',
                   style: GoogleFonts.greatVibes(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF424242),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -158,13 +159,14 @@ class HomePage extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () => AppRouter.navigateToReminders(),
-                child: Icon(
-                  Icons.notifications_outlined,
-                  size: 24.sp,
-                  color: const Color(0xFF424242),
+                child: 
+                SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  width: 18.w,
+                  height: 20.h,
                 ),
               ),
-              SizedBox(width: 16.w),
+              //SizedBox(width: 16.w),
               Builder(
                 builder: (context) => IconButton(
                   onPressed: () => Scaffold.of(context).openDrawer(),
@@ -194,21 +196,12 @@ class HomePage extends StatelessWidget {
             child: Container(
               height: 48.h,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: viewModel.searchFilterType != null 
-                    ? const Color(0xFFFF8A00) 
-                    : Colors.black,
-                  width: 1.5.w,
+                  color: Colors.black,
+                  width: 1.w,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
               ),
               child: Row(
                 children: [
@@ -299,33 +292,19 @@ class HomePage extends StatelessWidget {
             onTap: () => _showFilterModal(context, viewModel),
             child: Container(
               width: 48.w,
-              height: 48.h,
-              decoration: BoxDecoration(
-                color: viewModel.searchFilterType != null 
-                  ? const Color(0xFFFF8A00) 
-                  : Colors.white,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(
-                  color: viewModel.searchFilterType != null 
-                    ? const Color(0xFFFF8A00) 
-                    : Colors.black,
-                  width: 1.5.w,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
+              height: 48.h,            
+              child: SvgPicture.asset(
+                'assets/icons/settings.svg',
+                width:40.w ,
+                height:40.h ,
               ),
-              child: Icon(
-                Icons.tune,
-                size: 20.sp,
-                color: viewModel.searchFilterType != null 
-                  ? Colors.white 
-                  : Colors.black,
-              ),
+              // Icon(
+              //   Icons.tune,
+              //   size: 20.sp,
+              //   color: viewModel.searchFilterType != null 
+              //     ? Colors.white 
+              //     : Colors.black,
+              // ),
             ),
           ),
         ],
@@ -751,7 +730,7 @@ class HomePage extends StatelessWidget {
             height: 56.h,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+                colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -1015,11 +994,11 @@ class HomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+                    colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
-                  borderRadius: BorderRadius.circular(6.r),
+                  borderRadius: BorderRadius.circular(30.r),
                 ),
                 child: Text(
                   'Details',
@@ -1268,11 +1247,11 @@ class HomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+                    colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(30.r),
                 ),
                 child: Text(
                   'Details',
@@ -1383,7 +1362,7 @@ class HomePage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         children: [
                           _buildFilterOption(
-                            icon: Icons.event_outlined,
+                            iconPath:'assets/icons/filter_events.svg',
                             title: 'Events',
                             isSelected: viewModel.searchFilterType == 'Events',
                             onTap: () {
@@ -1393,7 +1372,7 @@ class HomePage extends StatelessWidget {
                             },
                           ),
                           _buildFilterOption(
-                            icon: Icons.person_outline,
+                            iconPath: 'assets/icons/filter_coordinator.svg',
                             title: 'Coordinator',
                             isSelected: viewModel.searchFilterType == 'Coordinator',
                             onTap: () {
@@ -1403,7 +1382,7 @@ class HomePage extends StatelessWidget {
                             },
                           ),
                           _buildFilterOption(
-                            icon: Icons.calendar_today_outlined,
+                            iconPath: 'assets/icons/filter_date.svg',
                             title: 'Date',
                             isSelected: viewModel.searchFilterType == 'Date',
                             onTap: () {
@@ -1449,65 +1428,72 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildFilterOption({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    bool isSelected = false,
-    bool showDivider = true,
-  }) {
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(8.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-                decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFFFF8A00).withValues(alpha: 0.1) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  children: [
+  required String iconPath, // ← change IconData to String path
+  required String title,
+  required VoidCallback onTap,
+  bool isSelected = false,
+  bool showDivider = true,
+}) {
+  return Column(
+    children: [
+      Container(
+        margin: EdgeInsets.only(bottom: 8.h),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8.r),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFFFF8A00).withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    iconPath,
+                    width: 14.w,
+                    height: 14.h,
+                    color: isSelected
+                        ? const Color(0xFFFF8A00)
+                        : Colors.black,
+                  ),
+                  SizedBox(width: 16.w),
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      color: isSelected
+                        ? const Color(0xFFFF8A00)
+                        : Colors.black,
+                      fontWeight:isSelected ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                  ),
+                  if (isSelected) ...[
+                    const Spacer(),
                     Icon(
-                      icon,
-                      size: 24.sp,
-                      color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
+                      Icons.check_circle,
+                      size: 20.sp,
+                      color: const Color(0xFFFF8A00),
                     ),
-                    SizedBox(width: 16.w),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: isSelected ? const Color(0xFFFF8A00) : Colors.black,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      ),
-                    ),
-                    if (isSelected) ...[
-                      const Spacer(),
-                      Icon(
-                        Icons.check_circle,
-                        size: 20.sp,
-                        color: const Color(0xFFFF8A00),
-                      ),
-                    ],
                   ],
-                ),
+                ],
               ),
             ),
           ),
         ),
-        if (showDivider)
-          Container(
-            height: 1.h,
-            color: const Color(0xFFE0E0E0), // Light gray divider
-            margin: EdgeInsets.symmetric(horizontal: 12.w),
-          ),
-      ],
-    );
-  }
+      ),
+      if (showDivider)
+        Container(
+          height: 1.h,
+          color: const Color(0xFFE0E0E0),
+          margin: EdgeInsets.symmetric(horizontal: 12.w),
+        ),
+    ],
+  );
+}
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/otp_viewmodel.dart';
@@ -86,17 +87,13 @@ class OtpPage extends StatelessWidget {
                                         width: 120.w,
                                         height: 120.h,
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF424242,
-                                          ).withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
+                                          color: const Color(0xFF424242,).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(20.r,),
                                         ),
                                         child: Icon(
                                           Icons.image,
                                           size: 40.sp,
-                                          color: const Color(0xFF424242),
+                                          color: Colors.black,
                                         ),
                                       );
                                     },
@@ -107,12 +104,12 @@ class OtpPage extends StatelessWidget {
                                   // Verify OTP title
                                   Text(
                                     'Verify OTP',
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 24.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF424242),
+                                      color: Colors.black,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.start,
                                   ),
 
                                   SizedBox(height: 8.h),
@@ -120,9 +117,9 @@ class OtpPage extends StatelessWidget {
                                   // Instruction text
                                   Text(
                                     'We have sent a 4-digit code to your email',
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 16.sp,
-                                      color: const Color(0xFF424242),
+                                      color: Colors.black,
                                       height: 1.4,
                                     ),
                                     textAlign: TextAlign.center,
@@ -137,49 +134,50 @@ class OtpPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: List.generate(4, (index) {
-                                return Container(
-                                  width: 60.w,
-                                  height: 60.h,
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFFFFF3C4,
-                                    ), // Light yellow background
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    border: Border.all(
-                                      color: const Color(0xFFE0E0E0),
-                                      width: 1.w,
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 6.w,
+                                  ), // gap between boxes
+                                  child: Container(
+                                    width: 69.w,
+                                    height: 55.h,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFFF3C4),
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: const Color(0xFFFFE8A1),
+                                        width: 1.w,
+                                      ),
                                     ),
-                                  ),
-                                  child: TextField(
-                                    controller: viewModel.otpControllers[index],
-                                    focusNode: viewModel.focusNodes[index],
-                                    textAlign: TextAlign.center,
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 1,
-                                    enabled: !viewModel.isVerifying,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    style: TextStyle(
-                                      fontSize: 24.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF424242),
+                                    child: TextField(
+                                      controller:viewModel.otpControllers[index],
+                                      focusNode: viewModel.focusNodes[index],
+                                      textAlign: TextAlign.center,
+                                      keyboardType: TextInputType.number,
+                                      maxLength: 1,
+                                      enabled: !viewModel.isVerifying,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      style: TextStyle(
+                                        fontSize: 24.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF424242),
+                                      ),
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                      onChanged: (value) {
+                                        viewModel.onOtpChanged(value, index);
+                                      },
                                     ),
-                                    decoration: InputDecoration(
-                                      counterText: '',
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    onChanged: (value) {
-                                      viewModel.onOtpChanged(value, index);
-                                    },
                                   ),
                                 );
                               }),
                             ),
-
                             SizedBox(height: 32.h),
-
                             // Verify button
                             Container(
                               width: double.infinity,
@@ -187,8 +185,8 @@ class OtpPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFD700), // Yellow
+                                    Color(0xFFFFA167), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -218,9 +216,9 @@ class OtpPage extends StatelessWidget {
                                           )
                                         : Text(
                                             'Verify',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.sp,
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 20.sp,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -233,7 +231,8 @@ class OtpPage extends StatelessWidget {
 
                             // Resend OTP section
                             Center(
-                              child: Column(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "Didn't get the code?",
@@ -241,8 +240,9 @@ class OtpPage extends StatelessWidget {
                                       color: const Color(0xFF424242),
                                       fontSize: 14.sp,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: 4.h),
+                                  SizedBox(width: 4.h),
                                   GestureDetector(
                                     onTap:
                                         viewModel.canResend &&

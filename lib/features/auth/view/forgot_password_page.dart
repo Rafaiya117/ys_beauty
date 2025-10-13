@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/forgot_password_viewmodel.dart';
@@ -24,14 +26,13 @@ class ForgotPasswordPage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).padding.top -
-                          MediaQuery.of(context).padding.bottom,
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom,
                     ),
                     child: IntrinsicHeight(
                       child: Padding(
@@ -58,7 +59,7 @@ class ForgotPasswordPage extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF424242),
+                                      color:Colors.black,
                                     ),
                                   ),
                                   const Spacer(),
@@ -99,10 +100,11 @@ class ForgotPasswordPage extends StatelessWidget {
                                   // Instruction text
                                   Text(
                                     "Enter your email address and we'll send you a verify code to reset your password.",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 16.sp,
-                                      color: const Color(0xFF424242),
+                                      color: Colors.black,
                                       height: 1.4,
+                                      fontWeight: FontWeight.w400
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -118,7 +120,7 @@ class ForgotPasswordPage extends StatelessWidget {
                                 color: const Color(0xFFFFF3C4), // Light yellow background
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: const Color(0xFFFFE8A1),
                                   width: 1.w,
                                 ),
                               ),
@@ -127,14 +129,22 @@ class ForgotPasswordPage extends StatelessWidget {
                                 keyboardType: TextInputType.emailAddress,
                                 enabled: !viewModel.isLoading,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon:Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/login_email_icon.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.email_outlined,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   hintText: 'Enter Email Address',
                                   hintStyle: TextStyle(
-                                    color: const Color(0xFF9E9E9E),
+                                    color: Colors.black,
                                     fontSize: 12.sp,
                                   ),
                                   border: InputBorder.none,
@@ -155,8 +165,8 @@ class ForgotPasswordPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFD700), // Yellow
+                                    Color(0xFFFFA167), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -180,9 +190,9 @@ class ForgotPasswordPage extends StatelessWidget {
                                           )
                                         : Text(
                                             'Request OTP',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.sp,
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 20.sp,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),

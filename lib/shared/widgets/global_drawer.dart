@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import '../constants/app_constants.dart';
 import '../../core/router.dart';
 
@@ -63,7 +64,7 @@ class GlobalDrawer extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 children: [
                   _buildMenuItem(
-                    icon: Icons.home_outlined,
+                    iconPath: 'assets/icons/menu_home.svg',
                     title: 'Home',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -73,7 +74,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.calendar_today_outlined,
+                    iconPath: 'assets/icons/menu_booking.svg',
                     title: 'Booking Calendar',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -83,7 +84,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.alarm_outlined,
+                    iconPath: 'assets/icons/menu_reminder.svg',
                     title: 'Reminders',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -93,7 +94,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.attach_money_outlined,
+                    iconPath: 'assets/icons/menu_finance.svg',
                     title: 'Finances',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -103,7 +104,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.history_outlined,
+                    iconPath: 'assets/icons/menu_booking_history.svg',
                     title: 'Booking History',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -113,7 +114,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.feedback_outlined,
+                    iconPath: 'assets/icons/menu_feedback.svg',
                     title: 'Feedback',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -123,7 +124,7 @@ class GlobalDrawer extends StatelessWidget {
                     },
                   ),
                   _buildMenuItem(
-                    icon: Icons.settings_outlined,
+                    iconPath: 'assets/icons/menu_settings.svg',
                     title: 'Settings',
                     onTap: () {
                       Navigator.of(context).pop();
@@ -143,51 +144,52 @@ class GlobalDrawer extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    bool showDivider = true,
-  }) {
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 8.h),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(8.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-                child: Row(
-                  children: [
-                    Icon(
-                      icon,
-                      size: 24.sp,
+  required String iconPath, // changed from IconData
+  required String title,
+  required VoidCallback onTap,
+  bool showDivider = true,
+}) {
+  return Column(
+    children: [
+      Container(
+        margin: EdgeInsets.only(bottom: 8.h),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8.r),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    iconPath,
+                    width: 14.w,
+                    height: 14.h,
+                    //color: Colors.black, // keeps same visual style
+                  ),
+                  SizedBox(width: 16.w),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
                       color: Colors.black,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(width: 16.w),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-        if (showDivider)
-          Container(
-            height: 1.h,
-            color: Colors.black,
-            margin: EdgeInsets.symmetric(horizontal: 12.w),
-          ),
-      ],
-    );
-  }
+      ),
+      if (showDivider)
+        Container(
+          height: 1.h,
+          color: Colors.black,
+          margin: EdgeInsets.symmetric(horizontal: 12.w),
+        ),
+    ],
+  );
+}
 }

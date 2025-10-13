@@ -37,7 +37,8 @@ class AuthPage extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppConstants.logoBorderRadius),
                         child: Image.asset(
-                          viewModel.logoPath,
+                          // viewModel.logoPath,
+                          'assets/app_logo/app_logo.png',
                           fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
@@ -60,7 +61,8 @@ class AuthPage extends StatelessWidget {
                     
                     // Buttons section
                     Container(
-                      width: 280,
+                      padding: EdgeInsets.all(16.0),
+                      //width: 280,
                       child: Column(
                         children: [
                           // Log In Button
@@ -70,13 +72,13 @@ class AuthPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
                                 colors: [
-                                  Color(0xFFFF8A00), // Orange
-                                  Color(0xFFFFD700), // Yellow
+                                  Color(0xFFFFA167), 
+                                  Color(0xFFFFDF6F),
                                 ],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                               ),
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Material(
                               color: Colors.transparent,
@@ -94,13 +96,13 @@ class AuthPage extends StatelessWidget {
                                           ),
                                         )
                                       : const Text(
-                                          'Log In',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+                                    'Log In',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -113,8 +115,8 @@ class AuthPage extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF424242), // Dark gray
-                              borderRadius: BorderRadius.circular(25),
+                              color: const Color(0xFF404040), // Dark gray
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Material(
                               color: Colors.transparent,
@@ -123,22 +125,22 @@ class AuthPage extends StatelessWidget {
                                 onTap: (viewModel.isLoginLoading || viewModel.isSignUpLoading) ? null : viewModel.navigateToSignUp,
                                 child: Center(
                                   child: viewModel.isSignUpLoading
-                                      ? const SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                          ),
-                                        )
-                                      : const Text(
-                                          'Sign Up',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                    ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                         ),
+                                      )
+                                      : const Text(
+                                        'Sign Up',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                 ),
                               ),
                             ),
@@ -146,7 +148,6 @@ class AuthPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
                     // Error message
                     if (viewModel.errorMessage != null) ...[
                       SizedBox(height: AppConstants.mediumSpacing),

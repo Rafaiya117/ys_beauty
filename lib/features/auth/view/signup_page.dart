@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/signup_viewmodel.dart';
@@ -46,10 +48,10 @@ class SignUpPage extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: const Color(0xFF424242),
-                                      size: 20.sp,
+                                    icon:SvgPicture.asset(
+                                      'assets/icons/back_button.svg',
+                                      width:16.w,
+                                      height: 12.h,
                                     ),
                                   ),
                                   const Spacer(),
@@ -76,20 +78,16 @@ class SignUpPage extends StatelessWidget {
                                   // App logo
                                   Image.asset(
                                     AppConstants.appLogo,
-                                    width: 120.w,
-                                    height: 120.h,
+                                    width: 96.48.w,
+                                    height: 86.75.h,
                                     fit: BoxFit.contain,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         width: 120.w,
                                         height: 120.h,
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF424242,
-                                          ).withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
+                                          color: const Color(0xFF424242,).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(20.r,),
                                         ),
                                         child: Icon(
                                           Icons.image,
@@ -102,18 +100,18 @@ class SignUpPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-
+                            SizedBox(height: 20.h,),
                             // Create Account title
                             Text(
                               'Create Account',
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF424242),
+                              style: GoogleFonts.poppins(
+                                fontSize: 30.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
                               ),
                             ),
 
-                            SizedBox(height: 24.h),
+                            SizedBox(height: 20.h),
 
                             // Name input field
                             Container(
@@ -130,11 +128,19 @@ class SignUpPage extends StatelessWidget {
                                 controller: viewModel.nameController,
                                 keyboardType: TextInputType.name,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.person_outline,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/reg_user_icon.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.person_outline,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   hintText: 'Enter Name',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF1A1A1A),
@@ -168,11 +174,19 @@ class SignUpPage extends StatelessWidget {
                                 controller: viewModel.phoneController,
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.phone_outlined,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon:Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/reg_phone.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.phone_outlined,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   hintText: 'Enter Phone Number',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF1A1A1A),
@@ -188,9 +202,7 @@ class SignUpPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             SizedBox(height: 16.h),
-
                             // Email input field
                             Container(
                               height: 40.h,
@@ -206,11 +218,19 @@ class SignUpPage extends StatelessWidget {
                                 controller: viewModel.emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon:Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/login_email_icon.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.email_outlined,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   hintText: 'Enter Email Address',
                                   hintStyle: TextStyle(
                                     color: const Color(0xFF1A1A1A),
@@ -244,11 +264,19 @@ class SignUpPage extends StatelessWidget {
                                 controller: viewModel.passwordController,
                                 obscureText: viewModel.isPasswordVisible,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline,
-                                    color: const Color(0xFFFF8A00),
-                                    size: 20.sp,
+                                  prefixIcon:Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/login_password.svg',
+                                      width: 14.w,
+                                      height: 12.h,
+                                    ),
                                   ),
+                                  // Icon(
+                                  //   Icons.lock_outline,
+                                  //   color: const Color(0xFFFF8A00),
+                                  //   size: 20.sp,
+                                  // ),
                                   suffixIcon: IconButton(
                                     onPressed:
                                         viewModel.togglePasswordVisibility,
@@ -284,14 +312,14 @@ class SignUpPage extends StatelessWidget {
                                 GestureDetector(
                                   onTap: viewModel.toggleRememberMe,
                                   child: Container(
-                                    width: 20.w,
-                                    height: 20.h,
+                                    width: 14.w,
+                                    height: 14.h,
                                     decoration: BoxDecoration(
                                       color: viewModel.isRememberMe
                                           ? const Color(0xFFFF8A00)
                                           : Colors.transparent,
                                       border: Border.all(
-                                        color: const Color(0xFFFF8A00),
+                                        color: const Color(0xFF1B1B1B),
                                         width: 2.w,
                                       ),
                                       borderRadius: BorderRadius.circular(4.r),
@@ -309,7 +337,7 @@ class SignUpPage extends StatelessWidget {
                                 Text(
                                   'Remember me',
                                   style: TextStyle(
-                                    color: const Color(0xFF424242),
+                                    color: Colors.black,
                                     fontSize: 14.sp,
                                   ),
                                 ),
@@ -325,8 +353,8 @@ class SignUpPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFD700), // Yellow
+                                    Color(0xFFFFA167), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
@@ -342,24 +370,20 @@ class SignUpPage extends StatelessWidget {
                                       : viewModel.signUp,
                                   child: Center(
                                     child: viewModel.isEmailSignUpLoading
-                                        ? SizedBox(
-                                            width: 20.w,
-                                            height: 20.h,
-                                            child:
-                                                const CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                        Color
-                                                      >(Colors.black54),
-                                                ),
+                                      ? SizedBox(
+                                        width: 20.w,
+                                        height: 20.h,
+                                          child:const CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:AlwaysStoppedAnimation<Color>(Colors.black54),
+                                            ),
                                           )
                                         : Text(
                                             'Sign Up',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w600,
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                   ),
@@ -367,7 +391,7 @@ class SignUpPage extends StatelessWidget {
                               ),
                             ),
 
-                            SizedBox(height: 24.h),
+                            SizedBox(height: 20.h),
 
                             // Or Continue With
                             Center(
@@ -380,7 +404,7 @@ class SignUpPage extends StatelessWidget {
                               ),
                             ),
 
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 10.h),
 
                             // Google sign up button
                             Center(
@@ -402,22 +426,19 @@ class SignUpPage extends StatelessWidget {
                                       )
                                     : Image.asset(
                                         AppConstants.googleLogoPath,
-                                        width: 50.w,
-                                        height: 50.h,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Icon(
-                                                Icons.g_mobiledata,
-                                                size: 50.sp,
-                                                color: const Color(0xFF4285F4),
-                                              );
-                                            },
-                                      ),
+                                        width: 24.w,
+                                        height: 24.h,
+                                        errorBuilder:(context, error, stackTrace) {
+                                    return Icon(
+                                      Icons.g_mobiledata,
+                                      size: 50.sp,
+                                      color: const Color(0xFF4285F4),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
-
                             SizedBox(height: 24.h),
-
                             // Login link
                             Center(
                               child: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/reset_password_viewmodel.dart';
@@ -48,11 +49,12 @@ class ResetPasswordPage extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: const Color(0xFF424242),
-                                      size: 20.sp,
-                                    ),
+                                    icon:SvgPicture.asset(
+                                      'assets/icons/back_button.svg',
+                                      width: 16.w,
+                                      height: 16.h,
+                                    )
+                                    
                                   ),
                                   const Spacer(),
                                   Text(
@@ -70,7 +72,11 @@ class ResetPasswordPage extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            Column(
+                              children: [
 
+                              ],
+                            ),
                             // Logo and illustration section
                             Center(
                               child: Column(
@@ -86,12 +92,8 @@ class ResetPasswordPage extends StatelessWidget {
                                         width: 120.w,
                                         height: 120.h,
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF424242,
-                                          ).withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            20.r,
-                                          ),
+                                          color: const Color(0xFF424242,).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(20.r,),
                                         ),
                                         child: Icon(
                                           Icons.image,
@@ -111,12 +113,9 @@ class ResetPasswordPage extends StatelessWidget {
                                       fontSize: 24.sp,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF424242),
-                                    ),
-                                    textAlign: TextAlign.center,
+                                    ),                                 
                                   ),
-
                                   SizedBox(height: 8.h),
-
                                   // Instruction text
                                   Text(
                                     'Enter your new password below to reset your password',
@@ -141,7 +140,7 @@ class ResetPasswordPage extends StatelessWidget {
                                 ), // Light yellow background
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: const Color(0xFFFFE8A1),
                                   width: 1.w,
                                 ),
                               ),
@@ -168,7 +167,7 @@ class ResetPasswordPage extends StatelessWidget {
                                   ),
                                   hintText: 'Enter New Password',
                                   hintStyle: TextStyle(
-                                    color: const Color(0xFF9E9E9E),
+                                    color: Colors.black,
                                     fontSize: 12.sp,
                                   ),
                                   border: InputBorder.none,
@@ -190,14 +189,13 @@ class ResetPasswordPage extends StatelessWidget {
                                 ), // Light yellow background
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: const Color(0xFFFFE8A1),
                                   width: 1.w,
                                 ),
                               ),
                               child: TextField(
                                 controller: viewModel.confirmPasswordController,
-                                obscureText:
-                                    !viewModel.isConfirmPasswordVisible,
+                                obscureText:!viewModel.isConfirmPasswordVisible,
                                 enabled: !viewModel.isLoading,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
@@ -218,7 +216,7 @@ class ResetPasswordPage extends StatelessWidget {
                                   ),
                                   hintText: 'Enter Confirm Password',
                                   hintStyle: TextStyle(
-                                    color: const Color(0xFF9E9E9E),
+                                    color: Colors.black,
                                     fontSize: 12.sp,
                                   ),
                                   border: InputBorder.none,
@@ -229,9 +227,7 @@ class ResetPasswordPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             SizedBox(height: 24.h),
-
                             // Reset Password button
                             Container(
                               width: double.infinity,
@@ -239,8 +235,8 @@ class ResetPasswordPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFD700), // Yellow
+                                    Color(0xFFFFA167), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/create_event_viewmodel.dart';
@@ -83,7 +84,7 @@ class CreateEventPage extends StatelessWidget {
                             // Event/Coordinator field
                             _buildInputField(
                               label: 'Enter Event/ Coordinator',
-                              icon: Icons.calendar_today_outlined,
+                              iconPath: 'assets/icons/create_event_name.svg',
                               controller: viewModel.eventController,
                             ),
 
@@ -97,7 +98,7 @@ class CreateEventPage extends StatelessWidget {
                             // Location field
                             _buildInputField(
                               label: 'Choose Location',
-                              icon: Icons.location_on_outlined,
+                              iconPath: 'assets/icons/create_location.svg',
                               controller: viewModel.locationController,
                               hasArrow: true,
                             ),
@@ -110,7 +111,7 @@ class CreateEventPage extends StatelessWidget {
                                 Expanded(
                                   child: _buildInputField(
                                     label: 'Enter Booth Fee',
-                                    icon: Icons.attach_money,
+                                    iconPath: 'assets/icons/create_event_booth.svg',
                                     controller: viewModel.boothFeeController,
                                   ),
                                 ),
@@ -118,7 +119,7 @@ class CreateEventPage extends StatelessWidget {
                                 Expanded(
                                   child: _buildInputField(
                                     label: 'Enter Booth Size',
-                                    icon: Icons.aspect_ratio,
+                                    iconPath: 'assets/icons/create_booth_size.svg',
                                     controller: viewModel.boothSizeController,
                                   ),
                                 ),
@@ -130,7 +131,7 @@ class CreateEventPage extends StatelessWidget {
                             // Space # field
                             _buildInputField(
                               label: 'Enter Space #',
-                              icon: Icons.place_outlined,
+                              iconPath: 'assets/icons/create_event_space.svg',
                               controller: viewModel.spaceNumberController,
                             ),
 
@@ -140,7 +141,7 @@ class CreateEventPage extends StatelessWidget {
                             _buildDateField(
                               context: context,
                               label: 'Enter Date',
-                              icon: Icons.calendar_today_outlined,
+                              iconPath: 'assets/icons/create_event_date.svg',
                               controller: viewModel.dateController,
                               viewModel: viewModel,
                             ),
@@ -151,7 +152,7 @@ class CreateEventPage extends StatelessWidget {
                             _buildReminderField(
                               context: context,
                               label: 'Set Reminder',
-                              icon: Icons.notifications_outlined,
+                              iconPath: 'assets/icons/create_reminder.svg',
                               controller: viewModel.reminderController,
                               viewModel: viewModel,
                             ),
@@ -224,152 +225,168 @@ class CreateEventPage extends StatelessWidget {
   }
 
   Widget _buildInputField({
-    required String label,
-    required IconData icon,
-    required TextEditingController controller,
-    bool hasArrow = false,
-    bool hasDropdown = false,
-  }) {
-    return Container(
+  required String label,
+  required String iconPath, // changed from IconData
+  required TextEditingController controller,
+  bool hasArrow = false,
+  bool hasDropdown = false,
+}) {
+  return Container(
+    height: 48.h,
+    padding: EdgeInsets.symmetric(horizontal: 10.w),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFF3C4),
+      borderRadius: BorderRadius.circular(12.r),
+      //border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+    ),
+    child: Row(
+      children: [
+        SvgPicture.asset(
+          iconPath,
+          width: 18.w,
+          height: 18.h,
+          color: const Color(0xFFFFA167),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: const Color(0xFF424242),
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              hintText: label,
+              hintStyle: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+            ),
+          ),
+        ),
+        if (hasArrow)
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16.sp,
+            color: const Color(0xFF9E9E9E),
+          ),
+        if (hasDropdown)
+          Icon(
+            Icons.keyboard_arrow_down,
+            size: 18.sp,
+            color: const Color(0xFF9E9E9E),
+          ),
+      ],
+    ),
+  );
+}
+
+
+  Widget _buildDateField({
+  required BuildContext context,
+  required String label,
+  required String iconPath, // changed from IconData
+  required TextEditingController controller,
+  required CreateEventViewModel viewModel,
+}) {
+  return GestureDetector(
+    onTap: () => _showDatePicker(context, viewModel),
+    child: Container(
       height: 48.h,
-      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+        //border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
-          SizedBox(width: 10.w),
+          SvgPicture.asset(
+            iconPath,
+            width: 18.w,
+            height: 18.h,
+            color: const Color(0xFFFFA167),
+          ),
+          SizedBox(width: 12.w),
           Expanded(
-            child: TextField(
-              controller: controller,
+            child: Text(
+              controller.text.isEmpty ? label : controller.text,
               style: TextStyle(
-                fontSize: 12.sp,
-                color: const Color(0xFF424242),
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: label,
-                hintStyle: TextStyle(
-                  fontSize: 12.sp,
-                  color: const Color(0xFF9E9E9E),
-                  fontWeight: FontWeight.w400,
-                ),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                fontSize: 14.sp,
+                color: controller.text.isEmpty
+                    ? const Color(0xFF9E9E9E)
+                    : const Color(0xFF424242),
+                fontWeight: controller.text.isEmpty
+                    ? FontWeight.w400
+                    : FontWeight.w500,
               ),
             ),
           ),
-          if (hasArrow)
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.sp,
-              color: const Color(0xFF9E9E9E),
-            ),
-          if (hasDropdown)
-            Icon(
-              Icons.keyboard_arrow_down,
-              size: 18.sp,
-              color: const Color(0xFF9E9E9E),
-            ),
+          Icon(
+            Icons.calendar_today,
+            size: 18.sp,
+            color: const Color(0xFF9E9E9E),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDateField({
-    required BuildContext context,
-    required String label,
-    required IconData icon,
-    required TextEditingController controller,
-    required CreateEventViewModel viewModel,
-  }) {
-    return GestureDetector(
-      onTap: () => _showDatePicker(context, viewModel),
-      child: Container(
-        height: 48.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF3C4),
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Text(
-                controller.text.isEmpty ? label : controller.text,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: controller.text.isEmpty
-                      ? const Color(0xFF9E9E9E)
-                      : const Color(0xFF424242),
-                  fontWeight: controller.text.isEmpty
-                      ? FontWeight.w400
-                      : FontWeight.w500,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.calendar_today,
-              size: 18.sp,
-              color: const Color(0xFF9E9E9E),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildReminderField({
-    required BuildContext context,
-    required String label,
-    required IconData icon,
-    required TextEditingController controller,
-    required CreateEventViewModel viewModel,
-  }) {
-    return GestureDetector(
-      onTap: () => _showReminderDropdown(context, viewModel),
-      child: Container(
-        height: 48.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF3C4),
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Text(
-                controller.text.isEmpty ? label : controller.text,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: controller.text.isEmpty
-                      ? const Color(0xFF9E9E9E)
-                      : const Color(0xFF424242),
-                  fontWeight: controller.text.isEmpty
-                      ? FontWeight.w400
-                      : FontWeight.w500,
-                ),
+  required BuildContext context,
+  required String label,
+  required String iconPath, // changed from IconData
+  required TextEditingController controller,
+  required CreateEventViewModel viewModel,
+}) {
+  return GestureDetector(
+    onTap: () => _showReminderDropdown(context, viewModel),
+    child: Container(
+      height: 48.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF3C4),
+        borderRadius: BorderRadius.circular(12.r),
+        //border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+      ),
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            iconPath,
+            width: 18.w,
+            height: 18.h,
+            color: const Color(0xFFFFA167),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text(
+              controller.text.isEmpty ? label : controller.text,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: controller.text.isEmpty
+                    ? const Color(0xFF9E9E9E)
+                    : const Color(0xFF424242),
+                fontWeight: controller.text.isEmpty
+                    ? FontWeight.w400
+                    : FontWeight.w500,
               ),
             ),
-            Icon(
-              Icons.keyboard_arrow_down,
-              size: 18.sp,
-              color: const Color(0xFF9E9E9E),
-            ),
-          ],
-        ),
+          ),
+          Icon(
+            Icons.keyboard_arrow_down,
+            size: 18.sp,
+            color: const Color(0xFF9E9E9E),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildTimeSection(
     BuildContext context,

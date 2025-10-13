@@ -190,15 +190,15 @@ class MainNavigationPage extends StatelessWidget {
           width: 56.w,
           height: 56.h,
           decoration: BoxDecoration(
-            color: const Color(0xFFFF8A00), // Orange background
+            color: const Color(0xFFFFA066), // Orange background
             shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFFF8A00).withValues(alpha: 0.4),
-                blurRadius: 12.r,
-                offset: Offset(0, 6.h),
-              ),
-            ],
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: const Color(0xFFFF8A00).withValues(alpha: 0.4),
+            //     blurRadius: 12.r,
+            //     offset: Offset(0, 6.h),
+            //   ),
+            // ],
           ),
           child: Icon(Icons.add, size: 28.sp, color: Colors.white),
         ),
