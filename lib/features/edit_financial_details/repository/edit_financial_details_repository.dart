@@ -1,87 +1,71 @@
+import 'dart:convert';
+
+import 'package:animation/core/token_storage.dart';
+import 'package:http/http.dart' as http;
+
 import '../model/edit_financial_details_model.dart';
 
 class EditFinancialDetailsRepository {
-  // Mock data for edit financial details
-  List<EditFinancialDetailsModel> _financialDetails = [
-    EditFinancialDetailsModel(
-      id: '1',
-      event: 'Birthday Party',
-      date: '01 July 2025',
-      boothSize: '10*10',
-      boothFee: 100.00,
-      grossSales: 200.00,
-      expenses: 200.00,
-      netProfit: 100.00,
-    ),
-    EditFinancialDetailsModel(
-      id: '2',
-      event: 'Concert',
-      date: '31 Jun 2025',
-      boothSize: '15*15',
-      boothFee: 150.00,
-      grossSales: 300.00,
-      expenses: 100.00,
-      netProfit: 200.00,
-    ),
-    EditFinancialDetailsModel(
-      id: '3',
-      event: 'Conference',
-      date: '30 Jun 2025',
-      boothSize: '20*20',
-      boothFee: 200.00,
-      grossSales: 500.00,
-      expenses: 300.00,
-      netProfit: 200.00,
-    ),
-    EditFinancialDetailsModel(
-      id: '4',
-      event: 'Friendly Party',
-      date: '29 July 2025',
-      boothSize: '12*12',
-      boothFee: 120.00,
-      grossSales: 400.00,
-      expenses: 150.00,
-      netProfit: 250.00,
-    ),
-    EditFinancialDetailsModel(
-      id: '5',
-      event: 'Wedding Reception',
-      date: '28 July 2025',
-      boothSize: '25*25',
-      boothFee: 250.00,
-      grossSales: 600.00,
-      expenses: 200.00,
-      netProfit: 400.00,
-    ),
-  ];
+  final String _baseUrl = 'http://10.10.13.36'; 
 
+  // Load financial details by ID
   Future<EditFinancialDetailsModel?> getFinancialDetailsById(String id) async {
-    // Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    final accessToken = await TokenStorage.getAccessToken();
     try {
-      return _financialDetails.firstWhere((item) => item.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
+      final response = await http.get(
+        Uri.parse("$_baseUrl/event/events/$id/"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
 
-  Future<bool> updateFinancialDetails(EditFinancialDetailsModel financialDetails) async {
-    // Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 800));
-    try {
-      final index = _financialDetails.indexWhere((item) => item.id == financialDetails.id);
-      if (index != -1) {
-        _financialDetails[index] = financialDetails;
-        return true;
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return EditFinancialDetailsModel(
+          id: data['id'].toString(),
+          event: data['event_name'] ?? '',
+          date: data['date'] ?? '',
+          boothSize: data['booth_size'] ?? '',
+          boothFee: (data['booth_fee'] ?? 0).toDouble(),
+          grossSales: (data['gross_sales'] ?? 0).toDouble(),
+          expenses: (data['expenses'] ?? 0).toDouble(),
+          netProfit: (data['net_profit'] ?? 0).toDouble(),
+        );
+      } else if (response.statusCode == 404) {
+        return null; 
+      } else {
+        throw Exception('Failed to fetch financial details. Status: ${response.statusCode}');
       }
-      return false;
     } catch (e) {
-      return false;
+      throw Exception('Failed to fetch financial details: $e');
     }
   }
 
-  Future<List<EditFinancialDetailsModel>> getAllFinancialDetails() async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return _financialDetails;
+  // Update financial details
+  Future<bool> updateFinancialDetails(EditFinancialDetailsModel financialDetails) async {
+    final accessToken = await TokenStorage.getAccessToken();
+    try {
+      final response = await http.put(
+        Uri.parse("$_baseUrl/event/events/${financialDetails.id}/update/"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken', 
+        },
+        body: jsonEncode({
+          "event": financialDetails.event,
+          "date": financialDetails.date,
+          "booth_size": financialDetails.boothSize,
+          "booth_fee": financialDetails.boothFee,
+          "gross_sales": financialDetails.grossSales,
+          "expenses": financialDetails.expenses,
+          "net_profit": financialDetails.netProfit,
+        }),
+      );
+
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -172,7 +172,7 @@ class GlobalDrawer extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 14.sp,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),

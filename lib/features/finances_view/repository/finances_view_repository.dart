@@ -1,6 +1,15 @@
+// ignore_for_file: prefer_final_fields
+
+import 'dart:convert';
+
+import 'package:animation/core/token_storage.dart';
+import 'package:animation/features/finances_view/viewmodel/finances_view_viewmodel.dart';
+import 'package:http/http.dart' as http;
+
 import '../model/finances_view_model.dart';
 
 class FinancesViewRepository {
+  final _baseurl = 'http://10.10.13.36';
   // Mock data for finances view
   List<FinancesViewModel> _financesData = [
     FinancesViewModel(
@@ -118,5 +127,32 @@ class FinancesViewRepository {
   Future<List<FinancesViewModel>> getAllFinancesView() async {
     await Future.delayed(const Duration(milliseconds: 400));
     return _financesData;
+  }
+
+  Future<bool> updateFinance(String financeId, SalesEvent updatedEvent, {required bool isSales}) async {
+    try {
+      final accessToken = await TokenStorage.getAccessToken();
+      final url = '$_baseurl/event/events/$financeId/'; // your API endpoint
+      final body = isSales
+          ? {'sales': double.tryParse(updatedEvent.amount.replaceAll('\$', '')) ?? 0.0}
+          : {'expenses': double.tryParse(updatedEvent.amount.replaceAll('\$', '')) ?? 0.0};
+
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -783,8 +784,7 @@ class FinancesPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () =>
-                            AppRouter.navigateToFinancesView(eventId: event.id),
+                        onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
                         child: Icon(
                           Icons.visibility,
                           size: 18.sp,
@@ -805,7 +805,7 @@ class FinancesPage extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }).toList(),           
         ),
       ],
     );
@@ -904,13 +904,22 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 20.h),
 
               // Form Input Fields
+              // _buildInputField(
+              //   icon: Icons.event,
+              //   hintText: 'Enter Event',
+              //   controller: viewModel.salesEventController,
+              //   isRequired: true,
+              // ),
               _buildInputField(
-                icon: Icons.event,
-                hintText: 'Enter Event',
-                controller: viewModel.salesEventController,
-                isRequired: true,
+                hintText: 'Select Booth',
+                controller: viewModel.boothEventController,
+                svgIconPath: 'assets/icons/booth.svg',
+                isDropdown: true,
+                dropdownItems: viewModel.createdBooths,
+                onDropdownChanged: (value) {
+                  viewModel.boothEventController.text = value;
+                },
               ),
-
               SizedBox(height: 12.h),
 
               _buildInputField(
@@ -966,13 +975,23 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 20.h),
 
               // Form Input Fields
+              // _buildInputField(
+              //   icon: Icons.event,
+              //   hintText: 'Enter Event',
+              //   controller: viewModel.expensesEventController,
+              //   isRequired: true,
+              // ),
+              
               _buildInputField(
-                icon: Icons.event,
-                hintText: 'Enter Event',
+                hintText: 'Select Booth',
                 controller: viewModel.expensesEventController,
-                isRequired: true,
+                svgIconPath: 'assets/icons/booth.svg',
+                isDropdown: true,
+                dropdownItems: viewModel.createdBooths,
+                onDropdownChanged: (value) {
+                  viewModel.expensesEventController.text = value;
+                },
               ),
-
               SizedBox(height: 12.h),
 
               _buildInputField(
@@ -1007,68 +1026,184 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField({
-    required IconData icon,
-    required String hintText,
-    required TextEditingController controller,
-    bool isRequired = false,
-    TextInputType? keyboardType,
-  }) {
-    return Container(
-      height: 48.h, // Fixed shorter height
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3C4),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
+  // Widget _buildInputField({
+  //   required IconData icon,
+  //   required String hintText,
+  //   required TextEditingController controller,
+  //   bool isRequired = false,
+  //   TextInputType? keyboardType,
+  // }) {
+  //   return Container(
+  //     height: 48.h, // Fixed shorter height
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFFFFF3C4),
+  //       borderRadius: BorderRadius.circular(12.r),
+  //       border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+  //     ),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Stack(
+  //           alignment: Alignment.center,
+  //           children: [
+  //             Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
+  //             if (isRequired)
+  //               Positioned(
+  //                 right: -2,
+  //                 top: -2,
+  //                 child: Icon(
+  //                   Icons.star,
+  //                   size: 8.sp,
+  //                   color: const Color(0xFFFF8A00),
+  //                 ),
+  //               ),
+  //           ],
+  //         ),
+  //         SizedBox(width: 12.w),
+  //         Expanded(
+  //           child: TextField(
+  //             controller: controller,
+  //             keyboardType: keyboardType ?? TextInputType.text,
+  //             textAlignVertical: TextAlignVertical.center,
+  //             style: TextStyle(
+  //               fontSize: 13.sp,
+  //               color: const Color(0xFF424242),
+  //               height: 1.2,
+  //             ),
+  //             decoration: InputDecoration(
+  //               hintText: hintText,
+  //               hintStyle: TextStyle(
+  //                 fontSize: 13.sp,
+  //                 color: const Color(0xFF757575),
+  //                 height: 1.2,
+  //               ),
+  //               border: InputBorder.none,
+  //               contentPadding: EdgeInsets.zero,
+  //               isDense: true,
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+Widget _buildInputField({
+  required String hintText,
+  required TextEditingController controller,
+  IconData? icon, // made optional for SVG usage
+  String? svgIconPath, // <-- new
+  bool isRequired = false,
+  TextInputType? keyboardType,
+  bool isDropdown = false, // <-- new
+  List<String>? dropdownItems, // <-- new
+  Function(String)? onDropdownChanged, // optional callback
+}) {
+  return Container(
+    height: 48.h,
+    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFF3C4),
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            if (svgIconPath != null)
+              SvgPicture.asset(
+                svgIconPath,
+                width: 18.w,
+                height: 18.h,
+                colorFilter: const ColorFilter.mode(
+                  Color(0xFF424242),
+                  BlendMode.srcIn,
+                ),
+              )
+            else if (icon != null)
               Icon(icon, size: 18.sp, color: const Color(0xFF424242)),
-              if (isRequired)
-                Positioned(
-                  right: -2,
-                  top: -2,
-                  child: Icon(
-                    Icons.star,
-                    size: 8.sp,
-                    color: const Color(0xFFFF8A00),
+
+            if (isRequired)
+              Positioned(
+                right: -2,
+                top: -2,
+                child: Icon(
+                  Icons.star,
+                  size: 8.sp,
+                  color: const Color(0xFFFF8A00),
+                ),
+              ),
+          ],
+        ),
+        SizedBox(width: 12.w),
+
+        // ------- Conditional Input Type ------- //
+        Expanded(
+          child: isDropdown
+              ? DropdownButtonFormField<String>(
+                  value: controller.text.isNotEmpty ? controller.text : null,
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: TextStyle(
+                      fontSize: 13.sp,
+                      color: const Color(0xFF757575),
+                      height: 1.2,
+                    ),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  items: dropdownItems?.map((item) {
+                    return DropdownMenuItem(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: const Color(0xFF424242),
+                          height: 1.2,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.text = value ?? '';
+                    if (onDropdownChanged != null && value != null) {
+                      onDropdownChanged(value);
+                    }
+                  },
+                )
+              : TextField(
+                  controller: controller,
+                  keyboardType: keyboardType ?? TextInputType.text,
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: const Color(0xFF424242),
+                    height: 1.2,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: TextStyle(
+                      fontSize: 13.sp,
+                      color: const Color(0xFF757575),
+                      height: 1.2,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                    isDense: true,
                   ),
                 ),
-            ],
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              keyboardType: keyboardType ?? TextInputType.text,
-              textAlignVertical: TextAlignVertical.center,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: const Color(0xFF424242),
-                height: 1.2,
-              ),
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: TextStyle(
-                  fontSize: 13.sp,
-                  color: const Color(0xFF757575),
-                  height: 1.2,
-                ),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildActionButton({
     required String title,

@@ -1,3 +1,5 @@
+import 'package:animation/features/finances_view/view/expensess_history.dart';
+import 'package:animation/features/finances_view/view/sales_history.dart';
 import 'package:flutter/material.dart';
 import '../../features/splash/view/splash_page.dart';
 import '../../features/animation/view/animation_page.dart';
@@ -61,7 +63,8 @@ class AppRouter {
   static const String search = '/search';
   static const String location = '/location';
   static const String availableEvent = '/available-event';
-
+  static const String saleshistory = '/sales_history';
+  static const String expensessistory = '/expensess_history';
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
@@ -210,7 +213,7 @@ class AppRouter {
         );
       case financesView:
         final args = settings.arguments as Map<String, dynamic>?;
-        final eventId = args?['eventId'] as String?;
+        final eventId = args?['eventId'] as String? ?? '';
         return MaterialPageRoute(
           builder: (_) => FinancesViewPage(eventId: eventId),
           settings: settings,
@@ -243,6 +246,14 @@ class AppRouter {
           builder: (_) => const AvailableEventPageWrapper(),
           settings: settings,
         );
+      case saleshistory:
+        return MaterialPageRoute(builder: (_)=>SalesHistoryPage(),
+        settings: settings,
+      );
+      case expensessistory:
+        return MaterialPageRoute(builder: (_)=>ExpensesHistoryPage(),
+        settings: settings,
+      );
       default:
         return MaterialPageRoute(
           builder: (_) => const SplashPage(),
@@ -366,14 +377,28 @@ class AppRouter {
     return navigator!.pushNamed(financesView, arguments: {'eventId': eventId});
   }
 
-  static Future<dynamic> navigateToEditFinancialDetails({
-    String? financialDetailsId,
-  }) {
-    return navigator!.pushNamed(
-      editFinancialDetails,
-      arguments: {'financialDetailsId': financialDetailsId},
-    );
-  }
+  // static Future<dynamic> navigateToEditFinancialDetails({
+  //   String? financialDetailsId,
+  // }) {
+  //   return navigator!.pushNamed(
+  //     editFinancialDetails,
+  //     arguments: {'financialDetailsId': financialDetailsId},
+  //   );
+  // }
+
+static Future<dynamic> navigateToEditFinancialDetails({
+  String? financialDetailsId,
+  Function? onUpdate, // <-- add this
+}) {
+  return navigator!.pushNamed(
+    editFinancialDetails,
+    arguments: {
+      'financialDetailsId': financialDetailsId,
+      'onUpdate': onUpdate, // <-- pass it along
+    },
+  );
+}
+
 
   static Future<dynamic> navigateToFeedback() {
     return navigator!.pushNamed(feedback);
@@ -391,6 +416,12 @@ class AppRouter {
     return navigator!.pushNamed(availableEvent);
   }
 
+  static Future<dynamic> navigateToSalesHistory() {
+    return navigator!.pushNamed(saleshistory);
+  }
+  static Future<dynamic> navigateToExpenssHistory() {
+    return navigator!.pushNamed(expensessistory);
+  }
   static void goBack() {
     if (navigator!.canPop()) {
       navigator!.pop();

@@ -1,19 +1,424 @@
+import 'package:animation/features/edit_financial_details/view/edit_financial_details_page.dart';
+import 'package:animation/features/finances_view/view/modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/finances_view_viewmodel.dart';
 import '../../../shared/constants/app_constants.dart';
 import '../../../core/router.dart';
 
-class FinancesViewPage extends StatelessWidget {
-  final String? eventId;
+// class FinancesViewPage extends StatelessWidget {
+//   final String? eventId;
   
-  const FinancesViewPage({super.key, this.eventId});
+//   const FinancesViewPage({super.key, this.eventId});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider(
+//       create: (context) => FinancesViewViewModel()..loadFinancesView(eventId ?? '1'),
+//       child: Consumer<FinancesViewViewModel>(
+//         builder: (context, viewModel, child) {
+//           return Scaffold(
+//             body: Container(
+//               width: double.infinity,
+//               height: double.infinity,
+//               decoration: const BoxDecoration(
+//                 image: DecorationImage(
+//                   image: AssetImage(AppConstants.backgroundImagePath),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//               child: SafeArea(
+//                 child: Column(
+//                   children: [
+//                     // Header
+//                     _buildHeader(context),                    
+//                     SizedBox(height: 20.h),                    
+//                     // Content
+//                     Expanded(
+//                       child: _buildContent(viewModel),
+//                     ),
+//                     SizedBox(height: 20.h,),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget _buildHeader(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+//       child: Row(
+//         children: [
+//           // Back button
+//           GestureDetector(
+//             onTap: () => Navigator.of(context).pop(),
+//             child: Icon(
+//               Icons.arrow_back_ios,
+//               size: 24.sp,
+//               color: Colors.black,
+//             ),
+//           ),
+          
+//           // Title - Centered
+//           Expanded(
+//             child: Center(
+//               child: Text(
+//                 'Finances',
+//                 style: TextStyle(
+//                   fontSize: 20.sp,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black,
+//                 ),
+//               ),
+//             ),
+//           ),
+          
+//           // Spacer to balance the back button
+//           SizedBox(width: 24.w),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildContent(FinancesViewViewModel viewModel) {
+//     if (viewModel.isLoading) {
+//       return const Center(
+//         child: CircularProgressIndicator(),
+//       );
+//     }
+
+//     if (viewModel.error != null) {
+//       return Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Icon(
+//               Icons.error_outline,
+//               size: 48.sp,
+//               color: const Color(0xFF757575),
+//             ),
+//             SizedBox(height: 16.h),
+//             Text(
+//               viewModel.error!,
+//               style: TextStyle(
+//                 fontSize: 16.sp,
+//                 color: const Color(0xFF757575),
+//               ),
+//               textAlign: TextAlign.center,
+//             ),
+//             SizedBox(height: 16.h),
+//             ElevatedButton(
+//               onPressed: () => viewModel.refresh(),
+//               child: const Text('Retry'),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
+
+//     if (viewModel.financesData == null) {
+//       return Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Icon(
+//               Icons.receipt_long_outlined,
+//               size: 48.sp,
+//               color: const Color(0xFF757575),
+//             ),
+//             SizedBox(height: 16.h),
+//             Text(
+//               'No finance data found',
+//               style: TextStyle(
+//                 fontSize: 16.sp,
+//                 color: const Color(0xFF757575),
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
+
+//     return SingleChildScrollView(
+//       padding: EdgeInsets.symmetric(horizontal: 20.w),
+//       child: Column(
+//         children: [
+//            _buildFinanceCard(viewModel.financesData!),
+//            SizedBox(height: 20.h,),
+//            Column(
+//              children: [
+//                Text(
+//                 'Sales',
+//                 style: GoogleFonts.poppins(
+//                   fontSize: 16,
+//                   fontWeight: FontWeight.w700,
+//                   color:Colors.black
+//                 ),
+//               ),
+//               //!----------------Event Cards -----------------!
+//               SizedBox(height: 20.h,),
+//               _buildSalesEventCard(
+//                 amount: '\$500', 
+//                 title: 'Birthday Party', 
+//                 date: '01 June,2025',
+//                 onEdit: () {
+                  
+//                 },
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//   Widget _buildFinanceCard(financesData) {
+//     return Container(
+//       width: double.infinity,
+//       padding: EdgeInsets.all(24.w),
+//       decoration: BoxDecoration(
+//         image: const DecorationImage(
+//           image: AssetImage(AppConstants.cardBgPath),
+//           fit: BoxFit.cover,
+//         ),
+//         borderRadius: BorderRadius.circular(16.r),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withValues(alpha: 0.1),
+//             blurRadius: 10.r,
+//             offset: Offset(0, 4.h),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           // Event Title and Date
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 financesData.eventName,
+//                 style: TextStyle(
+//                   fontSize: 20.sp,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.black,
+//                 ),
+//               ),
+//               Text(
+//                 'Date: ${financesData.date}',
+//                 style: TextStyle(
+//                   fontSize: 16.sp,
+//                   color: Colors.black,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//             ],
+//           ),
+          
+//           SizedBox(height: 24.h),
+          
+//           // Event Details - Two Column Layout
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // Left Column
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     _buildDetailRow('Booth Size:', financesData.boothSize),
+//                     SizedBox(height: 16.h),
+//                     _buildDetailRow('Booth Fee:', '\$${financesData.boothFee.toStringAsFixed(0)}'),
+//                     SizedBox(height: 24.h),
+//                     Text(
+//                       'Net Profit: \$${financesData.netProfit.toStringAsFixed(0)}',
+//                       style: TextStyle(
+//                         fontSize: 20.sp,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.black,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+              
+//               SizedBox(width: 20.w),
+              
+//               // Right Column
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     _buildDetailRow('Event Sales:', '\$${financesData.eventSales.toStringAsFixed(0)}'),
+//                     SizedBox(height: 16.h),
+//                     _buildDetailRow('Event Expenses:', '\$${financesData.eventExpenses.toStringAsFixed(0)}'),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+          
+//           SizedBox(height: 32.h),
+          
+//           // Edit Button - Centered
+//           Center(
+//             child: _buildEditButton(),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildDetailRow(String label, String value) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           label,
+//           style: TextStyle(
+//             fontSize: 14.sp,
+//             color: Colors.black.withValues(alpha: 0.7),
+//           ),
+//         ),
+//         SizedBox(height: 4.h),
+//         Text(
+//           value,
+//           style: TextStyle(
+//             fontSize: 16.sp,
+//             fontWeight: FontWeight.w500,
+//             color: Colors.black,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget _buildEditButton() {
+//     return GestureDetector(
+//       onTap: () {
+//         // Navigate to Edit Financial Details screen
+//         AppRouter.navigateToEditFinancialDetails(financialDetailsId: eventId);
+//       },
+//       child: Container(
+//         width: 400.w,
+//         height: 60.h,
+//         decoration: BoxDecoration(
+//           gradient: const LinearGradient(
+//             colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+//             begin: Alignment.centerLeft,
+//             end: Alignment.centerRight,
+//           ),
+//           borderRadius: BorderRadius.circular(12.r),
+//           boxShadow: [
+//             BoxShadow(
+//               color: const Color(0xFFFF8A00).withValues(alpha: 0.3),
+//               blurRadius: 6.r,
+//               offset: Offset(0, 3.h),
+//             ),
+//           ],
+//         ),
+//         child: Center(
+//           child: Text(
+//             'Edit',
+//             style: TextStyle(
+//               fontSize: 22.sp,
+//               fontWeight: FontWeight.bold,
+//               color: Colors.black,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//  Widget _buildSalesEventCard({
+//   required String title,
+//   required String date,
+//   required String amount,
+//   VoidCallback? onEdit,
+//   Color? backgroundColor,
+// }) {
+//   return Container(
+//     width: double.infinity,
+//     decoration: BoxDecoration(
+//       color: backgroundColor ?? const Color(0xFFFEF4D3),
+//       borderRadius: BorderRadius.circular(12),
+//       border: Border.all(color: const Color(0xFFFFE9A3), width: 1),
+//     ),
+//     child: Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Column(
+//         children: [
+//           // Top row (title + edit icon)
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 title,
+//                 style: GoogleFonts.poppins(
+//                   fontWeight: FontWeight.w500,
+//                   color: Colors.black,
+//                   fontSize: 14.sp,
+//                 ),
+//               ),
+//               if (onEdit != null)
+//                 GestureDetector(
+//                   onTap: onEdit,
+//                   child: SvgPicture.asset(
+//                     'assets/icons/edit_icon.svg',
+//                     width: 12.w,
+//                     height: 12.h,
+//                   ),
+//                 ),
+//             ],
+//           ),
+
+//           // Bottom row (date + amount)
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Expanded(
+//                 child: Text(
+//                   date,
+//                   style: GoogleFonts.poppins(
+//                     fontWeight: FontWeight.w400,
+//                     fontSize: 10.sp,
+//                     color: Colors.black,
+//                   ),
+//                 ),
+//               ),
+//               Text(
+//                 amount,
+//                 style: GoogleFonts.poppins(
+//                   fontSize: 16.sp,
+//                   color: Colors.black,
+//                   fontWeight: FontWeight.w500,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+// }
+class FinancesViewPage extends StatelessWidget {
+  final String eventId;
+
+  const FinancesViewPage({super.key, required this.eventId});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => FinancesViewViewModel()..loadFinancesView(eventId ?? '1'),
+      create: (context) =>FinancesViewViewModel()..loadFinancesView(eventId),
       child: Consumer<FinancesViewViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -29,13 +434,10 @@ class FinancesViewPage extends StatelessWidget {
               child: SafeArea(
                 child: Column(
                   children: [
-                    // Header
-                    _buildHeader(context),                    
-                    SizedBox(height: 20.h),                    
-                    // Content
-                    Expanded(
-                      child: _buildContent(viewModel),
-                    ),
+                    _buildHeader(context),
+                    SizedBox(height: 20.h),
+                    Expanded(child: _buildContent(viewModel)),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),
@@ -51,17 +453,10 @@ class FinancesViewPage extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Row(
         children: [
-          // Back button
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
-            ),
+            child: Icon(Icons.arrow_back_ios, size: 24.sp, color: Colors.black),
           ),
-          
-          // Title - Centered
           Expanded(
             child: Center(
               child: Text(
@@ -74,8 +469,6 @@ class FinancesViewPage extends StatelessWidget {
               ),
             ),
           ),
-          
-          // Spacer to balance the back button
           SizedBox(width: 24.w),
         ],
       ),
@@ -84,9 +477,7 @@ class FinancesViewPage extends StatelessWidget {
 
   Widget _buildContent(FinancesViewViewModel viewModel) {
     if (viewModel.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (viewModel.error != null) {
@@ -102,10 +493,7 @@ class FinancesViewPage extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               viewModel.error!,
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: const Color(0xFF757575),
-              ),
+              style: TextStyle(fontSize: 16.sp, color: const Color(0xFF757575)),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 16.h),
@@ -131,10 +519,7 @@ class FinancesViewPage extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               'No finance data found',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: const Color(0xFF757575),
-              ),
+              style: TextStyle(fontSize: 16.sp, color: const Color(0xFF757575)),
             ),
           ],
         ),
@@ -143,11 +528,144 @@ class FinancesViewPage extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: _buildFinanceCard(viewModel.financesData!),
+      child: Column(
+        children: [
+          _buildFinanceCard(viewModel.financesData!,viewModel),
+          SizedBox(height: 20.h),
+
+          // ------------------ SALES SECTION ------------------
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sales',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      AppRouter.navigateToSalesHistory();
+                    },
+                    child:Text(
+                      'See all',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.black, 
+                        decorationThickness: 2,
+                        decorationStyle: TextDecorationStyle.solid,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: viewModel.salesEvents.length,
+                itemBuilder: (context, index) {
+                  final event = viewModel.salesEvents[index];
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildSalesEventCard(
+                      title: event.title,
+                      date: event.date,
+                      amount: event.amount,
+                      onEdit: () async {
+                        final updatedEvent = await showDialog<SalesEvent>(
+                          context: context,
+                          builder: (context) => EditSalesEventDialog(event: event),
+                        );
+                        if (updatedEvent != null) {
+                          viewModel.updateSalesEvent(index, updatedEvent);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+
+          SizedBox(height: 30.h),
+
+          // ------------------ EXPENSES SECTION ------------------
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Expenses',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      AppRouter.navigateToExpenssHistory();
+                    },
+                    child:Text(
+                      'See all',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.black, 
+                        decorationThickness: 2,
+                        decorationStyle: TextDecorationStyle.solid,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: viewModel.expensesEvents.length,
+                itemBuilder: (context, index) {
+                  final event = viewModel.expensesEvents[index];
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildSalesEventCard(
+                      title: event.title,
+                      date: event.date,
+                      amount: event.amount,
+                      onEdit: () async {
+                        final updatedEvent = await showDialog<SalesEvent>(
+                          context: context,
+                          builder: (context) =>
+                              EditSalesEventDialog(event: event),
+                        );
+                        if (updatedEvent != null) {
+                          viewModel.updateExpenseEvent(index, updatedEvent);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildFinanceCard(financesData) {
+  // ----------------------- EXISTING METHODS UNCHANGED -----------------------
+  Widget _buildFinanceCard(financesData,FinancesViewViewModel viewModel) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.w),
@@ -168,7 +686,6 @@ class FinancesViewPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Event Title and Date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -190,21 +707,18 @@ class FinancesViewPage extends StatelessWidget {
               ),
             ],
           ),
-          
           SizedBox(height: 24.h),
-          
-          // Event Details - Two Column Layout
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left Column
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDetailRow('Booth Size:', financesData.boothSize),
                     SizedBox(height: 16.h),
-                    _buildDetailRow('Booth Fee:', '\$${financesData.boothFee.toStringAsFixed(0)}'),
+                    _buildDetailRow('Booth Fee:',
+                        '\$${financesData.boothFee.toStringAsFixed(0)}'),
                     SizedBox(height: 24.h),
                     Text(
                       'Net Profit: \$${financesData.netProfit.toStringAsFixed(0)}',
@@ -217,29 +731,21 @@ class FinancesViewPage extends StatelessWidget {
                   ],
                 ),
               ),
-              
               SizedBox(width: 20.w),
-              
-              // Right Column
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDetailRow('Event Sales:', '\$${financesData.eventSales.toStringAsFixed(0)}'),
+                    _buildDetailRow('Event Sales:','\$${financesData.eventSales.toStringAsFixed(0)}'),
                     SizedBox(height: 16.h),
-                    _buildDetailRow('Event Expenses:', '\$${financesData.eventExpenses.toStringAsFixed(0)}'),
+                    _buildDetailRow('Event Expenses:','\$${financesData.eventExpenses.toStringAsFixed(0)}'),
                   ],
                 ),
               ),
             ],
           ),
-          
           SizedBox(height: 32.h),
-          
-          // Edit Button - Centered
-          Center(
-            child: _buildEditButton(),
-          ),
+          Center(child: _buildEditButton(viewModel)),
         ],
       ),
     );
@@ -269,39 +775,150 @@ class FinancesViewPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEditButton() {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to Edit Financial Details screen
-        AppRouter.navigateToEditFinancialDetails(financialDetailsId: eventId);
-      },
-      child: Container(
-        width: 400.w,
-        height: 60.h,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+  // Widget _buildEditButton() {
+  //   return 
+  //   GestureDetector(
+  //     onTap: () {
+  //       AppRouter.navigateToEditFinancialDetails(financialDetailsId: eventId);
+  //     },
+  //     child: Container(
+  //       width: 400.w,
+  //       height: 60.h,
+  //       decoration: BoxDecoration(
+  //         gradient: const LinearGradient(
+  //           colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+  //           begin: Alignment.centerLeft,
+  //           end: Alignment.centerRight,
+  //         ),
+  //         borderRadius: BorderRadius.circular(12.r),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: const Color(0xFFFF8A00).withValues(alpha: 0.3),
+  //             blurRadius: 6.r,
+  //             offset: Offset(0, 3.h),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           'Edit',
+  //           style: TextStyle(
+  //             fontSize: 22.sp,
+  //             fontWeight: FontWeight.bold,
+  //             color: Colors.black,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+ Widget _buildEditButton(FinancesViewViewModel viewModel) {
+  return GestureDetector(
+    onTap: () {
+      AppRouter.navigateToEditFinancialDetails(
+        financialDetailsId: viewModel.financesData?.id ?? eventId,
+        onUpdate: () async {
+          await viewModel.refresh(); 
+        },
+      );
+    },
+    child: Container(
+      width: 400.w,
+      height: 60.h,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF8A00).withValues(alpha: 0.3),
+            blurRadius: 6.r,
+            offset: Offset(0, 3.h),
           ),
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF8A00).withValues(alpha: 0.3),
-              blurRadius: 6.r,
-              offset: Offset(0, 3.h),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          'Edit',
+          style: TextStyle(
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildSalesEventCard({
+    required String title,
+    required String date,
+    required String amount,
+    VoidCallback? onEdit,
+    Color? backgroundColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: backgroundColor ?? const Color(0xFFFEF4D3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFFFE9A3), width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 14.sp,
+                  ),
+                ),
+                if (onEdit != null)
+                  GestureDetector(
+                    onTap: onEdit,
+                    child: SvgPicture.asset(
+                      'assets/icons/edit_icon.svg',
+                      width: 12.w,
+                      height: 12.h,
+                    ),
+                  ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    date,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10.sp,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Text(
+                  amount,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        child: Center(
-          child: Text(
-            'Edit',
-            style: TextStyle(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
         ),
       ),
     );

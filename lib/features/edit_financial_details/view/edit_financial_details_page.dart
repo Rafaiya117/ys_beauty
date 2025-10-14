@@ -11,8 +11,12 @@ class EditFinancialDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  final args = ModalRoute.of(context)!.settings.arguments as Map?;
+  final onUpdate = args?['onUpdate'] as Function?;
+  final financialDetailsId = args?['financialDetailsId'] as String?;
     return ChangeNotifierProvider(
-      create: (context) => EditFinancialDetailsViewModel()..loadFinancialDetails(financialDetailsId ?? '1'),
+      create: (context) => EditFinancialDetailsViewModel()
+        ..loadFinancialDetailsById(financialDetailsId ?? '1'),
       child: Consumer<EditFinancialDetailsViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -85,9 +89,7 @@ class EditFinancialDetailsPage extends StatelessWidget {
 
   Widget _buildContent(EditFinancialDetailsViewModel viewModel) {
     if (viewModel.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (viewModel.error != null) {
@@ -95,18 +97,10 @@ class EditFinancialDetailsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 48.sp,
-              color: const Color(0xFF757575),
-            ),
+            Icon(Icons.error_outline, size: 48.sp, color: const Color(0xFF757575)),
             SizedBox(height: 16.h),
-            Text(
-              viewModel.error!,
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: const Color(0xFF757575),
-              ),
+            Text(viewModel.error!,
+              style: TextStyle(fontSize: 16.sp, color: const Color(0xFF757575)),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 16.h),
@@ -124,18 +118,10 @@ class EditFinancialDetailsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 48.sp,
-              color: const Color(0xFF757575),
-            ),
+            Icon(Icons.receipt_long_outlined, size: 48.sp, color: const Color(0xFF757575)),
             SizedBox(height: 16.h),
-            Text(
-              'No financial details found',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: const Color(0xFF757575),
-              ),
+            Text('No financial details found',
+              style: TextStyle(fontSize: 16.sp, color: const Color(0xFF757575)),
             ),
           ],
         ),
@@ -149,70 +135,68 @@ class EditFinancialDetailsPage extends StatelessWidget {
           // Form Fields
           _buildInputField(
             icon: Icons.event,
-            hintText: 'Enter Event',
+            hintText: 'Event',
             controller: viewModel.eventController,
-            isRequired: true,
+            readOnly: true, // readonly
           ),
-          
           SizedBox(height: 16.h),
-          
+
           _buildInputField(
             icon: Icons.calendar_today,
-            hintText: 'Enter Date',
+            hintText: 'Date',
             controller: viewModel.dateController,
+            readOnly: true, // readonly
           ),
-          
           SizedBox(height: 16.h),
-          
+
           _buildInputField(
             icon: Icons.aspect_ratio,
-            hintText: 'Enter Booth Size',
+            hintText: 'Booth Size',
             controller: viewModel.boothSizeController,
+            readOnly: true, // readonly
           ),
-          
           SizedBox(height: 16.h),
-          
+
           _buildInputField(
             icon: Icons.storefront,
-            hintText: 'Enter Booth Fee',
+            hintText: 'Booth Fee',
             controller: viewModel.boothFeeController,
             keyboardType: TextInputType.number,
+            readOnly: true, // readonly
           ),
-          
           SizedBox(height: 16.h),
-          
+
+          // Editable fields: Gross Sales & Expenses
           _buildInputField(
             icon: Icons.trending_up,
-            hintText: 'Enter Gross Sales',
+            hintText: 'Gross Sales',
             controller: viewModel.grossSalesController,
             keyboardType: TextInputType.number,
             onChanged: (value) => viewModel.calculateNetProfit(),
           ),
-          
           SizedBox(height: 16.h),
-          
+
           _buildInputField(
             icon: Icons.receipt,
-            hintText: 'Enter Expenses',
+            hintText: 'Expenses',
             controller: viewModel.expensesController,
             keyboardType: TextInputType.number,
             onChanged: (value) => viewModel.calculateNetProfit(),
           ),
-          
           SizedBox(height: 16.h),
-          
+
+          // Net Profit - readonly
           _buildInputField(
             icon: Icons.account_balance_wallet,
-            hintText: 'Enter Net Profit',
+            hintText: 'Net Profit',
             controller: viewModel.netProfitController,
             keyboardType: TextInputType.number,
+            readOnly: true,
           ),
-          
           SizedBox(height: 32.h),
-          
+
           // Save Button
           _buildSaveButton(viewModel),
-          
           SizedBox(height: 20.h),
         ],
       ),
@@ -220,129 +204,90 @@ class EditFinancialDetailsPage extends StatelessWidget {
   }
 
   Widget _buildInputField({
-    required IconData icon,
-    required String hintText,
-    required TextEditingController controller,
-    bool isRequired = false,
-    TextInputType? keyboardType,
-    Function(String)? onChanged,
-  }) {
-    return Container(
-      height: 56.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3C4),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
-            blurRadius: 4.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 20.sp,
-                color: const Color(0xFFB8860B),
-              ),
-              if (isRequired)
-                Positioned(
-                  right: -2,
-                  top: -2,
-                  child: Icon(
-                    Icons.star,
-                    size: 8.sp,
-                    color: const Color(0xFFFF8A00),
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              keyboardType: keyboardType ?? TextInputType.text,
-              textAlignVertical: TextAlignVertical.center,
-              onChanged: onChanged,
-              style: TextStyle(
+  required IconData icon,
+  required String hintText,
+  required TextEditingController controller,
+  bool readOnly = false,
+  TextInputType? keyboardType,
+  Function(String)? onChanged,
+}) {
+  return Container(
+    height: 56.h,
+    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFF3C4),
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, size: 20.sp, color: const Color(0xFFB8860B)),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            readOnly: readOnly,
+            keyboardType: keyboardType ?? TextInputType.text,
+            onChanged: onChanged,
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: readOnly ? const Color(0xFFB8860B) : const Color(0xFF424242), // Orange for readonly
+              height: 1.2,
+            ),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(
                 fontSize: 14.sp,
-                color: const Color(0xFF424242),
+                color: const Color(0xFFB8860B),
                 height: 1.2,
               ),
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFFB8860B),
-                  height: 1.2,
-                ),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
-              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+              isDense: true,
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel) {
-    return Container(
-      width: double.infinity,
-      height: 56.h,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
+
+  Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUpdate}) {
+  return Container(
+    width: double.infinity,
+    height: 56.h,
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(colors: [Color(0xFFFF8A00), Color(0xFFFFC107)]),
+      borderRadius: BorderRadius.circular(12.r),
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: viewModel.isSaving
+          ? null
+          : () async {
+            await viewModel.saveFinancialDetails();
+              if (viewModel.isSuccess && onUpdate != null) {
+            onUpdate(); 
+          }
+        },
         borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFF8A00).withValues(alpha: 0.3),
-            blurRadius: 8.r,
-            offset: Offset(0, 4.h),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: viewModel.isSaving ? null : () => viewModel.saveFinancialDetails(),
-          borderRadius: BorderRadius.circular(12.r),
-          child: Center(
-            child: viewModel.isSaving
-                ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: const CircularProgressIndicator(
-                      color: Colors.black,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : Text(
-                    'Save',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+        child: Center(
+          child: viewModel.isSaving
+            ? SizedBox(
+              width: 24.w,
+              height: 24.h,
+              child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 2),
+            ): Text(
+              'Save',
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
