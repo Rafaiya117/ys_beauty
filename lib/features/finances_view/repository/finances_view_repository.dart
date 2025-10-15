@@ -20,7 +20,7 @@ class FinancesViewRepository {
       boothFee: 100.00,
       eventSales: 200.00,
       eventExpenses: 200.00,
-      netProfit: 100.00,
+      netProfit: 100.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '2',
@@ -30,7 +30,7 @@ class FinancesViewRepository {
       boothFee: 150.00,
       eventSales: 300.00,
       eventExpenses: 100.00,
-      netProfit: 200.00,
+      netProfit: 200.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '3',
@@ -40,7 +40,7 @@ class FinancesViewRepository {
       boothFee: 200.00,
       eventSales: 500.00,
       eventExpenses: 300.00,
-      netProfit: 200.00,
+      netProfit: 200.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '4',
@@ -50,7 +50,7 @@ class FinancesViewRepository {
       boothFee: 120.00,
       eventSales: 400.00,
       eventExpenses: 150.00,
-      netProfit: 250.00,
+      netProfit: 250.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '5',
@@ -60,7 +60,7 @@ class FinancesViewRepository {
       boothFee: 250.00,
       eventSales: 750.00,
       eventExpenses: 200.00,
-      netProfit: 550.00,
+      netProfit: 550.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '6',
@@ -70,7 +70,7 @@ class FinancesViewRepository {
       boothFee: 180.00,
       eventSales: 600.00,
       eventExpenses: 250.00,
-      netProfit: 350.00,
+      netProfit: 350.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '7',
@@ -80,7 +80,7 @@ class FinancesViewRepository {
       boothFee: 300.00,
       eventSales: 800.00,
       eventExpenses: 400.00,
-      netProfit: 400.00,
+      netProfit: 400.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '8',
@@ -90,7 +90,7 @@ class FinancesViewRepository {
       boothFee: 160.00,
       eventSales: 350.00,
       eventExpenses: 100.00,
-      netProfit: 250.00,
+      netProfit: 250.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '9',
@@ -100,7 +100,7 @@ class FinancesViewRepository {
       boothFee: 140.00,
       eventSales: 450.00,
       eventExpenses: 180.00,
-      netProfit: 270.00,
+      netProfit: 270.00, salesList: [], expenseList: [],
     ),
     FinancesViewModel(
       id: '10',
@@ -110,7 +110,7 @@ class FinancesViewRepository {
       boothFee: 220.00,
       eventSales: 600.00,
       eventExpenses: 150.00,
-      netProfit: 450.00,
+      netProfit: 450.00, salesList: [], expenseList: [],
     ),
   ];
 

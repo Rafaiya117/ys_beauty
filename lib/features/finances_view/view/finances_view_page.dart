@@ -644,12 +644,13 @@ class FinancesViewPage extends StatelessWidget {
                       date: event.date,
                       amount: event.amount,
                       onEdit: () async {
-                        final updatedEvent = await showDialog<SalesEvent>(
+                        // Show dialog for editing ExpenseEvent
+                        final updatedEvent = await showDialog<ExpenseEvent>(
                           context: context,
-                          builder: (context) => EditSalesEventDialog(event: event),
+                          builder: (context) =>EditExpenseEventDialog(event: event),
                         );
                         if (updatedEvent != null) {
-                          viewModel.updateSalesEvent(index, updatedEvent);
+                          viewModel.updateExpenseEvent(index, updatedEvent);
                         }
                       },
                     ),
@@ -826,7 +827,7 @@ class FinancesViewPage extends StatelessWidget {
       height: 60.h,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+          colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),

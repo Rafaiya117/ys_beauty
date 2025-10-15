@@ -110,21 +110,31 @@ class FinancesPage extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () => AppRouter.navigateToReminders(),
-                child: Icon(
-                  Icons.notifications_outlined,
-                  size: 24.sp,
-                  color: const Color(0xFF424242),
+                child:SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  width: 18.w,
+                  height: 20.h,
                 ),
+                // Icon(
+                //   Icons.notifications_outlined,
+                //   size: 24.sp,
+                //   color: const Color(0xFF424242),
+                // ),
               ),
-              SizedBox(width: 16.w),
+              //SizedBox(width: 16.w),
               Builder(
                 builder: (context) => IconButton(
                   onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(
-                    Icons.menu,
-                    size: 24.sp,
-                    color: const Color(0xFF424242),
+                  icon:SvgPicture.asset(
+                    'assets/icons/menu.svg',
+                    width: 18.w,
+                    height: 20.h,
                   ),
+                  // Icon(
+                  //   Icons.menu,
+                  //   size: 24.sp,
+                  //   color: const Color(0xFF424242),
+                  // ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -221,6 +231,7 @@ class FinancesPage extends StatelessWidget {
         ),
         shadows: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
@@ -266,6 +277,7 @@ class FinancesPage extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: 8.sp,
+                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.7),
                 ),
               ),
@@ -413,7 +425,7 @@ class FinancesPage extends StatelessWidget {
               Icons.grid_view_rounded,
               0,
               viewModel.selectedTabIndex == 0,
-                  () => viewModel.selectTab(0),
+              () => viewModel.selectTab(0),
             ),
           ),
           SizedBox(width: 8.w),
@@ -451,13 +463,7 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTab(
-      String title,
-      IconData icon,
-      int index,
-      bool isSelected,
-      VoidCallback onTap,
-      ) {
+  Widget _buildTab(String title,IconData icon,int index,bool isSelected,VoidCallback onTap,) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -672,7 +678,7 @@ class FinancesPage extends StatelessWidget {
                       },
                     ),
                     belowBarData: BarAreaData(
-                      show: false, // Remove area fill to match design
+                      show: false,
                     ),
                   ),
                 ],
@@ -705,7 +711,6 @@ class FinancesPage extends StatelessWidget {
           ),
 
           SizedBox(height: 24.h),
-
           // Event History
           _buildEventHistory(viewModel),
         ],
@@ -750,7 +755,7 @@ class FinancesPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFFFF3C4),
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+              border: Border.all(color: const Color(0xFFFFE793), width: 1.w),
             ),
             child: Row(
               children: [
@@ -831,7 +836,7 @@ class FinancesPage extends StatelessWidget {
 
               // Form Input Fields
               _buildInputField(
-                icon: Icons.event,
+                svgIconPath:'assets/icons/booth.svg',
                 hintText: 'Enter Event',
                 controller: viewModel.boothEventController,
                 isRequired: true,
@@ -840,7 +845,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.calendar_today,
+                svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.boothDateController,
               ),
@@ -848,7 +853,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.aspect_ratio,
+                svgIconPath: 'assets/icons/create_booth_size.svg',
                 hintText: 'Enter Booth Size',
                 controller: viewModel.boothSizeController,
               ),
@@ -856,7 +861,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.storefront,
+                svgIconPath:'assets/icons/create_event_booth.svg',
                 hintText: 'Enter Booth Fee',
                 controller: viewModel.boothFeeController,
                 keyboardType: TextInputType.number,
@@ -919,9 +924,8 @@ class FinancesPage extends StatelessWidget {
                 },
               ),
               SizedBox(height: 12.h),
-
               _buildInputField(
-                icon: Icons.calendar_today,
+                svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.salesDateController,
               ),
@@ -929,7 +933,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.attach_money,
+                svgIconPath: 'assets/icons/gross_sale.svg',
                 hintText: 'Enter Gross sales',
                 controller: viewModel.salesAmountController,
                 keyboardType: TextInputType.number,
@@ -993,7 +997,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.calendar_today,
+                svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.expensesDateController,
               ),
@@ -1001,7 +1005,7 @@ class FinancesPage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               _buildInputField(
-                icon: Icons.receipt,
+                svgIconPath: 'assets/icons/add_expenss.svg',
                 hintText: 'Enter Expenses',
                 controller: viewModel.expensesAmountController,
                 keyboardType: TextInputType.number,
@@ -1104,7 +1108,7 @@ Widget _buildInputField({
     decoration: BoxDecoration(
       color: const Color(0xFFFFF3C4),
       borderRadius: BorderRadius.circular(12.r),
-      border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
+      border: Border.all(color: const Color(0xFFFFE793), width: 1.w),
     ),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1118,7 +1122,7 @@ Widget _buildInputField({
                 width: 18.w,
                 height: 18.h,
                 colorFilter: const ColorFilter.mode(
-                  Color(0xFF424242),
+                  Color(0xFFFFA268),
                   BlendMode.srcIn,
                 ),
               )
@@ -1213,7 +1217,7 @@ Widget _buildInputField({
       height: 56.h,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+          colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),

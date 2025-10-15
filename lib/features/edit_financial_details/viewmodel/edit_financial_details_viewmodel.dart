@@ -169,7 +169,8 @@ import '../repository/edit_financial_details_repository.dart';
 // }
 class EditFinancialDetailsViewModel extends ChangeNotifier {
   final EditFinancialDetailsRepository _repository = EditFinancialDetailsRepository();
-  
+  EditFinancialDetailsRepository get repository => _repository;
+
   EditFinancialDetailsModel? _financialDetails;
   bool _isLoading = false;
   String? _error;

@@ -14,8 +14,8 @@ class FinancesViewViewModel extends ChangeNotifier {
   List<SalesEvent> _salesEvents = [];
   List<SalesEvent> get salesEvents => _salesEvents;
   
-  List<SalesEvent> _expensesEvents = [];
-  List<SalesEvent> get expensesEvents => _expensesEvents;
+ List<ExpenseEvent> _expensesEvents = [];
+ List<ExpenseEvent> get expensesEvents => _expensesEvents;
 
   // Getters
   FinancesViewModel? get financesData => _financesData;
@@ -24,153 +24,149 @@ class FinancesViewViewModel extends ChangeNotifier {
 
   // --------------------- Load finance data ---------------------
   Future<void> loadFinancesView(String id) async {
-  _setLoading(true);
-  _clearError();
+    _setLoading(true);
+    _clearError();
 
-  try {
-    final accessToken = await TokenStorage.getAccessToken();
-    debugPrint('!-------------$id');
-    final response = await http.get(
-      Uri.parse("$_baseurl/event/events/$id/"),
-      headers: {
-        'Content-Type': 'application/json',
-        if (accessToken != null) 'Authorization': 'Bearer $accessToken',
-      },
-    );
+    try {
+      final accessToken = await TokenStorage.getAccessToken();
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-
-      _financesData = FinancesViewModel(
-        id: data['id'].toString(),
-        eventName: data['event_name'] ?? '',
-        date: data['date'] ?? '',
-        eventSales: (data['sales'] ?? 0).toDouble(),
-        eventExpenses: (data['expenses'] ?? 0).toDouble(),
-        netProfit: (data['net_profit'] ?? 0).toDouble(),
-        boothFee: (data['booth_fee'] ?? 0).toDouble(), 
-        boothSize: (data['booth_size'] ?? ''),
+      final response = await http.get(
+        Uri.parse("$_baseurl/finance/finance/$id/"),
+        headers: {
+          'Content-Type': 'application/json',
+          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+        },
       );
 
-      // Populate Sales & Expenses for all booths under the event
-      _salesEvents = (data['booths'] as List<dynamic>? ?? []).expand((booth) {
-        final boothId = booth['id'].toString();
-        final boothName = booth['name'] ?? '';
-        final salesList = (booth['sales'] as List<dynamic>? ?? []);
-        return salesList.map((sale) => SalesEvent(
-          id: sale['id'].toString(),
-          boothId: boothId,
-          title: "$boothName - ${sale['title'] ?? 'Sale'}",
-          date: sale['date'] ?? '',
-          amount: '\$${(sale['amount'] ?? 0).toStringAsFixed(0)}',
-        ));
-      }).toList();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        _financesData = FinancesViewModel.fromJson(data);
 
-      _expensesEvents = (data['booths'] as List<dynamic>? ?? []).expand((booth) {
-        final boothId = booth['id'].toString();
-        final boothName = booth['name'] ?? '';
-        final expensesList = (booth['expenses'] as List<dynamic>? ?? []);
-        return expensesList.map((expense) => SalesEvent(
-          id: expense['id'].toString(),
-          boothId: boothId,
-          title: "$boothName - ${expense['title'] ?? 'Expense'}",
-          date: expense['date'] ?? '',
-          amount: '\$${(expense['amount'] ?? 0).toStringAsFixed(0)}',
-        ));
-      }).toList();
+        // Populate Sales Events
+        _salesEvents = [];
+        for (var sale in data['sales_list'] ?? []) {
+          debugPrint('📦 Loaded sale: ${sale['id']} -> ${sale['sales']}');
+          _salesEvents.add(
+            SalesEvent(
+              id: sale['id'].toString(),
+              title: "${_financesData!.eventName} Sale",
+              date: sale['date'] ?? '',
+              amount: '\$${sale['sales'].toString()}',
+              boothId: '',
+            ),
+          );
+        }
 
-    } else {
-      _setError('Failed to load finance data: ${response.statusCode}');
+        // Populate Expenses Events
+        _expensesEvents = [];
+        for (var expense in data['expence_list'] ?? []) {
+          _expensesEvents.add(ExpenseEvent(
+            id: expense['id'].toString(),
+            boothId: _financesData!.id,
+            title: "${_financesData!.eventName} Expense",
+            date: expense['date'] ?? '',
+            amount: '\$${expense['expence'].toString()}',
+          ));
+        }
+      } else {
+        _setError('Failed to load finance data: ${response.statusCode}');
+      }
+
+      notifyListeners();
+    } catch (e) {
+      _setError('Failed to load finance details: $e');
+    } finally {
+      _setLoading(false);
     }
-
-    notifyListeners();
-  } catch (e) {
-    _setError('Failed to load finance details: $e');
-  } finally {
-    _setLoading(false);
   }
-}
 
   // --------------------- Update Sales & Expenses ---------------------
   Future<void> updateSalesEvent(int index, SalesEvent updatedEvent) async {
-    if (index >= 0 && index < _salesEvents.length) {
-      _salesEvents[index] = updatedEvent;
-      notifyListeners();
+  if (index >= 0 && index < _salesEvents.length) {
+    // ✅ Preserve the original sale ID
+    final oldEvent = _salesEvents[index];
+    final eventWithId = updatedEvent.copyWith(id: oldEvent.id);
 
-      await _putSalesEvent(updatedEvent); // Call API
-      await loadFinancesView(_financesData!.id); // Refresh
-    }
-  }
+    _salesEvents[index] = eventWithId;
+    notifyListeners();
 
-  Future<void> updateExpenseEvent(int index, SalesEvent updatedEvent) async {
-    if (index >= 0 && index < _expensesEvents.length) {
-      _expensesEvents[index] = updatedEvent;
-      notifyListeners();
-
-      await _putExpenseEvent(updatedEvent); // Call API
-      await loadFinancesView(_financesData!.id); // Refresh
-    }
-  }
-
-  // --------------------- Private API helpers ---------------------
-Future<void> _putSalesEvent(SalesEvent event) async {
-  final accessToken = await TokenStorage.getAccessToken();
-  final amount = double.tryParse(event.amount.replaceAll('\$', '')) ?? 0;
-
-  try {
-    final response = await http.put(
-      Uri.parse("$_baseurl/finance/finance/edit/sales/${event.id}/"),
-      headers: {
-        "Content-Type": "application/json",
-        if (accessToken != null) "Authorization": "Bearer $accessToken",
-      },
-      body: jsonEncode({"sales": amount}),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // update local _financesData to reflect change
-      _financesData = _financesData!.copyWith(
-        eventSales: _salesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
-        ),
-        netProfit: _salesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,) - _financesData!.eventExpenses,
-      );
-      notifyListeners();
-    } else {
-      print("Failed to update sale: ${response.statusCode}");
-    }
-  } catch (e) {
-    print("Error updating sale: $e");
+    await _putSalesEvent(eventWithId); // Call API
+    await loadFinancesView(_financesData!.id); // Refresh
   }
 }
 
-Future<void> _putExpenseEvent(SalesEvent event) async {
+
+  Future<void> updateExpenseEvent(int index, ExpenseEvent updatedEvent) async {
+  if (index >= 0 && index < _expensesEvents.length) {
+    final oldEvent = _expensesEvents[index];
+    final eventWithId = updatedEvent.copyWith(id: oldEvent.id);
+
+    _expensesEvents[index] = eventWithId;
+    notifyListeners();
+
+    await _putExpenseEvent(eventWithId); // Call API
+    await loadFinancesView(_financesData!.id); // Refresh
+  }
+}
+
+
+  // --------------------- Private API helpers ---------------------
+  Future<void> _putSalesEvent(SalesEvent event) async {
+    final accessToken = await TokenStorage.getAccessToken();
+    final amount = double.tryParse(event.amount.replaceAll('\$', '')) ?? 0;
+    debugPrint('!--------------sales id ${event.id}');
+    try {
+      final response = await http.put(
+        Uri.parse("$_baseurl/finance/finance/edit/sales/${event.id}/"),
+        headers: {
+          "Content-Type": "application/json",
+          if (accessToken != null) "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode({"sales": amount}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _financesData = _financesData!.copyWith(
+          eventSales: _salesEvents.fold<double>(0,(sum, e) => sum + (double.tryParse(e.amount.replaceAll('\$', '')) ?? 0),
+          ),
+          netProfit: _salesEvents.fold<double>(0,(sum, e) => sum + (double.tryParse(e.amount.replaceAll('\$', '')) ?? 0),) -_financesData!.eventExpenses,
+        );
+        notifyListeners();
+      } else {
+        print("Failed to update sale: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error updating sale: $e");
+    }
+  }
+
+  Future<void> _putExpenseEvent(ExpenseEvent event) async {
   final accessToken = await TokenStorage.getAccessToken();
   final amount = double.tryParse(event.amount.replaceAll('\$', '')) ?? 0;
+  debugPrint('!--------------expense id ${event.id}');
 
   try {
     final response = await http.put(
-      Uri.parse("$_baseurl/finance/finance/edit/expense/${event.id}/"),
+      Uri.parse("$_baseurl/finance/finance/edit/expance/${event.id}/"),
       headers: {
         "Content-Type": "application/json",
         if (accessToken != null) "Authorization": "Bearer $accessToken",
       },
-      body: jsonEncode({"expense": amount}),
+      body: jsonEncode({"expence": amount}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       _financesData = _financesData!.copyWith(
-        eventExpenses: _expensesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
-        ),
+        eventExpenses: _expensesEvents.fold<double>(0,(sum, e) =>sum + (double.tryParse(e.amount.replaceAll('\$', '')) ?? 0),),
         netProfit: _financesData!.eventSales -
-            _expensesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
-        ),
+        _expensesEvents.fold<double>(0,(sum, e) => sum + (double.tryParse(e.amount.replaceAll('\$', '')) ?? 0),),
       );
       notifyListeners();
     } else {
-      print("Failed to update expense: ${response.statusCode}");
+      debugPrint("Failed to update expense: ${response.statusCode}");
     }
   } catch (e) {
-    print("Error updating expense: $e");
+    debugPrint("Error updating expense: $e");
   }
 }
 
@@ -199,8 +195,8 @@ Future<void> _putExpenseEvent(SalesEvent event) async {
 
 // --------------------- SalesEvent model ---------------------
 class SalesEvent {
-  String id;        // sales/expense id
-  String boothId;   // booth id (optional)
+  String id; // sales/expense id
+  String boothId; // booth id (optional)
   String title;
   String date;
   String amount;
@@ -212,5 +208,92 @@ class SalesEvent {
     required this.date,
     required this.amount,
   });
+
+  factory SalesEvent.fromJson(Map<String, dynamic> json) {
+    return SalesEvent(
+      id: json['id'].toString(),
+      boothId: '',
+      title: '',
+      date: json['date'] ?? '',
+      amount: '\$${json['sales'] ?? json['expence'] ?? 0}',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "date": date,
+      "sales": amount,
+    };
+  }
+
+  SalesEvent copyWith({
+    String? id,
+    String? boothId,
+    String? title,
+    String? date,
+    String? amount,
+  }) {
+    return SalesEvent(
+      id: id ?? this.id,
+      boothId: boothId ?? this.boothId,
+      title: title ?? this.title,
+      date: date ?? this.date,
+      amount: amount ?? this.amount,
+    );
+  }
 }
 
+// --------------------- ExpenseEvent model ---------------------
+class ExpenseEvent {
+  String id;        // expense id
+  String boothId;   // booth id (optional)
+  String title;
+  String date;
+  String amount;
+
+  ExpenseEvent({
+    required this.id,
+    required this.boothId,
+    required this.title,
+    required this.date,
+    required this.amount,
+  });
+
+  // ✅ Add copyWith for preserving/updating fields
+  ExpenseEvent copyWith({
+    String? id,
+    String? boothId,
+    String? title,
+    String? date,
+    String? amount,
+  }) {
+    return ExpenseEvent(
+      id: id ?? this.id,
+      boothId: boothId ?? this.boothId,
+      title: title ?? this.title,
+      date: date ?? this.date,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  // Optional: for JSON serialization if needed
+  factory ExpenseEvent.fromJson(Map<String, dynamic> json) {
+    return ExpenseEvent(
+      id: json['id'].toString(),
+      boothId: '', // Adjust if your API sends boothId
+      title: json['title'] ?? '',
+      date: json['date'] ?? '',
+      amount: (json['expence'] ?? 0).toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "title": title,
+      "date": date,
+      "expence": amount,
+    };
+  }
+}

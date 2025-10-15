@@ -174,8 +174,7 @@ class EventDetailsPage extends StatelessWidget {
                   }).toList(),
                 ),
                 
-                SizedBox(height: 24.h),
-                
+                SizedBox(height: 24.h),               
                 // Event details in two columns
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,3 +1,5 @@
+import 'package:animation/features/edit_financial_details/model/edit_financial_details_model.dart';
+import 'package:animation/features/edit_financial_details/repository/edit_financial_details_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,12 +13,19 @@ class EditFinancialDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final args = ModalRoute.of(context)!.settings.arguments as Map?;
-  final onUpdate = args?['onUpdate'] as Function?;
-  final financialDetailsId = args?['financialDetailsId'] as String?;
+    // Get arguments safely
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final onUpdate = args?['onUpdate'] as Function?;
+    final financialDetailsId = args?['financialDetailsId'] as String?;
+
     return ChangeNotifierProvider(
-      create: (context) => EditFinancialDetailsViewModel()
-        ..loadFinancialDetailsById(financialDetailsId ?? '1'),
+      create: (context) {
+        final viewModel = EditFinancialDetailsViewModel();
+        if (financialDetailsId != null) {
+          viewModel.loadFinancialDetailsById(financialDetailsId);
+        }
+        return viewModel;
+      },
       child: Consumer<EditFinancialDetailsViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -34,12 +43,12 @@ class EditFinancialDetailsPage extends StatelessWidget {
                   children: [
                     // Header
                     _buildHeader(context),
-                    
+
                     SizedBox(height: 20.h),
-                    
+
                     // Content
                     Expanded(
-                      child: _buildContent(viewModel),
+                      child: _buildContent(viewModel, context, onUpdate: onUpdate),
                     ),
                   ],
                 ),
@@ -50,7 +59,6 @@ class EditFinancialDetailsPage extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -87,7 +95,7 @@ class EditFinancialDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(EditFinancialDetailsViewModel viewModel) {
+  Widget _buildContent(EditFinancialDetailsViewModel viewModel, BuildContext context ,{Function? onUpdate}) {
     if (viewModel.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -137,55 +145,49 @@ class EditFinancialDetailsPage extends StatelessWidget {
             icon: Icons.event,
             hintText: 'Event',
             controller: viewModel.eventController,
-            readOnly: true, // readonly
+            readOnly: false, // Editable now
           ),
           SizedBox(height: 16.h),
-
           _buildInputField(
             icon: Icons.calendar_today,
             hintText: 'Date',
             controller: viewModel.dateController,
-            readOnly: true, // readonly
+            readOnly: false, // Editable now
           ),
           SizedBox(height: 16.h),
-
           _buildInputField(
             icon: Icons.aspect_ratio,
             hintText: 'Booth Size',
             controller: viewModel.boothSizeController,
-            readOnly: true, // readonly
+            readOnly: false, // Editable now
           ),
           SizedBox(height: 16.h),
-
           _buildInputField(
             icon: Icons.storefront,
             hintText: 'Booth Fee',
             controller: viewModel.boothFeeController,
             keyboardType: TextInputType.number,
-            readOnly: true, // readonly
+            readOnly: false, // Editable now
           ),
           SizedBox(height: 16.h),
-
-          // Editable fields: Gross Sales & Expenses
           _buildInputField(
             icon: Icons.trending_up,
             hintText: 'Gross Sales',
             controller: viewModel.grossSalesController,
             keyboardType: TextInputType.number,
+            readOnly: true, // Editable
             onChanged: (value) => viewModel.calculateNetProfit(),
           ),
           SizedBox(height: 16.h),
-
           _buildInputField(
             icon: Icons.receipt,
             hintText: 'Expenses',
             controller: viewModel.expensesController,
             keyboardType: TextInputType.number,
+            readOnly: true, // Editable
             onChanged: (value) => viewModel.calculateNetProfit(),
           ),
           SizedBox(height: 16.h),
-
-          // Net Profit - readonly
           _buildInputField(
             icon: Icons.account_balance_wallet,
             hintText: 'Net Profit',
@@ -194,9 +196,8 @@ class EditFinancialDetailsPage extends StatelessWidget {
             readOnly: true,
           ),
           SizedBox(height: 32.h),
-
           // Save Button
-          _buildSaveButton(viewModel),
+          _buildSaveButton(viewModel, onUpdate: onUpdate, context: context),
           SizedBox(height: 20.h),
         ],
       ),
@@ -255,7 +256,7 @@ class EditFinancialDetailsPage extends StatelessWidget {
 }
 
 
-  Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUpdate}) {
+Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUpdate, required BuildContext context}) {
   return Container(
     width: double.infinity,
     height: 56.h,
@@ -266,23 +267,28 @@ class EditFinancialDetailsPage extends StatelessWidget {
     child: Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: viewModel.isSaving
-          ? null
-          : () async {
-            await viewModel.saveFinancialDetails();
-              if (viewModel.isSuccess && onUpdate != null) {
-            onUpdate(); 
+        borderRadius: BorderRadius.circular(12.r),
+        onTap: () async {
+          if (viewModel.financialDetails != null) {
+            // Call the repository directly
+            bool success = await viewModel.repository.updateFinancialDetails(viewModel.financialDetails!);
+
+            if (success) {
+              // Pop the page
+              Navigator.of(context).pop();
+              // Call the onUpdate callback if provided
+              if (onUpdate != null) onUpdate();
+            } else {
+              // Optional: show a snackbar if saving failed
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Failed to update financial details'))
+              );
+            }
           }
         },
-        borderRadius: BorderRadius.circular(12.r),
         child: Center(
-          child: viewModel.isSaving
-            ? SizedBox(
-              width: 24.w,
-              height: 24.h,
-              child: const CircularProgressIndicator(color: Colors.black, strokeWidth: 2),
-            ): Text(
-              'Save',
+          child: Text(
+            'Save',
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),

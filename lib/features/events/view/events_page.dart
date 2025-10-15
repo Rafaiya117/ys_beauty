@@ -191,8 +191,8 @@ class EventsPage extends StatelessWidget {
                     Icons.search,
                     size: 20.sp,
                     color: viewModel.searchFilterType != null
-                        ? const Color(0xFFFF8A00)
-                        : Colors.black,
+                      ? const Color(0xFFFF8A00)
+                      : Colors.black,
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -271,32 +271,39 @@ class EventsPage extends StatelessWidget {
             child: Container(
               width: 48.w,
               height: 48.h,
-              decoration: BoxDecoration(
-                color: viewModel.searchFilterType != null
-                    ? const Color(0xFFFF8A00)
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(
-                  color: viewModel.searchFilterType != null
-                      ? const Color(0xFFFF8A00)
-                      : Colors.black,
-                  width: 1.5.w,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
+              // decoration: BoxDecoration(
+              //   color: viewModel.searchFilterType != null
+              //       ? const Color(0xFFFF8A00)
+              //       : Colors.white,
+              //   borderRadius: BorderRadius.circular(24.r),
+              //   border: Border.all(
+              //     color: viewModel.searchFilterType != null
+              //         ? const Color(0xFFFF8A00)
+              //         : Colors.black,
+              //     width: 1.5.w,
+              //   ),
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.black.withValues(alpha: 0.05),
+              //       blurRadius: 8.r,
+              //       offset: Offset(0, 2.h),
+              //     ),
+              //   ],
+              // ),
+              child: SvgPicture.asset(
+                'assets/icons/settings.svg',
+                width:40.w ,
+                height:40.h ,
+                // ignore: deprecated_member_use
+                color:viewModel.searchFilterType != null ? Colors.white:Colors.black ,
               ),
-              child: Icon(
-                Icons.tune,
-                size: 20.sp,
-                color: viewModel.searchFilterType != null
-                    ? Colors.white
-                    : Colors.black,
-              ),
+              // Icon(
+              //   Icons.tune,
+              //   size: 20.sp,
+              //   color: viewModel.searchFilterType != null
+              //       ? Colors.white
+              //       : Colors.black,
+              // ),
             ),
           ),
         ],

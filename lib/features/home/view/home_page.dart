@@ -55,12 +55,12 @@ class HomePage extends StatelessWidget {
                        SizedBox(height: 24.h),
                        
                        // Today Events section
-                       _buildTodayEvents(),
+                       _buildTodayEvents(viewModel),
                       
                       SizedBox(height: 24.h),
                       
                       // Upcoming Events section
-                      _buildUpcomingEvents(),
+                      _buildUpcomingEvents(viewModel),
                       
                        SizedBox(height: 24.h),
                       
@@ -75,8 +75,7 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(height: 16.h),
                       ],
-                      
-                      
+                                            
                       // Error message
                       if (viewModel.errorMessage != null) ...[
                         Container(
@@ -545,177 +544,129 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildTodayEvents() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Today Events',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF424242),
-                ),
-              ),
-              Text(
-                'See All',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFFFF8A00),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Horizontal scrollable event cards
-          SizedBox(
-            height: 180.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: 266.w,
-                  margin: EdgeInsets.only(right: 16.w),
-                  child: _buildEventCard(
-                    title: 'Friendly Party',
-                    status: ['Approved', 'Paid'],
-                    date: 'July 22',
-                    location: 'Bardessono - Yountville, CA',
-                    boothSize: '10*10',
-                    spaceNumber: '12',
-                    cost: '\$200',
-                    startTime: '2:00 PM',
-                    endTime: '6:00 PM',
-                  ),
-                );
-              },
-            ),
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Pagination dots
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF8A00),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFD700),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Container(
-                width: 8.w,
-                height: 8.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFD700),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTodayEvents(HomeViewModel viewModel) {
+  final events = viewModel.events;
 
-  Widget _buildUpcomingEvents() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Upcoming Events',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF424242),
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 24.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Today Events',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
+              ),
+            ),
+            Text(
+              'See All',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: const Color(0xFFFF8A00),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+
+        // Event cards
+        SizedBox(
+          height: 180.h,
+          child: events.isEmpty
+              ? Center(child: Text('No events today', style: TextStyle(fontSize: 14.sp)))
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
+                    return Container(
+                      width: 266.w,
+                      margin: EdgeInsets.only(right: 16.w),
+                      child: _buildEventCard(
+                        title: event.eventName,
+                        status: [event.status ?? 'Pending', event.paid ? 'Paid' : 'Unpaid'],
+                        date: event.date,
+                        location: event.address??'',
+                        boothSize: event.boothSize,
+                        spaceNumber: event.boothSpace,
+                        cost: '\$${event.boothFee}',
+                        startTime: event.startTimeDate,
+                        endTime: event.endTimeDate,
+                      ),
+                    );
+                  },
                 ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+  Widget _buildUpcomingEvents(HomeViewModel viewModel) {
+  final events = viewModel.upcomingEvents;
+
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 24.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Upcoming Events',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
               ),
-              Text(
-                'See All',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFFFF8A00),
-                  fontWeight: FontWeight.w500,
-                ),
+            ),
+            Text(
+              'See All',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: const Color(0xFFFF8A00),
+                fontWeight: FontWeight.w500,
               ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Vertical event cards
-          Column(
-            children: [
-              _buildUpcomingEventCard(
-                title: 'Friendly Party',
-                status: ['Pending', 'Unpaid'],
-                date: 'July 25',
-                location: 'Bardessono - Yountville, CA',
-                boothSize: '10*10',
-                spaceNumber: '12',
-                cost: '\$500',
-                startTime: '2:00 PM',
-                endTime: '6:00 PM',
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+
+        // Event cards
+        events.isEmpty
+            ? Center(child: Text('No upcoming events', style: TextStyle(fontSize: 14.sp)))
+            : Column(
+                children: events.map((event) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: _buildUpcomingEventCard(
+                      title: event.eventName,
+                      status: [event.status ?? 'Pending', event.paid ? 'Paid' : 'Unpaid'],
+                      date: event.date,
+                      location: event.address??'',
+                      boothSize: event.boothSize,
+                      spaceNumber: event.boothSpace,
+                      cost: '\$${event.boothFee}',
+                      startTime: event.startTimeDate,
+                      endTime: event.endTimeDate,
+                    ),
+                  );
+                }).toList(),
               ),
-              SizedBox(height: 12.h),
-              _buildUpcomingEventCard(
-                title: 'Friendly Party',
-                status: ['Pending', 'Paid'],
-                date: 'July 25',
-                location: 'Bardessono - Yountville, CA',
-                boothSize: '10*10',
-                spaceNumber: '12',
-                cost: '\$500',
-                startTime: '2:00 PM',
-                endTime: '6:00 PM',
-              ),
-              SizedBox(height: 12.h),
-              _buildUpcomingEventCard(
-                title: 'Friendly Party',
-                status: ['Denied'],
-                date: 'July 25',
-                location: 'Bardessono - Yountville, CA',
-                boothSize: '10*10',
-                spaceNumber: '12',
-                cost: '\$500',
-                startTime: '2:00 PM',
-                endTime: '6:00 PM',
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   Widget _buildAddNewEventButton() {
     return Padding(
