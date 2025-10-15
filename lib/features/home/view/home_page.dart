@@ -170,10 +170,10 @@ class HomePage extends StatelessWidget {
               Builder(
                 builder: (context) => IconButton(
                   onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(
-                    Icons.menu,
-                    size: 24.sp,
-                    color: const Color(0xFF424242),
+                  icon:SvgPicture.asset(
+                    'assets/icons/menu.svg',
+                    width: 18.w,
+                    height: 20.h,
                   ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),

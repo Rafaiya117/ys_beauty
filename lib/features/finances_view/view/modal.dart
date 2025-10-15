@@ -53,7 +53,9 @@ class _EditSalesEventDialogState extends State<EditSalesEventDialog> {
               SalesEvent(
                 title: titleController.text,
                 date: dateController.text,
-                amount: amountController.text,
+                amount: amountController.text, 
+                id: '', 
+                boothId: '',
               ),
             );
           },

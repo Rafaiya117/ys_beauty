@@ -714,102 +714,100 @@ class FinancesPage extends StatelessWidget {
   }
 
   Widget _buildEventHistory(FinancesViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Event History',
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Event History',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF424242),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => AppRouter.navigateToFinanceHistory(),
+            child: Text(
+              'See All',
               style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF424242),
+                fontSize: 14.sp,
+                color: const Color(0xFFFF8A00),
+                fontWeight: FontWeight.w500,
               ),
             ),
-            GestureDetector(
-              onTap: () => AppRouter.navigateToFinanceHistory(),
-              child: Text(
-                'See All',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFFFF8A00),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+          ),
+        ],
+      ),
+      SizedBox(height: 16.h),
+      Column(
+        children: viewModel.eventHistory.map((event) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 10.h),
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF3C4),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
             ),
-          ],
-        ),
-
-        SizedBox(height: 16.h),
-
-        // Event cards
-        Column(
-          children: viewModel.eventHistory.map((event) {
-            return Container(
-              margin: EdgeInsets.only(bottom: 10.h),
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF3C4),
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFE0E0E0), width: 1.w),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          event.title,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF424242),
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Text(
-                          event.date,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: const Color(0xFF757575),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
-                        child: Icon(
-                          Icons.visibility,
-                          size: 18.sp,
-                          color: Colors.black,
+                      Text(
+                        event.title,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF424242),
                         ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        '\$${event.amount.toStringAsFixed(0)}',
+                        event.date,
                         style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          fontSize: 12.sp,
+                          color: const Color(0xFF757575),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            );
-          }).toList(),           
-        ),
-      ],
-    );
-  }
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
+                      child: Icon(
+                        Icons.visibility,
+                        size: 18.sp,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      '\$${event.amount.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    ],
+  );
+}
+
 
   Widget _buildBoothFeesContent() {
     return Consumer<FinancesViewModel>(
@@ -1092,13 +1090,13 @@ class FinancesPage extends StatelessWidget {
 Widget _buildInputField({
   required String hintText,
   required TextEditingController controller,
-  IconData? icon, // made optional for SVG usage
-  String? svgIconPath, // <-- new
+  IconData? icon, 
+  String? svgIconPath, 
   bool isRequired = false,
   TextInputType? keyboardType,
-  bool isDropdown = false, // <-- new
-  List<String>? dropdownItems, // <-- new
-  Function(String)? onDropdownChanged, // optional callback
+  bool isDropdown = false, 
+  List<String>? dropdownItems, 
+  Function(String)? onDropdownChanged, 
 }) {
   return Container(
     height: 48.h,
@@ -1187,18 +1185,18 @@ Widget _buildInputField({
                     color: const Color(0xFF424242),
                     height: 1.2,
                   ),
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    hintStyle: TextStyle(
-                      fontSize: 13.sp,
-                      color: const Color(0xFF757575),
-                      height: 1.2,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                    isDense: true,
-                  ),
-                ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                fontSize: 13.sp,
+                color: const Color(0xFF757575),
+                height: 1.2,
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+              isDense: true,
+            ),
+          ),
         ),
       ],
     ),

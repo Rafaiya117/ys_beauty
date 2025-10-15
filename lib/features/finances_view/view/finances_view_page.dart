@@ -646,11 +646,10 @@ class FinancesViewPage extends StatelessWidget {
                       onEdit: () async {
                         final updatedEvent = await showDialog<SalesEvent>(
                           context: context,
-                          builder: (context) =>
-                              EditSalesEventDialog(event: event),
+                          builder: (context) => EditSalesEventDialog(event: event),
                         );
                         if (updatedEvent != null) {
-                          viewModel.updateExpenseEvent(index, updatedEvent);
+                          viewModel.updateSalesEvent(index, updatedEvent);
                         }
                       },
                     ),

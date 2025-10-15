@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../model/finances_view_model.dart';
 
-
 class FinancesViewViewModel extends ChangeNotifier {
   FinancesViewModel? _financesData;
   bool _isLoading = false;
@@ -25,61 +24,72 @@ class FinancesViewViewModel extends ChangeNotifier {
 
   // --------------------- Load finance data ---------------------
   Future<void> loadFinancesView(String id) async {
-    _setLoading(true);
-    _clearError();
+  _setLoading(true);
+  _clearError();
 
-    try {
-      final accessToken = await TokenStorage.getAccessToken();
+  try {
+    final accessToken = await TokenStorage.getAccessToken();
+    debugPrint('!-------------$id');
+    final response = await http.get(
+      Uri.parse("$_baseurl/event/events/$id/"),
+      headers: {
+        'Content-Type': 'application/json',
+        if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+      },
+    );
 
-      final response = await http.get(
-        Uri.parse("$_baseurl/event/events/$id/"),
-        headers: {
-          'Content-Type': 'application/json',
-          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
-        },
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      _financesData = FinancesViewModel(
+        id: data['id'].toString(),
+        eventName: data['event_name'] ?? '',
+        date: data['date'] ?? '',
+        eventSales: (data['sales'] ?? 0).toDouble(),
+        eventExpenses: (data['expenses'] ?? 0).toDouble(),
+        netProfit: (data['net_profit'] ?? 0).toDouble(),
+        boothFee: (data['booth_fee'] ?? 0).toDouble(), 
+        boothSize: (data['booth_size'] ?? ''),
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      // Populate Sales & Expenses for all booths under the event
+      _salesEvents = (data['booths'] as List<dynamic>? ?? []).expand((booth) {
+        final boothId = booth['id'].toString();
+        final boothName = booth['name'] ?? '';
+        final salesList = (booth['sales'] as List<dynamic>? ?? []);
+        return salesList.map((sale) => SalesEvent(
+          id: sale['id'].toString(),
+          boothId: boothId,
+          title: "$boothName - ${sale['title'] ?? 'Sale'}",
+          date: sale['date'] ?? '',
+          amount: '\$${(sale['amount'] ?? 0).toStringAsFixed(0)}',
+        ));
+      }).toList();
 
-        _financesData = FinancesViewModel(
-          id: data['id'].toString(),
-          eventName: data['event_name'] ?? '',
-          date: data['date'] ?? '',
-          eventSales: (data['sales'] ?? 0).toDouble(),
-          eventExpenses: (data['expenses'] ?? 0).toDouble(),
-          netProfit: (data['net_profit'] ?? 0).toDouble(),
-          boothFee: (data['booth_fee'] ?? 0).toDouble(), 
-          boothSize: (data['booth_size'] ?? ''),
-        );
+      _expensesEvents = (data['booths'] as List<dynamic>? ?? []).expand((booth) {
+        final boothId = booth['id'].toString();
+        final boothName = booth['name'] ?? '';
+        final expensesList = (booth['expenses'] as List<dynamic>? ?? []);
+        return expensesList.map((expense) => SalesEvent(
+          id: expense['id'].toString(),
+          boothId: boothId,
+          title: "$boothName - ${expense['title'] ?? 'Expense'}",
+          date: expense['date'] ?? '',
+          amount: '\$${(expense['amount'] ?? 0).toStringAsFixed(0)}',
+        ));
+      }).toList();
 
-        // Populate history events
-        _salesEvents = [
-          SalesEvent(
-            title: _financesData!.eventName,
-            date: _financesData!.date,
-            amount: '\$${_financesData!.eventSales.toStringAsFixed(0)}',
-          ),
-        ];
-
-        _expensesEvents = [
-          SalesEvent(
-            title: _financesData!.eventName,
-            date: _financesData!.date,
-            amount: '\$${_financesData!.eventExpenses.toStringAsFixed(0)}',
-          ),
-        ];
-      } else {
-        _setError('Failed to load finance data: ${response.statusCode}');
-      }
-
-      notifyListeners();
-    } catch (e) {
-      _setError('Failed to load finance details: $e');
-    } finally {
-      _setLoading(false);
+    } else {
+      _setError('Failed to load finance data: ${response.statusCode}');
     }
+
+    notifyListeners();
+  } catch (e) {
+    _setError('Failed to load finance details: $e');
+  } finally {
+    _setLoading(false);
   }
+}
 
   // --------------------- Update Sales & Expenses ---------------------
   Future<void> updateSalesEvent(int index, SalesEvent updatedEvent) async {
@@ -109,26 +119,20 @@ Future<void> _putSalesEvent(SalesEvent event) async {
 
   try {
     final response = await http.put(
-      Uri.parse("$_baseurl/finance/finance/edit/sales/${_financesData!.id}/"),
+      Uri.parse("$_baseurl/finance/finance/edit/sales/${event.id}/"),
       headers: {
         "Content-Type": "application/json",
         if (accessToken != null) "Authorization": "Bearer $accessToken",
       },
-      body: jsonEncode({"sales": amount}), // your API expects "sales"
+      body: jsonEncode({"sales": amount}),
     );
-    debugPrint('!-------------------${_financesData!.id}');
+
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("✅ Sale updated on server: ${response.body}");
-      // Update local financesData to reflect the new sales immediately
-      _financesData = FinancesViewModel(
-        id: _financesData!.id,
-        eventName: _financesData!.eventName,
-        date: _financesData!.date,
-        eventSales: amount, // updated
-        eventExpenses: _financesData!.eventExpenses,
-        netProfit: amount - _financesData!.eventExpenses,
-        boothFee: _financesData!.boothFee,
-        boothSize: _financesData!.boothSize,
+      // update local _financesData to reflect change
+      _financesData = _financesData!.copyWith(
+        eventSales: _salesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
+        ),
+        netProfit: _salesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,) - _financesData!.eventExpenses,
       );
       notifyListeners();
     } else {
@@ -145,26 +149,21 @@ Future<void> _putExpenseEvent(SalesEvent event) async {
 
   try {
     final response = await http.put(
-      Uri.parse("$_baseurl/finance/finance/${_financesData!.id}/edit-expense/"),
+      Uri.parse("$_baseurl/finance/finance/edit/expense/${event.id}/"),
       headers: {
         "Content-Type": "application/json",
         if (accessToken != null) "Authorization": "Bearer $accessToken",
       },
-      body: jsonEncode({"expense": amount}), // fixed typo: "expence" → "expense"
+      body: jsonEncode({"expense": amount}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("✅ Expense updated on server: ${response.body}");
-      // Update local financesData to reflect the new expenses immediately
-      _financesData = FinancesViewModel(
-        id: _financesData!.id,
-        eventName: _financesData!.eventName,
-        date: _financesData!.date,
-        eventSales: _financesData!.eventSales,
-        eventExpenses: amount, // updated
-        netProfit: _financesData!.eventSales - amount,
-        boothFee: _financesData!.boothFee,
-        boothSize: _financesData!.boothSize,
+      _financesData = _financesData!.copyWith(
+        eventExpenses: _expensesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
+        ),
+        netProfit: _financesData!.eventSales -
+            _expensesEvents.fold<double>(0,(sum, e) => sum + double.tryParse(e.amount.replaceAll('\$', ''))!,
+        ),
       );
       notifyListeners();
     } else {
@@ -200,9 +199,18 @@ Future<void> _putExpenseEvent(SalesEvent event) async {
 
 // --------------------- SalesEvent model ---------------------
 class SalesEvent {
+  String id;        // sales/expense id
+  String boothId;   // booth id (optional)
   String title;
   String date;
   String amount;
 
-  SalesEvent({required this.title, required this.date, required this.amount});
+  SalesEvent({
+    required this.id,
+    required this.boothId,
+    required this.title,
+    required this.date,
+    required this.amount,
+  });
 }
+

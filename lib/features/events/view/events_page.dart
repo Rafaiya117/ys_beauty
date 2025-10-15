@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -122,20 +123,21 @@ class EventsPage extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () => AppRouter.navigateToReminders(),
-                child: Icon(
-                  Icons.notifications_outlined,
-                  size: 24.sp,
-                  color: const Color(0xFF424242),
+                child: 
+                SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  width: 18.w,
+                  height: 20.h,
                 ),
               ),
-              SizedBox(width: 16.w),
+              //SizedBox(width: 16.w),
               Builder(
                 builder: (context) => IconButton(
                   onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(
-                    Icons.menu,
-                    size: 24.sp,
-                    color: const Color(0xFF424242),
+                  icon:SvgPicture.asset(
+                    'assets/icons/menu.svg',
+                    width: 18.w,
+                    height: 20.h,
                   ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -157,22 +159,30 @@ class EventsPage extends StatelessWidget {
           Expanded(
             child: Container(
               height: 48.h,
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.circular(24.r),
+              //   border: Border.all(
+              //     color: viewModel.searchFilterType != null
+              //         ? const Color(0xFFFF8A00)
+              //         : Colors.black,
+              //     width: 1.5.w,
+              //   ),
+              //   boxShadow: [
+              //     BoxShadow(
+              //       color: Colors.black.withValues(alpha: 0.05),
+              //       blurRadius: 8.r,
+              //       offset: Offset(0, 2.h),
+              //     ),
+              //   ],
+              // ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: viewModel.searchFilterType != null
-                      ? const Color(0xFFFF8A00)
-                      : Colors.black,
-                  width: 1.5.w,
+                  color: Colors.black,
+                  width: 1.w,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
               ),
               child: Row(
                 children: [
