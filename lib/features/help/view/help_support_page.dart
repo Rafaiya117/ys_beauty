@@ -361,7 +361,7 @@ class HelpSupportPage extends StatelessWidget {
         height: 56.h,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+            colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),

@@ -86,9 +86,7 @@ class SettingsViewModel extends ChangeNotifier {
               ),
               textAlign: TextAlign.center,
             ),
-            
             SizedBox(height: 16.h),
-            
             // Confirmation message
             Text(
               'Are you sure you want to log out of your account?',
@@ -141,7 +139,7 @@ class SettingsViewModel extends ChangeNotifier {
                       height: 48.h,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+                          colors: [Color(0xFFFFA367), Color(0xFFFFDF6F)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
