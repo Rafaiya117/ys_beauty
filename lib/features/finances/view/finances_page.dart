@@ -64,85 +64,87 @@ class FinancesPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-      child: Row(
-        children: [
-          // Profile picture
-          Container(
-            width: 40.w,
-            height: 40.h,
-            decoration: const BoxDecoration(shape: BoxShape.circle),
-            child: Image.asset(AppConstants.profileImagePath),
-          ),
-          SizedBox(width: 16.w),
-          // Greeting text
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  GreetingUtils.getGreeting(),
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 16.sp,
-                    color: const Color(0xFF424242),
-                    fontWeight: FontWeight.bold,
+  return Consumer<FinancesViewModel>(
+    builder: (context, viewModel, _) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+        child: Row(
+          children: [
+            // Profile picture
+            Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child: viewModel.isUserLoading
+                ? CircularProgressIndicator(strokeWidth: 2)
+                : (viewModel.userProfileImage != null
+                  ? ClipOval(
+                    child: Image.network(
+                      viewModel.userProfileImage!,
+                      fit: BoxFit.cover,
+                      width: 40.w,
+                      height: 40.h,
+                    ),
+                  ): Image.asset(AppConstants.profileImagePath)),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          GreetingUtils.getGreeting(),
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 16.sp,
+                            color: const Color(0xFF424242),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          viewModel.isUserLoading ? 'Loading...'
+                        : viewModel.userName ?? 'Guest',
+                        style: GoogleFonts.greatVibes(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF424242),
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                // Name
-                Text(
-                  'Nicolas Smith',
-                  style: GoogleFonts.greatVibes(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF424242),
-                    fontStyle: FontStyle.italic,
+                // Notification and menu icons
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => AppRouter.navigateToReminders(),
+                      child: SvgPicture.asset(
+                        'assets/icons/notification.svg',
+                        width: 18.w,
+                        height: 20.h,
+                      ),
+                    ),
+                  Builder(
+                  builder: (context) => IconButton(
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: SvgPicture.asset(
+                      'assets/icons/menu.svg',
+                      width: 16.w,
+                      height: 18.h,
+                    ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                   ),
                 ),
               ],
             ),
-          ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
-          // Notification and menu icons
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => AppRouter.navigateToReminders(),
-                child:SvgPicture.asset(
-                  'assets/icons/notification.svg',
-                  width: 18.w,
-                  height: 20.h,
-                ),
-                // Icon(
-                //   Icons.notifications_outlined,
-                //   size: 24.sp,
-                //   color: const Color(0xFF424242),
-                // ),
-              ),
-              //SizedBox(width: 16.w),
-              Builder(
-                builder: (context) => IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon:SvgPicture.asset(
-                    'assets/icons/menu.svg',
-                    width: 16.w,
-                    height: 18.h,
-                  ),
-                  // Icon(
-                  //   Icons.menu,
-                  //   size: 24.sp,
-                  //   color: const Color(0xFF424242),
-                  // ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildFinancialSummaryCards(FinancesViewModel viewModel) {
     return Padding(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:animation/core/token_storage.dart';
+import 'package:animation/features/finances/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
@@ -8,8 +9,17 @@ class FinancesViewModel extends ChangeNotifier {
   FinancesViewModel() {
     fetchFinanceSummary();
     fetchMonthlyData();
-    fetchFinanceList(); // <- fetch booths as event history
+    fetchFinanceList(); 
+    fetchUserData();
   }
+
+  String? _userName;
+  String? _userProfileImage;
+  bool _isUserLoading = true;
+
+  String? get userName => _userName;
+  String? get userProfileImage => _userProfileImage;
+  bool get isUserLoading => _isUserLoading;
 
   double _totalSales = 0.0;
   double _totalExpenses = 0.0;
@@ -314,7 +324,6 @@ class FinancesViewModel extends ChangeNotifier {
             MonthlyData(month: 'Dec', sales: 0, expenses: 0, profit: 0),
           ];
         }
-
         for (final item in jsonData) {
           final monthStr = item['month'];
           if (monthStr == null) continue;
@@ -341,6 +350,36 @@ class FinancesViewModel extends ChangeNotifier {
     } catch (e) {
       debugPrint("Error fetching monthly data: $e");
     }
+  }
+
+  // ---------------- New: fetch user data ----------------
+  Future<void> fetchUserData() async {
+    _isUserLoading = true;
+    notifyListeners();
+
+    try {
+      final accessToken = await TokenStorage.getAccessToken();
+      final response = await http.get(
+        Uri.parse('$_baseurl/user/profile/get'), 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        _userName = data['first_name'] ?? 'Guest';
+        _userProfileImage = data['profile_photo']; 
+      } else {
+        print('Failed to fetch user data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+
+    _isUserLoading = false;
+    notifyListeners();
   }
 
   void _clearBoothForm() {
@@ -392,30 +431,3 @@ class FinancesViewModel extends ChangeNotifier {
   }
 }
 
-class MonthlyData {
-  final String month;
-  final double sales;
-  final double expenses;
-  final double profit;
-
-  MonthlyData({
-    required this.month,
-    required this.sales,
-    required this.expenses,
-    required this.profit,
-  });
-}
-
-class EventHistory {
-  final String id;
-  final String title;
-  final String date;
-  final double amount;
-
-  EventHistory({
-    required this.id,
-    required this.title,
-    required this.date,
-    required this.amount,
-  });
-}
