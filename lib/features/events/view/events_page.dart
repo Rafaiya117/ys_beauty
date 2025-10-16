@@ -81,11 +81,17 @@ class EventsPage extends StatelessWidget {
           // App logo
           Center(
             child: Container(
-              child: Image.asset(
+              child:GestureDetector(
+                onTap: () {
+                  AppRouter.navigateToHome();
+                },
+                child: Image.asset(
                 AppConstants.appLogoPath,
                 width: 40.w,
                 height: 40.h,
               ),
+              )
+              
             ),
           ),
 
@@ -926,7 +932,6 @@ class EventsPage extends StatelessWidget {
                       title: event.title,
                       date: event.date,
                       status:event.status.first, 
-                      // ignore: deprecated_member_use
                       cardColor: viewModel.getStatusColor(event.status.first).withOpacity(0.3),
                         statusColor: viewModel.getStatusColor(
                         event.status.first,

@@ -75,9 +75,7 @@ class FinancesPage extends StatelessWidget {
             decoration: const BoxDecoration(shape: BoxShape.circle),
             child: Image.asset(AppConstants.profileImagePath),
           ),
-
           SizedBox(width: 16.w),
-
           // Greeting text
           Expanded(
             child: Column(
