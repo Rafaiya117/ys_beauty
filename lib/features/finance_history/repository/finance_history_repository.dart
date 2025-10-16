@@ -1,123 +1,85 @@
 import '../model/finance_history_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:animation/core/token_storage.dart';
+
 
 class FinanceHistoryRepository {
-  // Mock data for finance history
-  List<FinanceHistoryModel> _financeHistory = [
-    FinanceHistoryModel(
-      id: '1',
-      eventName: 'Birthday Party',
-      date: '01 July 2025',
-      amount: 500.00,
-      type: 'sale',
-      description: 'Event sales revenue',
-    ),
-    FinanceHistoryModel(
-      id: '2',
-      eventName: 'Concert',
-      date: '31 Jun 2025',
-      amount: 200.00,
-      type: 'sale',
-      description: 'Concert ticket sales',
-    ),
-    FinanceHistoryModel(
-      id: '3',
-      eventName: 'Conference',
-      date: '30 Jun 2025',
-      amount: 100.00,
-      type: 'expense',
-      description: 'Conference setup costs',
-    ),
-    FinanceHistoryModel(
-      id: '4',
-      eventName: 'Friendly Party',
-      date: '29 July 2025',
-      amount: 400.00,
-      type: 'sale',
-      description: 'Party event revenue',
-    ),
-    FinanceHistoryModel(
-      id: '5',
-      eventName: 'Wedding Reception',
-      date: '28 July 2025',
-      amount: 750.00,
-      type: 'sale',
-      description: 'Wedding event sales',
-    ),
-    FinanceHistoryModel(
-      id: '6',
-      eventName: 'Corporate Event',
-      date: '27 July 2025',
-      amount: 150.00,
-      type: 'booth_fee',
-      description: 'Booth rental fee',
-    ),
-    FinanceHistoryModel(
-      id: '7',
-      eventName: 'Music Festival',
-      date: '26 July 2025',
-      amount: 300.00,
-      type: 'expense',
-      description: 'Equipment rental',
-    ),
-    FinanceHistoryModel(
-      id: '8',
-      eventName: 'Art Exhibition',
-      date: '25 July 2025',
-      amount: 250.00,
-      type: 'sale',
-      description: 'Exhibition ticket sales',
-    ),
-    FinanceHistoryModel(
-      id: '9',
-      eventName: 'Food Festival',
-      date: '24 July 2025',
-      amount: 180.00,
-      type: 'booth_fee',
-      description: 'Food booth rental',
-    ),
-    FinanceHistoryModel(
-      id: '10',
-      eventName: 'Charity Gala',
-      date: '23 July 2025',
-      amount: 600.00,
-      type: 'sale',
-      description: 'Gala event revenue',
-    ),
-    FinanceHistoryModel(
-      id: '11',
-      eventName: 'Tech Conference',
-      date: '22 July 2025',
-      amount: 120.00,
-      type: 'expense',
-      description: 'Conference materials',
-    ),
-    FinanceHistoryModel(
-      id: '12',
-      eventName: 'Sports Event',
-      date: '21 July 2025',
-      amount: 350.00,
-      type: 'sale',
-      description: 'Sports event tickets',
-    ),
-  ];
-
+  final String _baseUrl = 'http://10.10.13.36'; 
   Future<List<FinanceHistoryModel>> getFinanceHistory() async {
-    // Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 500));
-    return _financeHistory;
+    final accessToken = await TokenStorage.getAccessToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/finance/finance/list/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        print('Finance history response: ${response.body}');
+
+        return jsonData.map((e) => FinanceHistoryModel.fromJson(e)).toList();
+      } else {
+        print('Failed to load finance history: ${response.statusCode}');
+        throw Exception('Failed to load finance history: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching finance history: $e');
+      throw Exception('Error fetching finance history: $e');
+    }
   }
 
   Future<FinanceHistoryModel?> getFinanceHistoryById(String id) async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    final accessToken = await TokenStorage.getAccessToken();
     try {
-      return _financeHistory.firstWhere((item) => item.id == id);
+      final response = await http.get(
+        Uri.parse('$_baseUrl/event/finance/history/$id/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return FinanceHistoryModel.fromJson(data);
+      } else if (response.statusCode == 404) {
+        return null;
+      } else {
+        throw Exception('Failed to load finance history: ${response.statusCode}');
+      }
     } catch (e) {
-      return null;
+      throw Exception('Error loading finance history by ID: $e');
     }
   }
 
   Future<List<FinanceHistoryModel>> getFinanceHistoryByType(String type) async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return _financeHistory.where((item) => item.type == type).toList();
+    final accessToken = await TokenStorage.getAccessToken();
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/event/finance/history/?type=$type'),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        return jsonData.map((e) => FinanceHistoryModel.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
   }
 }

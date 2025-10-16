@@ -16,22 +16,23 @@ class FinanceHistoryModel {
   });
 
   factory FinanceHistoryModel.fromJson(Map<String, dynamic> json) {
-    return FinanceHistoryModel(
-      id: json['id'] ?? '',
-      eventName: json['eventName'] ?? '',
-      date: json['date'] ?? '',
-      amount: (json['amount'] ?? 0.0).toDouble(),
-      type: json['type'] ?? '',
-      description: json['description'] ?? '',
-    );
-  }
+  return FinanceHistoryModel(
+    id: json['id']?.toString() ?? '',
+    eventName: json['name'] ?? json['name'] ?? '',
+    date: json['date'] ?? '',
+    amount: (json['booth_fee'] ?? 0).toDouble(),
+    type: json['type'] ?? '',
+    description: json['description'] ?? '',
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'eventName': eventName,
+      'name': eventName,
       'date': date,
-      'amount': amount,
+      'booth_fee': amount,
       'type': type,
       'description': description,
     };

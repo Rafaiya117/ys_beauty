@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/event_details_viewmodel.dart';
@@ -74,11 +75,16 @@ class EventDetailsPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
-            ),
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
+            ), 
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   size: 24.sp,
+            //   color: Colors.black,
+            // ),
           ),
           
           SizedBox(width: 16.w),

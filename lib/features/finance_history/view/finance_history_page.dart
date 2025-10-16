@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/finance_history_viewmodel.dart';
@@ -28,10 +30,8 @@ class FinanceHistoryPage extends StatelessWidget {
                 child: Column(
                   children: [
                     // Header
-                    _buildHeader(context),
-                    
-                    SizedBox(height: 20.h),
-                    
+                    _buildHeader(context),                   
+                    SizedBox(height: 20.h),                    
                     // Finance History List
                     Expanded(
                       child: _buildFinanceHistoryList(viewModel),
@@ -54,22 +54,28 @@ class FinanceHistoryPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
             ),
-          ),
-          
-          SizedBox(width: 16.w),
-          
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   size: 24.sp,
+            //   color: Colors.black,
+            // ),
+          ),         
+          SizedBox(width: 90.w),         
           // Title
-          Text(
-            'Finance History',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              'Finance History',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -173,7 +179,7 @@ class FinanceHistoryPage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        item.date,
+                        _formatDate(item.date),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black,
@@ -211,4 +217,13 @@ class FinanceHistoryPage extends StatelessWidget {
       ),
     );
   }
+String _formatDate(String dateString) {
+  try {
+    final date = DateTime.parse(dateString);
+    final formatted = DateFormat('d MMMM, yyyy').format(date);
+    return formatted;
+  } catch (e) {
+    return dateString; // fallback if something goes wrong
+  }
+}
 }

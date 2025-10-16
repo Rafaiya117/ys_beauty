@@ -1,6 +1,7 @@
 import 'package:animation/features/edit_financial_details/model/edit_financial_details_model.dart';
 import 'package:animation/features/edit_financial_details/repository/edit_financial_details_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/edit_financial_details_viewmodel.dart';
@@ -67,13 +68,17 @@ class EditFinancialDetailsPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
             ),
-          ),
-          
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   size: 24.sp,
+            //   color: Colors.black,
+            // ),
+          ),         
           // Title - Centered
           Expanded(
             child: Center(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/settings_viewmodel.dart';
@@ -48,7 +49,7 @@ class SettingsPage extends StatelessWidget {
                           children: [
                             // Account Information
                             _buildSettingItem(
-                              icon: Icons.person,
+                              icon: 'assets/icons/pr_user.svg',
                               title: 'Account Information',
                               onTap: viewModel.navigateToAccountInformation,
                               showArrow: true,
@@ -58,7 +59,7 @@ class SettingsPage extends StatelessWidget {
                             
                             // Notifications & Reminders
                             _buildSettingItem(
-                              icon: Icons.notifications,
+                              icon: 'assets/icons/pr_notification.svg',
                               title: 'Notifications & Reminders',
                               onTap: null,
                               showArrow: false,
@@ -71,7 +72,7 @@ class SettingsPage extends StatelessWidget {
                             
                             // Help & Support
                             _buildSettingItem(
-                              icon: Icons.help,
+                              icon: 'assets/icons/pr_help.svg',
                               title: 'Help & Support',
                               onTap: viewModel.navigateToHelpSupport,
                               showArrow: true,
@@ -81,7 +82,7 @@ class SettingsPage extends StatelessWidget {
                             
                             // Terms & Condition
                             _buildSettingItem(
-                              icon: Icons.description,
+                              icon: 'assets/icons/pr_term.svg',
                               title: 'Terms & Condition',
                               onTap: viewModel.navigateToTermsConditions,
                               showArrow: true,
@@ -91,7 +92,7 @@ class SettingsPage extends StatelessWidget {
                             
                             // Privacy Policy
                             _buildSettingItem(
-                              icon: Icons.privacy_tip,
+                              icon: 'assets/icons/pr_privacy.svg',
                               title: 'Privacy Policy',
                               onTap: viewModel.navigateToPrivacyPolicy,
                               showArrow: true,
@@ -101,7 +102,7 @@ class SettingsPage extends StatelessWidget {
                             
                             // Log Out
                             _buildSettingItem(
-                              icon: Icons.logout,
+                              icon: 'assets/icons/logout.svg',
                               title: 'Log Out',
                               onTap: () => viewModel.showLogOutDialog(context),
                               showArrow: true,
@@ -163,90 +164,97 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback? onTap,
-    required bool showArrow,
-    bool showToggle = false,
-    bool toggleValue = false,
-    VoidCallback? onToggle,
-    bool isLoading = false,
-  }) {
-    return GestureDetector(
-      onTap: isLoading ? null : onTap,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF3C4), // Light yellow background
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
-        ),
-        child: Row(
-          children: [
-            // Icon
-            Container(
-              width: 36.w,
-              height: 36.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(18.r),
-              ),
-              child: Icon(
-                icon,
-                size: 18.sp,
-                color: Colors.black,
-              ),
-            ),
-            
-            SizedBox(width: 16.w),
-            
-            // Title
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF424242),
-                ),
-              ),
-            ),
-            
-            // Toggle or Arrow
-            if (showToggle) ...[
-              Switch(
-                value: toggleValue,
-                onChanged: isLoading ? null : (value) => onToggle?.call(),
-                activeColor: Colors.black,
-                inactiveThumbColor: const Color(0xFF9E9E9E),
-                inactiveTrackColor: const Color(0xFFE0E0E0),
-              ),
-            ] else if (showArrow) ...[
-              if (isLoading) ...[
-                SizedBox(
-                  width: 20.w,
-                  height: 20.h,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                  ),
-                ),
-              ] else ...[
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16.sp,
-                  color: Colors.black,
-                ),
-              ],
-            ],
-          ],
+Widget _buildSettingItem({
+  required dynamic icon,
+  required String title,
+  required VoidCallback? onTap,
+  required bool showArrow,
+  bool showToggle = false,
+  bool toggleValue = false,
+  VoidCallback? onToggle,
+  bool isLoading = false,
+}) {
+  return GestureDetector(
+    onTap: isLoading ? null : onTap,
+    child: Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF3C4),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: const Color(0xFFFFE89D),
+          width: 1.w,
         ),
       ),
-    );
-  }
+      child: Row(
+        children: [
+          // Icon (SVG or normal)
+          Container(
+            width: 36.w,
+            height: 36.h,
+            decoration: BoxDecoration(
+              //color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(18.r),
+            ),
+            child: Center(
+              child: icon is IconData
+                ? Icon(icon, size: 18.sp, color: Colors.black)
+                : SvgPicture.asset(
+                  icon,
+                  width: 18.w,
+                  height: 18.h,
+                      // colorFilter: const ColorFilter.mode(
+                      //   Colors.black,
+                      //   BlendMode.srcIn,
+                      // ),
+              ),
+            ),
+          ),
+          SizedBox(width: 16.w),
+          // Title
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF424242),
+              ),
+            ),
+          ),
+
+          // Toggle or Arrow
+          if (showToggle) ...[
+            Switch(
+              value: toggleValue,
+              onChanged: isLoading ? null : (value) => onToggle?.call(),
+              activeColor: Colors.white,
+              activeTrackColor: Color(0xFFFFA269),
+              inactiveThumbColor: const Color(0xFF9E9E9E),
+              inactiveTrackColor: const Color(0xFFE0E0E0),
+            ),
+          ] else if (showArrow) ...[
+            if (isLoading) ...[
+              SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                ),
+              ),
+            ] else ...[
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16.sp,
+                color: Colors.black,
+              ),
+            ],
+          ],
+        ],
+      ),
+    ),
+  );
+}
 }

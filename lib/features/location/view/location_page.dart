@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../viewmodel/location_viewmodel.dart';
 import '../model/location_model.dart';
@@ -54,10 +55,15 @@ class LocationPage extends StatelessWidget {
         children: [
           // Back arrow
           IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFF1B1B1B),
+            icon:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
             ),
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   color: Color(0xFF1B1B1B),
+            // ),
             onPressed: () => AppRouter.goBack(),
             padding: EdgeInsets.zero,
             constraints: BoxConstraints(),

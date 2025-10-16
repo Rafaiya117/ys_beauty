@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
@@ -52,19 +54,21 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                   children: [
                     // Header
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 24.w,
-                        vertical: 16.h,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 16.h,),
                       child: Row(
                         children: [
                           IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: const Color(0xFF424242),
-                              size: 20.sp,
+                            icon:SvgPicture.asset(
+                              'assets/icons/back_button.svg',
+                              width:16.w,
+                              height: 12.h,
                             ),
+                            // Icon(
+                            //   Icons.arrow_back_ios,
+                            //   color: const Color(0xFF424242),
+                            //   size: 20.sp,
+                            // ),
                           ),
                           Expanded(
                             child: Text(
@@ -77,14 +81,11 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          SizedBox(width: 44.w), // Balance the back button
+                          SizedBox(width: 44.w), 
                         ],
                       ),
                     ),
-
                     SizedBox(height: 20.h),
-
-                    // Profile and Basic Information Section
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -95,12 +96,10 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                               width: double.infinity,
                               padding: EdgeInsets.all(20.w),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFFFF3C4,
-                                ), // Light yellow background
+                                color: const Color(0xFFFFF3C4,), 
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: const Color(0xFFFFF3C4),
                                   width: 1.w,
                                 ),
                               ),
@@ -114,37 +113,28 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       shape: BoxShape.circle,
                                       color: const Color(0xFFE0E0E0),
                                     ),
-                                    child:
-                                        viewModel
-                                                .accountModel
-                                                .profileImagePath !=
-                                            null
-                                        ? ClipOval(
-                                            child: _buildProfileImage(
-                                              viewModel
-                                                  .accountModel
-                                                  .profileImagePath!,
-                                            ),
-                                          )
+                                    child:viewModel.accountModel.profileImagePath !=null
+                                      ? ClipOval(
+                                        child: _buildProfileImage(
+                                          viewModel.accountModel.profileImagePath!,
+                                          ),
+                                        )
                                         : const Icon(
                                             Icons.person,
                                             size: 50,
                                             color: Color(0xFF9E9E9E),
                                           ),
-                                  ),
-
-                                  SizedBox(height: 16.h),
-
+                                        ),
+                                      SizedBox(height: 16.h),
                                   // Name and Edit Button
-                                  Row(
-                                    children: [
-                                      // Name (centered)
-                                      Expanded(
-                                        child: Center(
-                                          child: viewModel.isEditing
+                                      Row(
+                                        children: [
+                                          // Name (centered)
+                                        Expanded(
+                                          child: Center(
+                                            child: viewModel.isEditing
                                               ? TextField(
-                                                  controller:
-                                                      viewModel.nameController,
+                                                  controller:viewModel.nameController,
                                                   style: TextStyle(
                                                     fontSize: 20.sp,
                                                     fontWeight: FontWeight.bold,
@@ -155,10 +145,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                                   textAlign: TextAlign.center,
                                                   decoration: InputDecoration(
                                                     border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8.r,
-                                                          ),
+                                                      borderRadius:BorderRadius.circular(8.r,),
                                                       borderSide: BorderSide(
                                                         color: const Color(
                                                           0xFFFF8A00,
@@ -167,11 +154,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                                       ),
                                                     ),
                                                     focusedBorder:
-                                                        OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                8.r,
-                                                              ),
+                                                      OutlineInputBorder(
+                                                        borderRadius:
+                                                          BorderRadius.circular(8.r,),
                                                           borderSide: BorderSide(
                                                             color: const Color(
                                                               0xFFFF8A00,
@@ -179,108 +164,87 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                                             width: 2.w,
                                                           ),
                                                         ),
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 12.w,
-                                                          vertical: 8.h,
+                                                        contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 12.w,
+                                                            vertical: 8.h,
+                                                          ),
                                                         ),
-                                                  ),
-                                                )
-                                              : Text(
-                                                  viewModel.accountModel.name,
-                                                  style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: const Color(
-                                                      0xFF424242,
+                                                      ): Text(
+                                                        viewModel.accountModel.name,
+                                                        style: TextStyle(
+                                                          fontSize: 20.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: const Color(0xFF424242,),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                        ),
-                                      ),
-
-                                      // Edit Button (right side)
-                                      GestureDetector(
-                                        onTap: viewModel.isEditing
-                                            ? viewModel.saveChanges
-                                            : () => _navigateToEditInformation(
-                                                context,
-                                                viewModel,
-                                              ),
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
-                                            vertical: 8.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF424242),
-                                            borderRadius: BorderRadius.circular(
-                                              8.r,
-                                            ),
-                                          ),
-                                          child: viewModel.isLoading
-                                              ? SizedBox(
-                                                  width: 16.w,
-                                                  height: 16.h,
-                                                  child: const CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                          Color
-                                                        >(Colors.white),
+                                                  // Edit Button (right side)
+                                                  GestureDetector(
+                                                    onTap: viewModel.isEditing ? viewModel.saveChanges
+                                                    : () => _navigateToEditInformation(context,viewModel,),
+                                                    child: Container(
+                                                      padding: EdgeInsets.symmetric(
+                                                        horizontal: 16.w,
+                                                        vertical: 8.h,
+                                                      ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(0xFF424242),
+                                                      borderRadius: BorderRadius.circular(8.r,),
+                                                    ),
+                                                    child: viewModel.isLoading? SizedBox(
+                                                      width: 16.w,
+                                                      height: 16.h,
+                                                      child: const CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        valueColor:
+                                                        AlwaysStoppedAnimation<Color>(Colors.white),
+                                                      ),
+                                                    )
+                                                    : Text(
+                                                        viewModel.isEditing ? 'Save' : 'Edit',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                )
-                                              : Text(
-                                                  viewModel.isEditing
-                                                      ? 'Save'
-                                                      : 'Edit',
+                                                ],
+                                              ),
+                                            SizedBox(height: 20.h),
+                                            // Email Field
+                                            Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h,),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: const Color(0xFFE0E0E0),
+                                                  width: 1.w,
+                                                ),
+                                              ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  color: Color(0xFFFFA268),
+                                                  size: 20.sp,
+                                                ),
+                                              SizedBox(width: 12.w),
+                                              if (viewModel.isEditing) ...[
+                                              Flexible(
+                                                child: TextField(
+                                                  controller:viewModel.emailController,
                                                   style: TextStyle(
-                                                    color: Colors.white,
                                                     fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w500,
+                                                    color: const Color(0xFF424242),
                                                   ),
-                                                ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  SizedBox(height: 20.h),
-
-                                  // Email Field
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 12.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      border: Border.all(
-                                        color: const Color(0xFFE0E0E0),
-                                        width: 1.w,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.email_outlined,
-                                          color: Colors.black,
-                                          size: 20.sp,
-                                        ),
-                                        SizedBox(width: 12.w),
-                                        if (viewModel.isEditing) ...[
-                                          Flexible(
-                                            child: TextField(
-                                              controller:
-                                                  viewModel.emailController,
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                                color: const Color(0xFF424242),
-                                              ),
-                                              decoration: const InputDecoration(
-                                                border: InputBorder.none,
+                                                decoration: const InputDecoration(
+                                                  border: InputBorder.none,
                                               ),
                                             ),
                                           ),
@@ -299,24 +263,17 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(height: 12.h),
-
                                   // Date of Birth and Location Row
                                   Row(
                                     children: [
                                       // Date of Birth
                                       Expanded(
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
-                                            vertical: 12.h,
-                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h,),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12.r,),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -326,39 +283,30 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                             children: [
                                               Icon(
                                                 Icons.calendar_today_outlined,
-                                                color: Colors.black,
+                                                color:Color(0xFFFFA268),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
                                               if (viewModel.isEditing) ...[
                                                 Flexible(
                                                   child: TextField(
-                                                    controller: viewModel
-                                                        .dateOfBirthController,
+                                                    controller: viewModel.dateOfBirthController,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF424242,
-                                                      ),
+                                                      color: const Color(0xFF424242,),
                                                     ),
-                                                    decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                              InputBorder.none,
-                                                        ),
+                                                    decoration:const InputDecoration(
+                                                      border:InputBorder.none,
+                                                    ),
                                                   ),
                                                 ),
                                               ] else ...[
                                                 Flexible(
                                                   child: Text(
-                                                    viewModel
-                                                        .accountModel
-                                                        .dateOfBirth,
+                                                    viewModel.accountModel.dateOfBirth,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF424242,
-                                                      ),
+                                                      color: const Color(0xFF424242,),
                                                     ),
                                                     maxLines: 1,
                                                   ),
@@ -368,21 +316,14 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                           ),
                                         ),
                                       ),
-
                                       SizedBox(width: 12.w),
-
                                       // Location
                                       Expanded(
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
-                                            vertical: 12.h,
-                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h,),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12.r,),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -392,39 +333,31 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                             children: [
                                               Icon(
                                                 Icons.location_city_outlined,
-                                                color: Colors.black,
+                                                color: Color(0xFFFFA268),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
                                               if (viewModel.isEditing) ...[
                                                 Flexible(
                                                   child: TextField(
-                                                    controller: viewModel
-                                                        .locationController,
+                                                    controller: viewModel.locationController,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF424242,
-                                                      ),
+                                                      color: const Color(0xFF424242,),
                                                     ),
                                                     decoration:
-                                                        const InputDecoration(
-                                                          border:
-                                                              InputBorder.none,
-                                                        ),
+                                                      const InputDecoration(
+                                                        border:InputBorder.none,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ] else ...[
+                                                ] else ...[
                                                 Flexible(
                                                   child: Text(
-                                                    viewModel
-                                                        .accountModel
-                                                        .location,
+                                                    viewModel.accountModel.location,
                                                     style: TextStyle(
                                                       fontSize: 12.sp,
-                                                      color: const Color(
-                                                        0xFF424242,
-                                                      ),
+                                                      color: const Color(0xFF424242,),
                                                     ),
                                                     maxLines: 1,
                                                   ),
@@ -439,61 +372,61 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                 ],
                               ),
                             ),
-
                             SizedBox(height: 16.h),
-
                             // Change Password Section
                             Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(20.w),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFFFF3C4,
-                                ), // Light yellow background
+                                color: const Color(0xFFFFF3C4,), 
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
                                   color: const Color(0xFFE0E0E0),
                                   width: 1.w,
                                 ),
                               ),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  Icon(
-                                    Icons.lock,
-                                    color: Colors.black,
-                                    size: 24.sp,
-                                  ),
-                                  SizedBox(width: 16.w),
-                                  Expanded(
-                                    child: Text(
-                                      'Change Password',
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color(0xFF424242),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/key_icon.svg',
+                                        width:14.w ,
+                                        height:18.h ,
                                       ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () =>
-                                        _navigateToEditPassword(context),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                        vertical: 8.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF424242),
-                                        borderRadius: BorderRadius.circular(
-                                          8.r,
+                                      // Icon(
+                                      //   Icons.lock,
+                                      //   color: Colors.black,
+                                      //   size: 24.sp,
+                                      // ),
+                                      SizedBox(width: 16.w),
+                                      Expanded(
+                                        child: Text(
+                                          'Change Password',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: const Color(0xFF424242),
+                                          ),
                                         ),
                                       ),
-                                      child: Text(
-                                        'Change Password',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.h,),
+                                  GestureDetector(
+                                    onTap: () =>_navigateToEditPassword(context),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h,),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF424242),
+                                          borderRadius: BorderRadius.circular(8.r,),
+                                        ),
+                                        child: Text(
+                                          'Change Password',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
@@ -501,7 +434,6 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                 ],
                               ),
                             ),
-
                             SizedBox(height: 20.h),
                           ],
                         ),
@@ -561,20 +493,14 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
   }
 
   Widget _buildProfileImage(String imagePath) {
-    // Check if it's a local file path or a URL
     if (imagePath.startsWith('http')) {
-      // It's a URL, use NetworkImage
-      return Image.network(
-        imagePath,
-        width: 100.w,
-        height: 100.h,
-        fit: BoxFit.cover,
+      return Image.network(imagePath,width: 100.w,height: 100.h,
+      fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           return const Icon(Icons.person, size: 50, color: Color(0xFF9E9E9E));
         },
       );
     } else if (imagePath.startsWith('/')) {
-      // It's a relative URL from API, convert to full URL
       final fullUrl = 'http://10.10.13.36$imagePath';
       return Image.network(
         fullUrl,

@@ -47,11 +47,16 @@ class ForgotPasswordPage extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: const Color(0xFF424242),
-                                      size: 20.sp,
+                                    icon:SvgPicture.asset(
+                                      'assets/icons/back_button.svg',
+                                      width:16.w,
+                                      height: 12.h,
                                     ),
+                                    // Icon(
+                                    //   Icons.arrow_back_ios,
+                                    //   color: const Color(0xFF424242),
+                                    //   size: 20.sp,
+                                    // ),
                                   ),
                                   const Spacer(),
                                   Text(

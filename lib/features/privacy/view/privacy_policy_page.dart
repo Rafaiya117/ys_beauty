@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/privacy_policy_viewmodel.dart';
@@ -31,11 +32,16 @@ class PrivacyPolicyPage extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: const Color(0xFF424242),
-                              size: 20.sp,
+                            icon:SvgPicture.asset(
+                              'assets/icons/back_button.svg',
+                              width:16.w,
+                              height: 12.h,
                             ),
+                            // Icon(
+                            //   Icons.arrow_back_ios,
+                            //   color: const Color(0xFF424242),
+                            //   size: 20.sp,
+                            // ),
                           ),
                           Expanded(
                             child: Text(

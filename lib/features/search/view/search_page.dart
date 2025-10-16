@@ -61,11 +61,16 @@ class SearchPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: const Color(0xFF424242),
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
             ),
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   size: 24.sp,
+            //   color: const Color(0xFF424242),
+            // ),
           ),
           
           SizedBox(width: 16.w),

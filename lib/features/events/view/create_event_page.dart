@@ -200,7 +200,12 @@ class CreateEventPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Icon(Icons.arrow_back_ios, size: 24.sp, color: Colors.black),
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
+            ),
+            //Icon(Icons.arrow_back_ios, size: 24.sp, color: Colors.black),
           ),
 
           SizedBox(width: 16.w),

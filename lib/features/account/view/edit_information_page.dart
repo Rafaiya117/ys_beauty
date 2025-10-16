@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,11 +56,16 @@ class EditInformationPage extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: const Color(0xFF424242),
-                              size: 20.sp,
+                            icon:SvgPicture.asset(
+                              'assets/icons/back_button.svg',
+                              width:16.w,
+                              height: 12.h,
                             ),
+                            // Icon(
+                            //   Icons.arrow_back_ios,
+                            //   color: const Color(0xFF424242),
+                            //   size: 20.sp,
+                            // ),
                           ),
                           Expanded(
                             child: Text(
@@ -111,32 +117,23 @@ class EditInformationPage extends StatelessWidget {
                                           shape: BoxShape.circle,
                                           color: const Color(0xFFE0E0E0),
                                         ),
-                                        child:
-                                            viewModel
-                                                    .editInformationModel
-                                                    .profileImagePath !=
-                                                null
-                                            ? ClipOval(
-                                                child: _buildProfileImage(
-                                                  viewModel
-                                                      .editInformationModel
-                                                      .profileImagePath!,
-                                                ),
-                                              )
-                                            : const Icon(
-                                                Icons.person,
-                                                size: 50,
-                                                color: Color(0xFF9E9E9E),
-                                              ),
+                                        child:viewModel.editInformationModel.profileImagePath !=null
+                                          ? ClipOval(
+                                          child: _buildProfileImage(
+                                            viewModel.editInformationModel.profileImagePath!,
+                                          ),
+                                        )
+                                        : const Icon(
+                                          Icons.person,
+                                          size: 50,
+                                          color: Color(0xFF9E9E9E),
+                                        ),
                                       ),
                                       Positioned(
                                         bottom: 0,
                                         right: 0,
                                         child: GestureDetector(
-                                          onTap: () => _showImagePicker(
-                                            context,
-                                            viewModel,
-                                          ),
+                                          onTap: () => _showImagePicker(context,viewModel,),
                                           child: Container(
                                             width: 32.w,
                                             height: 32.h,
@@ -158,9 +155,7 @@ class EditInformationPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-
                                   SizedBox(height: 24.h),
-
                                   // Name Field
                                   Container(
                                     width: double.infinity,
@@ -178,16 +173,20 @@ class EditInformationPage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.person,
-                                          color: Colors.black,
-                                          size: 20.sp,
+                                        SvgPicture.asset(
+                                          'assets/icons/profile_user.svg',
+                                          width: 16.w,
+                                          height: 16.h,
                                         ),
+                                        // Icon(
+                                        //   Icons.person,
+                                        //   color: Colors.black,
+                                        //   size: 20.sp,
+                                        // ),
                                         SizedBox(width: 12.w),
                                         Expanded(
                                           child: TextField(
-                                            controller:
-                                                viewModel.nameController,
+                                            controller:viewModel.nameController,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               color: const Color(0xFF424242),
@@ -205,16 +204,11 @@ class EditInformationPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(height: 12.h),
-
                                   // Email Field
                                   Container(
                                     width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 12.h,
-                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h,),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12.r),
@@ -227,14 +221,13 @@ class EditInformationPage extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.email,
-                                          color: Colors.black,
+                                          color: Color(0xFFFFA268),
                                           size: 20.sp,
                                         ),
                                         SizedBox(width: 12.w),
                                         Expanded(
                                           child: TextField(
-                                            controller:
-                                                viewModel.emailController,
+                                            controller:viewModel.emailController,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               color: const Color(0xFF424242),
@@ -252,9 +245,7 @@ class EditInformationPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(height: 12.h),
-
                                   // Birth Date and City Row
                                   Row(
                                     children: [
@@ -267,9 +258,7 @@ class EditInformationPage extends StatelessWidget {
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12.r,),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -279,14 +268,13 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.calendar_today,
-                                                color: Colors.black,
+                                                color: Color(0xFFFFA268),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
                                               Expanded(
                                                 child: TextField(
-                                                  controller: viewModel
-                                                      .birthDateController,
+                                                  controller: viewModel.birthDateController,
                                                   style: TextStyle(
                                                     fontSize: 16.sp,
                                                     color: const Color(
@@ -294,12 +282,9 @@ class EditInformationPage extends StatelessWidget {
                                                     ),
                                                   ),
                                                   decoration: InputDecoration(
-                                                    hintText:
-                                                        'Enter Birth-date',
+                                                    hintText:'Enter Birth-date',
                                                     hintStyle: TextStyle(
-                                                      color: const Color(
-                                                        0xFF9E9E9E,
-                                                      ),
+                                                      color: const Color(0xFF9E9E9E,),
                                                       fontSize: 16.sp,
                                                     ),
                                                     border: InputBorder.none,
@@ -310,9 +295,7 @@ class EditInformationPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-
                                       SizedBox(width: 12.w),
-
                                       // City
                                       Expanded(
                                         child: Container(
@@ -322,9 +305,7 @@ class EditInformationPage extends StatelessWidget {
                                           ),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
+                                            borderRadius: BorderRadius.circular(12.r,),
                                             border: Border.all(
                                               color: const Color(0xFFE0E0E0),
                                               width: 1.w,
@@ -334,14 +315,13 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.location_city,
-                                                color: Colors.black,
+                                                color: Color(0xFFFFA268),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
                                               Expanded(
                                                 child: TextField(
-                                                  controller:
-                                                      viewModel.cityController,
+                                                  controller:viewModel.cityController,
                                                   style: TextStyle(
                                                     fontSize: 16.sp,
                                                     color: const Color(
@@ -388,8 +368,8 @@ class EditInformationPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
                                 colors: [
-                                  Color(0xFFFF8A00), // Orange
-                                  Color(0xFFFFC107), // Yellow
+                                  Color(0xFFFFA167), // Orange
+                                  Color(0xFFFFDF6F), // Yellow
                                 ],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
@@ -400,54 +380,47 @@ class EditInformationPage extends StatelessWidget {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: viewModel.isLoading
-                                    ? null
-                                    : viewModel.saveChanges,
+                                  ? null
+                                  : viewModel.saveChanges,
                                 borderRadius: BorderRadius.circular(12.r),
                                 child: Center(
                                   child: viewModel.isLoading
-                                      ? SizedBox(
-                                          width: 24.w,
-                                          height: 24.h,
-                                          child:
-                                              const CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                      Color
-                                                    >(Colors.white),
-                                              ),
-                                        )
-                                      : Text(
-                                          'Save',
-                                          style: TextStyle(
-                                            color: const Color(0xFF424242),
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                    ? SizedBox(
+                                      width: 24.w,
+                                      height: 24.h,
+                                        child:const CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:AlwaysStoppedAnimation<Color>(Colors.white),
                                         ),
+                                      ): Text(
+                                          'Save',
+                                        style: TextStyle(
+                                          color: const Color(0xFF424242),
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-
-                          SizedBox(height: 12.h),
-
-                          // Cancel Button
-                          Container(
-                            width: double.infinity,
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF424242),
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: viewModel.cancelChanges,
+                            SizedBox(height: 12.h),
+                            // Cancel Button
+                            Container(
+                              width: double.infinity,
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF424242),
                                 borderRadius: BorderRadius.circular(12.r),
-                                child: Center(
-                                  child: Text(
-                                    'Cancel',
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: viewModel.cancelChanges,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  child: Center(
+                                    child: Text(
+                                      'Cancel',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16.sp,
@@ -514,10 +487,7 @@ class EditInformationPage extends StatelessWidget {
     );
   }
 
-  void _showImagePicker(
-    BuildContext context,
-    EditInformationViewModel viewModel,
-  ) {
+  void _showImagePicker(BuildContext context,EditInformationViewModel viewModel,) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -541,9 +511,7 @@ class EditInformationPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-
               SizedBox(height: 20.h),
-
               // Title
               Text(
                 'Select Profile Picture',
@@ -553,9 +521,7 @@ class EditInformationPage extends StatelessWidget {
                   color: const Color(0xFF424242),
                 ),
               ),
-
               SizedBox(height: 20.h),
-
               // Options
               ListTile(
                 leading: Icon(
@@ -575,7 +541,6 @@ class EditInformationPage extends StatelessWidget {
                   _pickFromGallery(viewModel);
                 },
               ),
-
               SizedBox(height: 20.h),
             ],
           ),
@@ -604,9 +569,7 @@ class EditInformationPage extends StatelessWidget {
   }
 
   Widget _buildProfileImage(String imagePath) {
-    // Check if it's a local file path or a URL
     if (imagePath.startsWith('http')) {
-      // It's a URL, use NetworkImage
       return Image.network(
         imagePath,
         width: 100.w,
@@ -617,7 +580,6 @@ class EditInformationPage extends StatelessWidget {
         },
       );
     } else if (imagePath.startsWith('/')) {
-      // It's a relative URL from API, convert to full URL
       final fullUrl = 'http://10.10.13.36$imagePath';
       return Image.network(
         fullUrl,
@@ -629,7 +591,6 @@ class EditInformationPage extends StatelessWidget {
         },
       );
     } else {
-      // It's a local file path, use Image.file
       return Image.file(
         File(imagePath),
         width: 100.w,
