@@ -905,10 +905,9 @@ class EventsPage extends StatelessWidget {
           ),
 
           SizedBox(height: 16.h),
-
           // Reminder cards
           ChangeNotifierProvider(
-            create: (_) => EventsViewModel()..loadEvents(), // Load on init
+            create: (_) => EventsViewModel()..loadEvents(), 
             child: Consumer<EventsViewModel>(
               builder: (context, viewModel, _) {
                 if (viewModel.isLoading) {
@@ -922,11 +921,11 @@ class EventsPage extends StatelessWidget {
                   return Center(child: Text('No events found.'));
                 }
                 return Column(
-                  children: events.map(
-                    (event) => _buildReminderCard(
+                  children: events
+                    .map((event) => _buildReminderCard(
                       title: event.title,
                       date: event.date,
-                      status: event.status.join(', '),
+                      status:event.status.first, 
                       // ignore: deprecated_member_use
                       cardColor: viewModel.getStatusColor(event.status.first).withOpacity(0.3),
                         statusColor: viewModel.getStatusColor(
