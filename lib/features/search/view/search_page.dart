@@ -113,101 +113,139 @@ class SearchPage extends StatelessWidget {
   }
 
   Widget _buildSearchBar(BuildContext context, SearchViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Row(
-        children: [
-          // Search bar
-          Expanded(
-            child: Container(
-              height: 48.h,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.w,
-                ),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(width: 16.w),
-                  Icon(
-                    Icons.search,
-                    size: 20.sp,
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 24.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 🔍 Search Bar (unchanged)
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 48.h,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(24.r),
+                  border: Border.all(
                     color: Colors.black,
+                    width: 1.w,
                   ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: TextField(
-                      controller: viewModel.searchController,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: const Color(0xFF424242),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.black,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (value) {
-                        viewModel.search(value);
-                      },
-                      autofocus: true,
-                    ),
-                  ),
-                  // Location icon
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     AppRouter.navigateToLocation();
-                  //   },
-                  //   child: Icon(
-                  //     Icons.location_on_outlined,
-                  //     size: 20.sp,
-                  //     color: Colors.black,
-                  //   ),
-                  // ),
-                  SizedBox(width: 8.w),
-                  // Calendar icon
-                  GestureDetector(
-                    onTap: () {
-                      AppRouter.navigateToAvailableEvent();
-                    },
-                    child: Icon(
-                      Icons.calendar_today_outlined,
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(width: 16.w),
+                    Icon(
+                      Icons.search,
                       size: 20.sp,
                       color: Colors.black,
                     ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: TextField(
+                        controller: viewModel.searchController,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: const Color(0xFF424242),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          hintStyle: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        onChanged: (value) {
+                          viewModel.search(value);
+                        },
+                        autofocus: true,
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    GestureDetector(
+                      onTap: () {
+                        AppRouter.navigateToAvailableEvent();
+                      },
+                      child: Icon(
+                        Icons.calendar_today_outlined,
+                        size: 20.sp,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 16.h),
+
+        // 🔽 Search Results (new addition)
+        if (viewModel.isSearching)
+          const Center(child: CircularProgressIndicator())
+        else if (viewModel.searchResults.isNotEmpty)
+          Container(
+            height: 250.h, // limit height to prevent overflow
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(16.r),
+            //   boxShadow: [
+            //     BoxShadow(
+            //       color: Colors.black.withOpacity(0.05),
+            //       blurRadius: 8,
+            //       offset: const Offset(0, 4),
+            //     ),
+            //   ],
+            // ),
+            child: ListView.builder(
+              itemCount: viewModel.searchResults.length,
+              itemBuilder: (context, index) {
+                final result = viewModel.searchResults[index];
+                return ListTile(
+                  title: Text(
+                    result.title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  SizedBox(width: 16.w),
-                ],
-              ),
+                  subtitle: Text(
+                    result.location,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  trailing: Text(
+                    result.date,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  onTap: () {
+                    // TODO: Add navigation or action
+                    print('Tapped: ${result.title}');
+                  },
+                );
+              },
+            ),
+          )
+        else if (viewModel.searchController.text.isNotEmpty)
+          Center(
+            child: Text(
+              'No results found',
+              style: TextStyle(fontSize: 14.sp, color: Colors.black54),
             ),
           ),
-          
-          SizedBox(width: 12.w),
-          
-          // Filter button
-          GestureDetector(
-            onTap: () => _showFilterModal(context, viewModel),
-            child: Container(
-              width: 48.w,
-              height: 48.h,
-              child: SvgPicture.asset(
-                'assets/icons/settings.svg',
-                width:40.w ,
-                height:40.h ,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   Widget _buildSearchResults(SearchViewModel viewModel) {
     if (viewModel.isLoading) {

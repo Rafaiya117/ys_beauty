@@ -127,8 +127,8 @@ class FinancesPage extends StatelessWidget {
                   onPressed: () => Scaffold.of(context).openDrawer(),
                   icon:SvgPicture.asset(
                     'assets/icons/menu.svg',
-                    width: 18.w,
-                    height: 20.h,
+                    width: 16.w,
+                    height: 18.h,
                   ),
                   // Icon(
                   //   Icons.menu,

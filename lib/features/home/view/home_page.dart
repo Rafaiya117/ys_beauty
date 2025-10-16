@@ -161,7 +161,7 @@ class HomePage extends StatelessWidget {
                 child: 
                 SvgPicture.asset(
                   'assets/icons/notification.svg',
-                  width: 18.w,
+                  width: 16.w,
                   height: 20.h,
                 ),
               ),
@@ -171,8 +171,8 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Scaffold.of(context).openDrawer(),
                   icon:SvgPicture.asset(
                     'assets/icons/menu.svg',
-                    width: 18.w,
-                    height: 20.h,
+                    width: 16.w,
+                    height: 18.h,
                   ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -493,10 +493,8 @@ class HomePage extends StatelessWidget {
                    selectedDayPredicate: (day) {
                      return isSameDay(viewModel.selectedDay, day);
                    },
-                 ),
-                
-                SizedBox(height: 16.h),
-                
+                 ),                
+                SizedBox(height: 16.h),                
                 // Legend
                 _buildCalendarLegend(),
               ],
@@ -590,6 +588,7 @@ class HomePage extends StatelessWidget {
                       width: 266.w,
                       margin: EdgeInsets.only(right: 16.w),
                       child: _buildEventCard(
+                        eventId: event.id.toString(),
                         title: event.eventName,
                         status: [event.status ?? 'Pending', event.paid ? 'Paid' : 'Unpaid'],
                         date: event.date,
@@ -713,259 +712,260 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildEventCard({
-    required String title,
-    required List<String> status,
-    required String date,
-    required String location,
-    required String boothSize,
-    required String spaceNumber,
-    required String cost,
-    required String startTime,
-    required String endTime,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage(AppConstants.cardBgPath),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
+  required String eventId, // ✅ Added eventId
+  required String title,
+  required List<String> status,
+  required String date,
+  required String location,
+  required String boothSize,
+  required String spaceNumber,
+  required String cost,
+  required String startTime,
+  required String endTime,
+}) {
+  return Container(
+    padding: EdgeInsets.all(12.w),
+    decoration: BoxDecoration(
+      image: const DecorationImage(
+        image: AssetImage(AppConstants.cardBgPath),
+        fit: BoxFit.cover,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header with title, status, and date
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    // Status badges beside title
-                    ...status.map((statusText) {
-                      Color statusColor = _getStatusColor(statusText);
-                      return Container(
-                        margin: EdgeInsets.only(right: 4.w),
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          statusText,
-                          style: TextStyle(
-                            fontSize: 8.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'July',
-                      style: TextStyle(
-                        fontSize: 8.sp,
-                        color: const Color(0xFF000000),
-                      ),
-                    ),
-                    Text(
-                      '22',
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF000000),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 2.h),
-          
-          // Location
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                size: 14.sp,
-                color: const Color(0xFF1B1B1B),
-              ),
-              SizedBox(width: 3.w),
-              Expanded(
-                child: Text(
-                  location,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: const Color(0xFF1B1B1B),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 3.h),
-          
-          // Booth size
-          Text(
-            'Booth Size: $boothSize',
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF424242),
-            ),
-          ),
-          
-          SizedBox(height: 8.h),
-          
-          // Time and details row
-          Row(
-            children: [
-              // Time stepper
-              Column(
-                children: [
-                  Container(
-                    width: 6.w,
-                    height: 6.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Container(
-                    width: 1.w,
-                    height: 16.h,
-                    color: Colors.black.withValues(alpha: 0.3),
-                  ),
-                  Container(
-                    width: 6.w,
-                    height: 6.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-              ),
-              
-              SizedBox(width: 8.w),
-              
-              // Time details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Start: $startTime',
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'End: $endTime',
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Space and cost
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+      borderRadius: BorderRadius.circular(12.r),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 8.r,
+          offset: Offset(0, 2.h),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Header with title, status, and date
+        Row(
+          children: [
+            Expanded(
+              child: Row(
                 children: [
                   Text(
-                    'Space #: $spaceNumber',
+                    title,
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF424242),
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(width: 8.w),
+                  // Status badges beside title
+                  ...status.map((statusText) {
+                    Color statusColor = _getStatusColor(statusText);
+                    return Container(
+                      margin: EdgeInsets.only(right: 4.w),
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        statusText,
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFE0E0E0)),
+              ),
+              child: Column(
+                children: [
                   Text(
-                    'Cost: $cost',
+                    'July',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 8.sp,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                  Text(
+                    '22',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 2.h),
+
+        // Location
+        Row(
+          children: [
+            Icon(
+              Icons.location_on,
+              size: 14.sp,
+              color: const Color(0xFF1B1B1B),
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: Text(
+                location,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: const Color(0xFF1B1B1B),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 3.h),
+
+        // Booth size
+        Text(
+          'Booth Size: $boothSize',
+          style: TextStyle(
+            fontSize: 12.sp,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF424242),
+          ),
+        ),
+
+        SizedBox(height: 8.h),
+
+        // Time and details row
+        Row(
+          children: [
+            // Time stepper
+            Column(
+              children: [
+                Container(
+                  width: 6.w,
+                  height: 6.h,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Container(
+                  width: 1.w,
+                  height: 16.h,
+                  color: Colors.black.withValues(alpha: 0.3),
+                ),
+                Container(
+                  width: 6.w,
+                  height: 6.h,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(width: 8.w),
+
+            // Time details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Start: $startTime',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF424242),
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'End: $endTime',
+                    style: TextStyle(
+                      fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF424242),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          
-          SizedBox(height: 8.h),
-          
-          // Details button
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => AppRouter.navigateToEventDetails('1'),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(30.r),
-                ),
-                child: Text(
-                  'Details',
+            ),
+
+            // Space and cost
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Space #: $spaceNumber',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: Color(0xFF1B1B1B),
                     fontWeight: FontWeight.bold,
+                    color: const Color(0xFF424242),
                   ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  'Cost: $cost',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF424242),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        SizedBox(height: 8.h),
+
+        // Details button
+        Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () => AppRouter.navigateToEventDetails(eventId), // ✅ Updated
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(30.r),
+              ),
+              child: Text(
+                'Details',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: const Color(0xFF1B1B1B),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildUpcomingEventCard({
     required String title,
@@ -1220,23 +1220,29 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return const Color(0xFFEEBC20); // Yellow background for Pending
-      case 'approved':
-        return const Color(0xFF00BF63); // Green background for Approved
-      case 'paid':
-        return const Color(0xFF00703A); // Dark green background for Paid
-      case 'denied':
-        return Color(0xFFFF5151);
-      case 'unpaid':
-        return Color(0xFFEF4444);
-      default:
-        return Colors.grey;
-    }
-  }
+ Color _getStatusColor(String status) {
+  final normalized = status.toLowerCase().trim();
 
+  switch (normalized) {
+    case 'pen':
+    case 'pending':
+      return const Color(0xFFEEBC20); // Yellow background for Pending
+    case 'app':
+    case 'approved':
+      return const Color(0xFF00BF63); // Green background for Approved
+    case 'paid':
+      return const Color(0xFF00703A); // Dark green background for Paid
+    case 'den':
+    case 'denied':
+      return const Color(0xFFFF5151); // Red background for Denied
+    case 'unpaid':
+      return const Color(0xFFEF4444); // Red background for Unpaid
+    case 'transfer':
+      return const Color(0xFF007AFF); // Blue background for Transfer
+    default:
+      return Colors.grey;
+  }
+}
 
   void _showFilterModal(BuildContext context, HomeViewModel viewModel) {
     showGeneralDialog(

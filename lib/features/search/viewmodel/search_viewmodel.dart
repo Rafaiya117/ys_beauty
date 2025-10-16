@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:animation/core/token_storage.dart';
-import 'package:animation/features/events/model/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../model/search_model.dart';
@@ -60,28 +59,34 @@ class SearchViewModel extends ChangeNotifier {
   //   }
   //   notifyListeners();
   // }
+List<SearchResult> searchResults = [];
+bool isSearching = false;
 
-Future<List<SearchResult>> search(String query) async {
+Future<void> search(String query) async {
+  if (query.isEmpty) return;
+
+  isSearching = true;
+  notifyListeners(); // 👀 tell UI “loading started”
+
+  try {
     final String baseUrl = 'http://10.10.13.36/event/events/search_event/';
     final accessToken = await TokenStorage.getAccessToken();
     final url = Uri.parse('$baseUrl?q=$query');
     final response = await http.get(
       url,
       headers: {
-      'Authorization': 'Bearer $accessToken',
-      'Content-Type': 'application/json',
-    },
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
     );
 
     print('🔍 Search URL: $url');
     print('📦 Status Code: ${response.statusCode}');
     print('📩 Body: ${response.body}');
 
-
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-
-      return data.map((json) {
+      searchResults = data.map((json) {
         return SearchResult(
           id: json['id'].toString(),
           title: json['event_name'] ?? '',
@@ -92,9 +97,17 @@ Future<List<SearchResult>> search(String query) async {
         );
       }).toList();
     } else {
-      throw Exception('Search failed [${response.statusCode}] ${response.reasonPhrase}');
+      searchResults = [];
     }
+  } catch (e) {
+    print('❌ Search failed: $e');
+    searchResults = [];
   }
+
+  isSearching = false;
+  notifyListeners(); // 🔥 tell UI “done loading”
+}
+
   void clearSearch() {
     _searchController.clear();
     _searchModel = const SearchModel(

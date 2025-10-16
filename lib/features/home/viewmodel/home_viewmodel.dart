@@ -1,3 +1,4 @@
+import 'package:animation/core/router.dart';
 import 'package:animation/features/home/model/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -83,13 +84,38 @@ Future<void> _loadHomeData() async {
   }
 
   // Calendar methods (unchanged)
+  // void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  //   if (!isSameDay(_selectedDay, selectedDay)) {
+  //     _selectedDay = selectedDay;
+  //     _focusedDay = focusedDay;
+  //     notifyListeners();
+  //   }
+  // }
+
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      _selectedDay = selectedDay;
-      _focusedDay = focusedDay;
-      notifyListeners();
+  if (!isSameDay(_selectedDay, selectedDay)) {
+    _selectedDay = selectedDay;
+    _focusedDay = focusedDay;
+    notifyListeners();
+
+    // Find events on this selected date
+    final matchingEvents = _homeModel.events.where((event) {
+      try {
+        final eventDate = DateTime.parse(event.date);
+        return eventDate.year == selectedDay.year &&
+            eventDate.month == selectedDay.month &&
+            eventDate.day == selectedDay.day;
+      } catch (_) {
+        return false;
+      }
+    }).toList();
+    if (matchingEvents.isNotEmpty) {
+      final selectedEvent = matchingEvents.first;
+      debugPrint("Navigating to Event ID: ${selectedEvent.id}");
+      AppRouter.navigateToEventDetails(selectedEvent.id.toString());
     }
   }
+}
 
   void onFormatChanged(CalendarFormat format) {
     if (_calendarFormat != format) {
@@ -103,7 +129,21 @@ Future<void> _loadHomeData() async {
     notifyListeners();
   }
 
-  bool hasEvents(DateTime day) => false;
+  // bool hasEvents(DateTime day) => false;
+
+  bool hasEvents(DateTime day) {
+  return _homeModel.events.any((event) {
+    try {
+      final eventDate = DateTime.parse(event.date);
+      return eventDate.year == day.year &&
+          eventDate.month == day.month &&
+          eventDate.day == day.day;
+    } catch (_) {
+      return false;
+    }
+  });
+}
+
 
   // Search methods (unchanged)
   void setSearchQuery(String query) {

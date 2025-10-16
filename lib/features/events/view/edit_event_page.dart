@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/edit_event_viewmodel.dart';
 import '../../../shared/constants/app_constants.dart';
-import '../../../core/router.dart';
 
 class EditEventPage extends StatelessWidget {
   final String eventId;
@@ -227,11 +227,16 @@ class EditEventPage extends StatelessWidget {
           // Back button
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 24.sp,
-              color: Colors.black,
-            ),
+            child:SvgPicture.asset(
+              'assets/icons/back_button.svg',
+              width:16.w,
+              height: 12.h,
+            ), 
+            // Icon(
+            //   Icons.arrow_back_ios,
+            //   size: 24.sp,
+            //   color: Colors.black,
+            // ),
           ),
           
           SizedBox(width: 16.w),
@@ -268,10 +273,10 @@ class EditEventPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
+        // border: Border.all(
+        //   color: const Color(0xFFE0E0E0),
+        //   width: 1.w,
+        // ),
       ),
       child: Row(
         children: [
@@ -333,10 +338,10 @@ class EditEventPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3C4),
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
+          // border: Border.all(
+          //   color: const Color(0xFFE0E0E0),
+          //   width: 1.w,
+          // ),
         ),
         child: Row(
           children: [
@@ -386,10 +391,10 @@ class EditEventPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3C4),
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: const Color(0xFFE0E0E0),
-            width: 1.w,
-          ),
+          // border: Border.all(
+          //   color: const Color(0xFFE0E0E0),
+          //   width: 1.w,
+          // ),
         ),
         child: Row(
           children: [
@@ -430,10 +435,10 @@ class EditEventPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: const Color(0xFFE0E0E0),
-          width: 1.w,
-        ),
+        // border: Border.all(
+        //   color: const Color(0xFFE0E0E0),
+        //   width: 1.w,
+        // ),
       ),
       child: Stack(
         children: [

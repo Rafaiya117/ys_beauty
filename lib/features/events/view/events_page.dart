@@ -136,8 +136,8 @@ class EventsPage extends StatelessWidget {
                   onPressed: () => Scaffold.of(context).openDrawer(),
                   icon:SvgPicture.asset(
                     'assets/icons/menu.svg',
-                    width: 18.w,
-                    height: 20.h,
+                    width: 16.w,
+                    height: 18.h,
                   ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -907,38 +907,36 @@ class EventsPage extends StatelessWidget {
           SizedBox(height: 16.h),
 
           // Reminder cards
-          Column(
-            children: [
-              _buildReminderCard(
-                title: 'Birthday Party',
-                date: '01 July 2025',
-                status: 'Pending',
-                cardColor: const Color(
-                  0xFFFFEBA9,
-                ).withOpacity(0.80), // Light yellow
-                statusColor: Colors.yellow,
-              ),
-              SizedBox(height: 12.h),
-              _buildReminderCard(
-                title: 'Friendly Party',
-                date: '01 July 2025',
-                status: 'Approved',
-                cardColor: const Color(
-                  0xFF00BF63,
-                ).withOpacity(0.30), // Light green
-                statusColor: Colors.green,
-              ),
-              SizedBox(height: 12.h),
-              _buildReminderCard(
-                title: 'Conference',
-                date: '01 July 2025',
-                status: 'Denied',
-                cardColor: const Color(
-                  0xFFFF3030,
-                ).withOpacity(0.31), // Light red
-                statusColor: Colors.red,
-              ),
-            ],
+          ChangeNotifierProvider(
+            create: (_) => EventsViewModel()..loadEvents(), // Load on init
+            child: Consumer<EventsViewModel>(
+              builder: (context, viewModel, _) {
+                if (viewModel.isLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (viewModel.errorMessage != null) {
+                  return Center(child: Text(viewModel.errorMessage!));
+                }
+                final events = viewModel.filteredEvents;
+                if (events.isEmpty) {
+                  return Center(child: Text('No events found.'));
+                }
+                return Column(
+                  children: events.map(
+                    (event) => _buildReminderCard(
+                      title: event.title,
+                      date: event.date,
+                      status: event.status.join(', '),
+                      // ignore: deprecated_member_use
+                      cardColor: viewModel.getStatusColor(event.status.first).withOpacity(0.3),
+                        statusColor: viewModel.getStatusColor(
+                        event.status.first,
+                      ),
+                    ),
+                  ).toList(),
+                );
+              },
+            ),
           ),
         ],
       ),

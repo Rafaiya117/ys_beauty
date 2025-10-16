@@ -207,9 +207,7 @@ class CreateEventPage extends StatelessWidget {
             ),
             //Icon(Icons.arrow_back_ios, size: 24.sp, color: Colors.black),
           ),
-
           SizedBox(width: 16.w),
-
           // Title
           Expanded(
             child: Text(
@@ -257,7 +255,7 @@ class CreateEventPage extends StatelessWidget {
           child: TextField(
             controller: controller,
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 16.sp,
               color: const Color(0xFF424242),
               fontWeight: FontWeight.w500,
             ),
@@ -265,7 +263,7 @@ class CreateEventPage extends StatelessWidget {
               hintText: label,
               hintStyle: TextStyle(
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
@@ -322,11 +320,11 @@ class CreateEventPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 color: controller.text.isEmpty
-                    ? const Color(0xFF9E9E9E)
-                    : const Color(0xFF424242),
+                  ? Color.fromARGB(255, 70, 69, 69)
+                  : const Color(0xFF424242),
                 fontWeight: controller.text.isEmpty
-                    ? FontWeight.w400
-                    : FontWeight.w500,
+                  ? FontWeight.w400
+                  : FontWeight.w500,
               ),
             ),
           ),
@@ -373,7 +371,7 @@ class CreateEventPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 color: controller.text.isEmpty
-                    ? const Color(0xFF9E9E9E)
+                    ? const Color(0xFF424242)
                     : const Color(0xFF424242),
                 fontWeight: controller.text.isEmpty
                     ? FontWeight.w400

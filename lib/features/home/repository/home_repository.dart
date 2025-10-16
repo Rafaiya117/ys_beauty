@@ -2,13 +2,7 @@ import 'dart:convert';
 import 'package:animation/core/token_storage.dart';
 import 'package:animation/features/home/model/event_model.dart';
 import 'package:animation/features/home/model/home_model.dart';
-import 'package:http/http.dart' as http;
-
-import 'dart:convert';
-import 'package:animation/core/token_storage.dart';
-import 'package:animation/features/home/model/event_model.dart';
-import 'package:animation/features/home/model/home_model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class HomeRepository {

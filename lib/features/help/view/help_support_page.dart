@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import '../viewmodel/help_support_viewmodel.dart';
-import '../model/help_support_model.dart';
 import '../../../shared/constants/app_constants.dart';
 
 class HelpSupportPage extends StatelessWidget {
@@ -171,7 +170,7 @@ class HelpSupportPage extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: const Color(0xFFE0E0E0),
+          color: const Color(0xFFFFE89D),
           width: 1.w,
         ),
       ),
@@ -219,7 +218,7 @@ class HelpSupportPage extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: const Color(0xFFE0E0E0),
+          color: const Color(0xFFFFE89D),
           width: 1.w,
         ),
       ),
@@ -258,7 +257,7 @@ class HelpSupportPage extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: const Color(0xFFE0E0E0),
+            color: const Color(0xFFFFE89D),
             width: 1.w,
           ),
         ),

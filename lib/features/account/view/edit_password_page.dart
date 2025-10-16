@@ -80,7 +80,7 @@ class EditPasswordPage extends StatelessWidget {
                                 ), // Light cream background
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(
-                                  color: const Color(0xFFE0E0E0),
+                                  color: const Color(0xFFFFE89D),
                                   width: 1.w,
                                 ),
                               ),
@@ -97,7 +97,7 @@ class EditPasswordPage extends StatelessWidget {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: const Color(0xFFE0E0E0),
+                                        color: const Color(0xFFFFE89D),
                                         width: 1.w,
                                       ),
                                     ),
@@ -111,18 +111,14 @@ class EditPasswordPage extends StatelessWidget {
                                         SizedBox(width: 12.w),
                                         Flexible(
                                           child: TextField(
-                                            controller: viewModel
-                                                .currentPasswordController,
-                                            obscureText: !viewModel
-                                                .editPasswordModel
-                                                .isCurrentPasswordVisible,
+                                            controller: viewModel.currentPasswordController,
+                                            obscureText: !viewModel.editPasswordModel.isCurrentPasswordVisible,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               color: const Color(0xFF424242),
                                             ),
                                             decoration: InputDecoration(
-                                              hintText:
-                                                  'Enter Current Password',
+                                              hintText:'Enter Current Password',
                                               hintStyle: TextStyle(
                                                 color: const Color(0xFF9E9E9E),
                                                 fontSize: 16.sp,
@@ -132,14 +128,11 @@ class EditPasswordPage extends StatelessWidget {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: viewModel
-                                              .toggleCurrentPasswordVisibility,
+                                          onTap: viewModel.toggleCurrentPasswordVisibility,
                                           child: Icon(
-                                            viewModel
-                                                    .editPasswordModel
-                                                    .isCurrentPasswordVisible
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
+                                            viewModel.editPasswordModel.isCurrentPasswordVisible
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
                                             color: const Color(0xFF9E9E9E),
                                             size: 20.sp,
                                           ),
@@ -147,9 +140,7 @@ class EditPasswordPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(height: 16.h),
-
                                   // New Password Field
                                   Container(
                                     width: double.infinity,
@@ -161,7 +152,7 @@ class EditPasswordPage extends StatelessWidget {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: const Color(0xFFE0E0E0),
+                                        color: const Color(0xFFFFE89D),
                                         width: 1.w,
                                       ),
                                     ),
@@ -175,11 +166,8 @@ class EditPasswordPage extends StatelessWidget {
                                         SizedBox(width: 12.w),
                                         Flexible(
                                           child: TextField(
-                                            controller:
-                                                viewModel.newPasswordController,
-                                            obscureText: !viewModel
-                                                .editPasswordModel
-                                                .isNewPasswordVisible,
+                                            controller:viewModel.newPasswordController,
+                                            obscureText: !viewModel.editPasswordModel.isNewPasswordVisible,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               color: const Color(0xFF424242),
@@ -195,14 +183,11 @@ class EditPasswordPage extends StatelessWidget {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: viewModel
-                                              .toggleNewPasswordVisibility,
+                                          onTap: viewModel.toggleNewPasswordVisibility,
                                           child: Icon(
-                                            viewModel
-                                                    .editPasswordModel
-                                                    .isNewPasswordVisible
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
+                                            viewModel.editPasswordModel.isNewPasswordVisible
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
                                             color: const Color(0xFF9E9E9E),
                                             size: 20.sp,
                                           ),
@@ -210,9 +195,7 @@ class EditPasswordPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   SizedBox(height: 16.h),
-
                                   // Confirm Password Field
                                   Container(
                                     width: double.infinity,
@@ -224,7 +207,7 @@ class EditPasswordPage extends StatelessWidget {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: const Color(0xFFE0E0E0),
+                                        color: const Color(0xFFFFE89D),
                                         width: 1.w,
                                       ),
                                     ),
@@ -238,11 +221,8 @@ class EditPasswordPage extends StatelessWidget {
                                         SizedBox(width: 12.w),
                                         Flexible(
                                           child: TextField(
-                                            controller: viewModel
-                                                .confirmPasswordController,
-                                            obscureText: !viewModel
-                                                .editPasswordModel
-                                                .isConfirmPasswordVisible,
+                                            controller: viewModel.confirmPasswordController,
+                                            obscureText: !viewModel.editPasswordModel.isConfirmPasswordVisible,
                                             style: TextStyle(
                                               fontSize: 16.sp,
                                               color: const Color(0xFF424242),
@@ -258,14 +238,11 @@ class EditPasswordPage extends StatelessWidget {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: viewModel
-                                              .toggleConfirmPasswordVisibility,
+                                          onTap: viewModel.toggleConfirmPasswordVisibility,
                                           child: Icon(
-                                            viewModel
-                                                    .editPasswordModel
-                                                    .isConfirmPasswordVisible
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
+                                            viewModel.editPasswordModel.isConfirmPasswordVisible
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
                                             color: const Color(0xFF9E9E9E),
                                             size: 20.sp,
                                           ),
@@ -286,8 +263,8 @@ class EditPasswordPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
                                   colors: [
-                                    Color(0xFFFF8A00), // Orange
-                                    Color(0xFFFFC107), // Yellow
+                                    Color(0xFFFFA267), // Orange
+                                    Color(0xFFFFDF6F), // Yellow
                                   ],
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,

@@ -30,23 +30,14 @@ class EventsViewModel extends ChangeNotifier {
       filtered = events;
     } else {
       // For other tabs, filter by category
-      filtered = events
-          .where((event) => event.category == selectedTab)
-          .toList();
+      filtered = events.where((event) => event.category == selectedTab).toList();
     }
 
     if (searchQuery.isNotEmpty) {
-      filtered = filtered
-          .where(
-            (event) =>
-                event.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                event.location.toLowerCase().contains(
-                  searchQuery.toLowerCase(),
-                ),
-          )
-          .toList();
+      filtered = filtered.where(
+      (event) =>event.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+      event.location.toLowerCase().contains(searchQuery.toLowerCase(),),).toList();
     }
-
     return filtered;
   }
 

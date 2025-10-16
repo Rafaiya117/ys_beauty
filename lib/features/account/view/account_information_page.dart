@@ -413,20 +413,23 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                     ],
                                   ),
                                   SizedBox(height: 20.h,),
-                                  GestureDetector(
-                                    onTap: () =>_navigateToEditPassword(context),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h,),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFF424242),
-                                          borderRadius: BorderRadius.circular(8.r,),
-                                        ),
-                                        child: Text(
-                                          'Change Password',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w500,
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: GestureDetector(
+                                      onTap: () =>_navigateToEditPassword(context),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h,),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF424242),
+                                            borderRadius: BorderRadius.circular(8.r,),
+                                          ),
+                                          child: Text(
+                                            'Change Password',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ),
