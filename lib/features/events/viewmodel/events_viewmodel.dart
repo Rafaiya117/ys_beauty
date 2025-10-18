@@ -19,6 +19,7 @@ class EventsViewModel extends ChangeNotifier {
   String get searchQuery => _model.searchQuery;
   String? get searchFilterType => _searchFilterType;
   TextEditingController get searchController => _searchController;
+  
 
   List<EventItem> get filteredEvents {
     List<EventItem> filtered;

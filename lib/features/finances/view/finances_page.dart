@@ -80,7 +80,7 @@ class FinancesPage extends StatelessWidget {
                 : (viewModel.userProfileImage != null
                   ? ClipOval(
                     child: Image.network(
-                      viewModel.userProfileImage!,
+                      'http://10.10.13.36/${viewModel.userProfileImage!}',
                       fit: BoxFit.cover,
                       width: 40.w,
                       height: 40.h,

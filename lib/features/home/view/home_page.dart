@@ -1,3 +1,4 @@
+import 'package:animation/features/finances/viewmodel/finances_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -108,6 +109,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final userName = FinancesViewModel.instance.userName ?? 'Guest';
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Row(
@@ -141,7 +143,7 @@ class HomePage extends StatelessWidget {
                 ),
                 // Name
                 Text(
-                  'Nicolas Smith',
+                  userName,
                   style: GoogleFonts.greatVibes(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.normal,

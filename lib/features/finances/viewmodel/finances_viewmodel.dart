@@ -6,13 +6,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
 
 class FinancesViewModel extends ChangeNotifier {
+  static final FinancesViewModel instance = FinancesViewModel();
   FinancesViewModel() {
     fetchFinanceSummary();
     fetchMonthlyData();
     fetchFinanceList(); 
     fetchUserData();
   }
-
+ 
   String? _userName;
   String? _userProfileImage;
   bool _isUserLoading = true;
@@ -368,10 +369,11 @@ class FinancesViewModel extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
+        final decoded = jsonDecode(response.body);
+        final data = decoded['data'] ?? decoded; 
         _userName = data['first_name'] ?? 'Guest';
-        _userProfileImage = data['profile_photo']; 
-      } else {
+        _userProfileImage = data['profile_photo'];
+      }else {
         print('Failed to fetch user data: ${response.statusCode}');
       }
     } catch (e) {

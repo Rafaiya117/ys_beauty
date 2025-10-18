@@ -1,3 +1,4 @@
+import 'package:animation/features/finances/viewmodel/finances_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -74,6 +75,8 @@ class EventsPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+  final userName = FinancesViewModel.instance.userName ?? 'Guest';
+  final userImage = FinancesViewModel.instance.userProfileImage;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Row(
@@ -82,19 +85,16 @@ class EventsPage extends StatelessWidget {
           Center(
             child: Container(
               child:GestureDetector(
-                onTap: () {
-                  AppRouter.navigateToHome();
-                },
-                child: Image.asset(
-                AppConstants.appLogoPath,
-                width: 40.w,
-                height: 40.h,
+                onTap: () => AppRouter.navigateToHome(),
+                child: CircleAvatar(
+                  radius: 20.w,
+                  backgroundImage: userImage != null
+                    ? NetworkImage('http://10.10.13.36$userImage')
+                    : AssetImage(AppConstants.appLogoPath) as ImageProvider,
+                  ),
+                ),
               ),
-              )
-              
             ),
-          ),
-
           SizedBox(width: 16.w),
 
           // Greeting text
@@ -112,7 +112,7 @@ class EventsPage extends StatelessWidget {
                 ),
                 // Name
                 Text(
-                  'Nicolas Smith',
+                  userName,
                   style: GoogleFonts.greatVibes(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
