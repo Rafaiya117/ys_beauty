@@ -14,6 +14,7 @@ class EventDetailsViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> loadEventDetails(String eventId) async {
+    debugPrint('!------------------$eventId');
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();

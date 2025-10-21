@@ -60,9 +60,7 @@ class EventsViewModel extends ChangeNotifier {
       } else {
         // Fallback to dummy events for unknown tabs
         final allEvents = await _repository.getEvents();
-        events = allEvents
-            .where((event) => event.category == selectedTab)
-            .toList();
+        events = allEvents.where((event) => event.category == selectedTab).toList();
       }
 
       _updateModel(_model.copyWith(isLoading: false, events: events));

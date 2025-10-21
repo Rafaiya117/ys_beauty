@@ -651,6 +651,7 @@ class HomePage extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 12.h),
                     child: _buildUpcomingEventCard(
+                      eventId:event.id.toString() ,
                       title: event.eventName,
                       status: [event.status ?? 'Pending', event.paid ? 'Paid' : 'Unpaid'],
                       date: event.date,
@@ -970,6 +971,7 @@ class HomePage extends StatelessWidget {
 }
 
   Widget _buildUpcomingEventCard({
+     required String eventId,
     required String title,
     required List<String> status,
     required String date,
@@ -1195,7 +1197,7 @@ class HomePage extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
-              onTap: () => AppRouter.navigateToEventDetails('1'),
+              onTap: () => AppRouter.navigateToEventDetails(eventId),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(

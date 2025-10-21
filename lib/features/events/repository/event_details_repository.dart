@@ -69,11 +69,11 @@ class EventDetailsRepository {
     
     // Create status list based on payment and approval
     final List<String> statusList = [];
-    if (event.status == 'APP') {
+    if (event.status == 'Approved') {
       statusList.add('Approved');
-    } else if (event.status == 'PEN') {
+    } else if (event.status == 'Pending') {
       statusList.add('Pending');
-    } else if (event.status == 'DEN') {
+    } else if (event.status == 'Denied') {
       statusList.add('Denied');
     }
     
