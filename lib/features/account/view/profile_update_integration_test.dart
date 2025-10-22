@@ -12,8 +12,7 @@ class ProfileUpdateIntegrationTest extends StatefulWidget {
       _ProfileUpdateIntegrationTestState();
 }
 
-class _ProfileUpdateIntegrationTestState
-    extends State<ProfileUpdateIntegrationTest> {
+class _ProfileUpdateIntegrationTestState extends State<ProfileUpdateIntegrationTest> {
   late AccountViewModel _accountViewModel;
   late EditInformationViewModel _editInformationViewModel;
 

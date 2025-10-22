@@ -1,3 +1,4 @@
+import 'package:animation/core/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +99,20 @@ class SettingsPage extends StatelessWidget {
                               showArrow: true,
                             ),
                             
+                            SizedBox(height: 8.h),
+
+                            _buildSettingItem(
+                              icon: 'assets/icons/menu_feedback.svg',
+                              title: 'Feedback',
+                              onTap:(){
+                                 Navigator.of(context).pop();
+                                  Future.delayed(const Duration(milliseconds: 100), () {
+                                  AppRouter.navigateToFeedback();
+                                });
+                              },
+                              showArrow: true,
+                            ),
+
                             SizedBox(height: 8.h),
                             
                             // Log Out
@@ -204,10 +219,10 @@ Widget _buildSettingItem({
                   icon,
                   width: 18.w,
                   height: 18.h,
-                      // colorFilter: const ColorFilter.mode(
-                      //   Colors.black,
-                      //   BlendMode.srcIn,
-                      // ),
+                    colorFilter: const ColorFilter.mode(
+                      Color(0xFF363636),
+                      BlendMode.srcIn,
+                ),
               ),
             ),
           ),

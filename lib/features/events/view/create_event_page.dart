@@ -248,7 +248,10 @@ class CreateEventPage extends StatelessWidget {
           iconPath,
           width: 18.w,
           height: 18.h,
-          color: const Color(0xFFFFA167),
+          // ignore: deprecated_member_use
+          color: Color(0xFF363636), 
+          // ignore: deprecated_member_use
+          colorBlendMode: BlendMode.modulate,
         ),
         SizedBox(width: 10.w),
         Expanded(
@@ -311,7 +314,7 @@ class CreateEventPage extends StatelessWidget {
             iconPath,
             width: 18.w,
             height: 18.h,
-            color: const Color(0xFFFFA167),
+            color: const Color(0xFF363636),
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -362,7 +365,7 @@ class CreateEventPage extends StatelessWidget {
             iconPath,
             width: 18.w,
             height: 18.h,
-            color: const Color(0xFFFFA167),
+            color: const Color(0xFF363636),
           ),
           SizedBox(width: 12.w),
           Expanded(

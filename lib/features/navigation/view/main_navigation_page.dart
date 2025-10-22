@@ -158,9 +158,7 @@ class MainNavigationPage extends StatelessWidget {
                     ? const Color(
                         AppConstants.selectedIconColor,
                       ) // FFA066 for active
-                    : const Color(
-                        0xFF010101,
-                      ), // 010101 for inactive (hardcoded since it's the default)
+                    : const Color(0xFF010101,), // 010101 for inactive (hardcoded since it's the default)
               ),
             ),
           ],

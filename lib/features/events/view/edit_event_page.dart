@@ -231,6 +231,10 @@ class EditEventPage extends StatelessWidget {
               'assets/icons/back_button.svg',
               width:16.w,
               height: 12.h,
+              // ignore: deprecated_member_use
+              color: Color(0xFF363636), 
+              // ignore: deprecated_member_use
+              colorBlendMode: BlendMode.modulate,
             ), 
             // Icon(
             //   Icons.arrow_back_ios,

@@ -60,6 +60,10 @@ class EditInformationPage extends StatelessWidget {
                               'assets/icons/back_button.svg',
                               width:16.w,
                               height: 12.h,
+                              // ignore: deprecated_member_use
+                              color: Color(0xFF363636), 
+                              // ignore: deprecated_member_use
+                              colorBlendMode: BlendMode.modulate,
                             ),
                             // Icon(
                             //   Icons.arrow_back_ios,
@@ -177,6 +181,10 @@ class EditInformationPage extends StatelessWidget {
                                           'assets/icons/profile_user.svg',
                                           width: 16.w,
                                           height: 16.h,
+                                          // ignore: deprecated_member_use
+                                          color: Color(0xFF363636), 
+                                        // ignore: deprecated_member_use
+                                        colorBlendMode: BlendMode.modulate,
                                         ),
                                         // Icon(
                                         //   Icons.person,
@@ -221,7 +229,8 @@ class EditInformationPage extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.email,
-                                          color: Color(0xFFFFA268),
+                                          // color: Color(0xFFFFA268),
+                                          color:Color(0xFF1B1B1B),
                                           size: 20.sp,
                                         ),
                                         SizedBox(width: 12.w),
@@ -268,7 +277,8 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.calendar_today,
-                                                color: Color(0xFFFFA268),
+                                                // color: Color(0xFFFFA268),
+                                                color:Color(0xFF1B1B1B),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),
@@ -315,7 +325,8 @@ class EditInformationPage extends StatelessWidget {
                                             children: [
                                               Icon(
                                                 Icons.location_city,
-                                                color: Color(0xFFFFA268),
+                                                // color: Color(0xFFFFA268),
+                                                color:Color(0xFF1B1B1B),
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 12.w),

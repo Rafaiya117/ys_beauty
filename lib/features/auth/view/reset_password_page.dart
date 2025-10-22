@@ -151,7 +151,7 @@ class ResetPasswordPage extends StatelessWidget {
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.lock_outline,
-                                    color: const Color(0xFFFF8A00),
+                                    color: const Color(0xFF363636),
                                     size: 20.sp,
                                   ),
                                   suffixIcon: IconButton(
@@ -161,7 +161,7 @@ class ResetPasswordPage extends StatelessWidget {
                                       viewModel.isPasswordVisible
                                           ? Icons.visibility_off_outlined
                                           : Icons.visibility_outlined,
-                                      color: const Color(0xFFFF8A00),
+                                      color: const Color(0xFF363636),
                                       size: 20.sp,
                                     ),
                                   ),
@@ -200,7 +200,7 @@ class ResetPasswordPage extends StatelessWidget {
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.lock_outline,
-                                    color: const Color(0xFFFF8A00),
+                                    color: const Color(0xFF363636),
                                     size: 20.sp,
                                   ),
                                   suffixIcon: IconButton(
@@ -210,7 +210,7 @@ class ResetPasswordPage extends StatelessWidget {
                                       viewModel.isConfirmPasswordVisible
                                           ? Icons.visibility_off_outlined
                                           : Icons.visibility_outlined,
-                                      color: const Color(0xFFFF8A00),
+                                      color: const Color(0xFF363636),
                                       size: 20.sp,
                                     ),
                                   ),
@@ -267,7 +267,7 @@ class ResetPasswordPage extends StatelessWidget {
                                         : Text(
                                             'Reset Password',
                                             style: TextStyle(
-                                              color: Colors.white,
+                                              color: Color(0xFF1B1B1B),
                                               fontSize: 16.sp,
                                               fontWeight: FontWeight.w600,
                                             ),

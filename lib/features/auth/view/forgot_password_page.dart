@@ -140,6 +140,9 @@ class ForgotPasswordPage extends StatelessWidget {
                                       'assets/icons/login_email_icon.svg',
                                       width: 14.w,
                                       height: 12.h,
+                                      color: Color(0xFF363636), 
+                                        // ignore: deprecated_member_use
+                                        colorBlendMode: BlendMode.modulate,
                                     ),
                                   ),
                                   // Icon(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_constants.dart';
 import '../../core/router.dart';
 
@@ -10,7 +11,7 @@ class GlobalDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: const Color(0xFFFFF8E1), // Light yellow background
+      backgroundColor: const Color(0xFFFFFEF3), // Light yellow background
       child: SafeArea(
         child: Column(
           children: [
@@ -25,14 +26,18 @@ class GlobalDrawer extends StatelessWidget {
                     child: Container(
                       width: 32.w,
                       height: 32.h,
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
+                      decoration: BoxDecoration(
+                        //color: Colors.black,
                         shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Color(0xFF1B1B1B), // border color
+                          width: 2, // adjust thickness as needed
+                        ),
                       ),
                       child: Icon(
                         Icons.close,
-                        color: Colors.white,
-                        size: 18.sp,
+                        color: Color(0xFF1B1B1B),
+                        size: 24.sp,
                       ),
                     ),
                   ),
@@ -171,7 +176,7 @@ class GlobalDrawer extends StatelessWidget {
                   SizedBox(width: 16.w),
                   Text(
                     title,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 14.sp,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,

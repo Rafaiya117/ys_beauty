@@ -1,6 +1,7 @@
 import 'package:animation/features/finances/viewmodel/finances_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -109,6 +110,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final userImage = FinancesViewModel.instance.userProfileImage;
     final userName = FinancesViewModel.instance.userName ?? 'Guest';
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
@@ -117,13 +119,17 @@ class HomePage extends StatelessWidget {
           // App logo
           Center(
             child: Container(
-              child: Image.asset(
-                AppConstants.appLogoPath,
-                width: 40.w,
-                height: 40.h,
+              child:GestureDetector(
+                onTap: () => AppRouter.navigateToHome(),
+                child: CircleAvatar(
+                  radius: 20.w,
+                  backgroundImage: userImage != null
+                    ? NetworkImage('http://10.10.13.36$userImage')
+                    : AssetImage(AppConstants.appLogoPath) as ImageProvider,
+                  ),
+                ),
               ),
             ),
-          ),
           
           SizedBox(width: 16.w),
           
@@ -347,7 +353,7 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF424242),
+                        color:Colors.black //const Color(0xFF424242),
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -355,7 +361,7 @@ class HomePage extends StatelessWidget {
                       'Select a date → add an event.',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: const Color(0xFF757575),
+                        color:Colors.black //const Color(0xFF757575),
                       ),
                     ),
                   ],
@@ -409,98 +415,157 @@ class HomePage extends StatelessWidget {
                  ),
                ],
              ),
-            child: Column(
-              children: [
-                 // Dynamic Calendar
-                 TableCalendar<dynamic>(
-                   firstDay: DateTime.utc(2020, 1, 1),
-                   lastDay: DateTime.utc(2030, 12, 31),
-                   focusedDay: viewModel.focusedDay,
-                   calendarFormat: viewModel.calendarFormat,
-                   eventLoader: (day) {
-                     return viewModel.hasEvents(day) ? [day] : [];
-                   },
-                   startingDayOfWeek: StartingDayOfWeek.sunday,
-                   calendarStyle: CalendarStyle(
-                     outsideDaysVisible: false,
-                     weekendTextStyle: TextStyle(
-                       color: const Color(0xFF424242),
-                       fontSize: 14.sp,
-                       fontWeight: FontWeight.w500,
-                     ),
-                     defaultTextStyle: TextStyle(
-                       color: const Color(0xFF424242),
-                       fontSize: 14.sp,
-                       fontWeight: FontWeight.w500,
-                     ),
-                     selectedDecoration: BoxDecoration(
-                       color: Colors.transparent,
-                       shape: BoxShape.circle,
-                       border: Border.all(
-                         color: Colors.black,
-                         width: 2.w,
-                       ),
-                     ),
-                     selectedTextStyle: TextStyle(
-                       color: Colors.black,
-                       fontSize: 14.sp,
-                       fontWeight: FontWeight.w500,
-                     ),
-                     todayDecoration: BoxDecoration(
-                       color: Colors.green.withValues(alpha: 0.3),
-                       shape: BoxShape.circle,
-                     ),
-                     markersMaxCount: 1,
-                     markerDecoration: BoxDecoration(
-                       color: const Color(0xFFFFF3C4),
-                       shape: BoxShape.circle,
-                     ),
-                     markerMargin: EdgeInsets.symmetric(horizontal: 1.w),
-                     markerSize: 6.w,
-                   ),
-                   headerStyle: HeaderStyle(
-                     formatButtonVisible: false,
-                     titleCentered: true,
-                     titleTextStyle: TextStyle(
-                       fontSize: 18.sp,
-                       fontWeight: FontWeight.bold,
-                       color: const Color(0xFF424242),
-                     ),
-                     leftChevronIcon: Icon(
-                       Icons.chevron_left,
-                       size: 24.sp,
-                       color: const Color(0xFF424242),
-                     ),
-                     rightChevronIcon: Icon(
-                       Icons.chevron_right,
-                       size: 24.sp,
-                       color: const Color(0xFF424242),
-                     ),
-                   ),
-                   daysOfWeekStyle: DaysOfWeekStyle(
-                     weekdayStyle: TextStyle(
-                       fontSize: 12.sp,
-                       fontWeight: FontWeight.w500,
-                       color: const Color(0xFF757575),
-                     ),
-                     weekendStyle: TextStyle(
-                       fontSize: 12.sp,
-                       fontWeight: FontWeight.w500,
-                       color: const Color(0xFF757575),
-                     ),
-                   ),
-                   onDaySelected: viewModel.onDaySelected,
-                   onFormatChanged: viewModel.onFormatChanged,
-                   onPageChanged: viewModel.onPageChanged,
-                   selectedDayPredicate: (day) {
-                     return isSameDay(viewModel.selectedDay, day);
-                   },
-                 ),                
-                SizedBox(height: 16.h),                
-                // Legend
-                _buildCalendarLegend(),
-              ],
+            child: 
+            Column(
+  children: [
+    // Custom Header (to match "July 2025" style)
+    Padding(
+  padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Text(
+            DateFormat.MMMM().format(viewModel.focusedDay),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black, // black text for month
             ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            DateFormat.y().format(viewModel.focusedDay),
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // black text for year
+            ),
+          ),
+        ],
+      ),
+      Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              viewModel.onPageChanged(
+                DateTime(
+                  viewModel.focusedDay.year,
+                  viewModel.focusedDay.month - 1,
+                ),
+              );
+            },
+            child: Icon(
+              Icons.chevron_left,
+              size: 22.sp,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: () {
+              viewModel.onPageChanged(
+                DateTime(
+                  viewModel.focusedDay.year,
+                  viewModel.focusedDay.month + 1,
+                ),
+              );
+            },
+            child: Icon(
+              Icons.chevron_right,
+              size: 22.sp,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+
+    // Dynamic Calendar
+    TableCalendar<dynamic>(
+      firstDay: DateTime.utc(2020, 1, 1),
+      lastDay: DateTime.utc(2030, 12, 31),
+      focusedDay: viewModel.focusedDay,
+      calendarFormat: viewModel.calendarFormat,
+      eventLoader: (day) {
+        return viewModel.hasEvents(day) ? [day] : [];
+      },
+      startingDayOfWeek: StartingDayOfWeek.sunday,
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: false,
+        weekendTextStyle: TextStyle(
+          color: const Color(0xFF424242),
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+        ),
+        defaultTextStyle: TextStyle(
+          color: const Color(0xFF424242),
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+        ),
+        selectedDecoration: BoxDecoration(
+          color: Colors.transparent,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.black,
+            width: 2.w,
+          ),
+        ),
+        selectedTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+        ),
+        todayDecoration: BoxDecoration(
+          color: Colors.green.withValues(alpha: 0.3),
+          shape: BoxShape.circle,
+        ),
+        markersMaxCount: 1,
+        markerDecoration: BoxDecoration(
+          color: const Color(0xFFFFF3C4),
+          shape: BoxShape.circle,
+        ),
+        markerMargin: EdgeInsets.symmetric(horizontal: 1.w),
+        markerSize: 6.w,
+      ),
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        titleTextFormatter:  (_, __) => '',
+        titleCentered: false,
+        leftChevronVisible: false,
+        rightChevronVisible: false,
+        //headerPadding: EdgeInsets.zero,
+      ),
+      daysOfWeekStyle: DaysOfWeekStyle(
+        weekdayStyle: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFF757575),
+        ),
+        weekendStyle: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFF757575),
+        ),
+      ),
+      onDaySelected: viewModel.onDaySelected,
+      onFormatChanged: viewModel.onFormatChanged,
+      onPageChanged: viewModel.onPageChanged,
+      selectedDayPredicate: (day) {
+        return isSameDay(viewModel.selectedDay, day);
+      },
+    ),
+
+    SizedBox(height: 16.h),
+
+    // Legend
+    _buildCalendarLegend(),
+  ],
+),
+
           ),
         ],
       ),
@@ -578,7 +643,7 @@ class HomePage extends StatelessWidget {
 
         // Event cards
         SizedBox(
-          height: 180.h,
+          height: 190.h,
           child: events.isEmpty
               ? Center(child: Text('No events today', style: TextStyle(fontSize: 14.sp)))
               : ListView.builder(
@@ -772,7 +837,7 @@ class HomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
-                        statusText,
+                        _getStatusLabel(statusText),
                         style: TextStyle(
                           fontSize: 8.sp,
                           color: Colors.white,
@@ -1027,7 +1092,7 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
-                          statusText,
+                          _getStatusLabel(statusText),
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: Colors.white,
@@ -1248,6 +1313,31 @@ class HomePage extends StatelessWidget {
   }
 }
 
+String _getStatusLabel(String status) {
+  final normalized = status.toLowerCase().trim();
+
+  switch (normalized) {
+    case 'pen':
+    case 'pending':
+      return 'Pending';
+    case 'app':
+    case 'approved':
+      return 'Approved';
+    case 'paid':
+      return 'Paid';
+    case 'den':
+    case 'denied':
+      return 'Denied';
+    case 'unpaid':
+      return 'Unpaid';
+    case 'transfer':
+      return 'Transfer';
+    default:
+      return status; // fallback to original text
+  }
+}
+
+
   void _showFilterModal(BuildContext context, HomeViewModel viewModel) {
     showGeneralDialog(
       context: context,
@@ -1264,7 +1354,7 @@ class HomePage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
-                color: Color(0xFFFFF8E1), // Light yellow background
+                color: Color(0xFFFFFEF3), // Light yellow background
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
@@ -1284,13 +1374,16 @@ class HomePage extends StatelessWidget {
                             child: Container(
                               width: 32.w,
                               height: 32.h,
-                              decoration: const BoxDecoration(
-                                color: Colors.black,
+                              decoration:BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.close,
-                                color: Colors.white,
+                                color: Colors.black,
                                 size: 18.sp,
                               ),
                             ),

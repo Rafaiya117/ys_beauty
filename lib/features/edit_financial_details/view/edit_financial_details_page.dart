@@ -228,7 +228,7 @@ class EditFinancialDetailsPage extends StatelessWidget {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 20.sp, color: const Color(0xFFB8860B)),
+        Icon(icon, size: 20.sp, color: const Color(0xFF363636)),
         SizedBox(width: 12.w),
         Expanded(
           child: TextField(
@@ -277,7 +277,6 @@ Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUp
           if (viewModel.financialDetails != null) {
             // Call the repository directly
             bool success = await viewModel.repository.updateFinancialDetails(viewModel.financialDetails!);
-
             if (success) {
               // Pop the page
               Navigator.of(context).pop();

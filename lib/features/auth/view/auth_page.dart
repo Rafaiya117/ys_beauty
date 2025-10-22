@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import '../../../shared/constants/app_colors.dart';
@@ -95,12 +96,12 @@ class AuthPage extends StatelessWidget {
                                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                           ),
                                         )
-                                      : const Text(
-                                    'Log In',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      :Text(
+                                      'Log In',
+                                    style: GoogleFonts.poppins(
+                                      color: Color(0xFF404040),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
@@ -133,11 +134,11 @@ class AuthPage extends StatelessWidget {
                                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                         ),
                                       )
-                                      : const Text(
+                                      :Text(
                                         'Sign Up',
-                                        style: TextStyle(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.white,
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),

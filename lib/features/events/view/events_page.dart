@@ -701,7 +701,7 @@ class EventsPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
-                color: Color(0xFFFFF8E1), // Light yellow background
+                color: Color(0xFFFFFEF3), // Light yellow background
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
@@ -721,13 +721,16 @@ class EventsPage extends StatelessWidget {
                             child: Container(
                               width: 32.w,
                               height: 32.h,
-                              decoration: const BoxDecoration(
-                                color: Colors.black,
+                              decoration:BoxDecoration(
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                )
                               ),
                               child: Icon(
                                 Icons.close,
-                                color: Colors.white,
+                                color: Colors.black,
                                 size: 18.sp,
                               ),
                             ),
@@ -928,16 +931,25 @@ class EventsPage extends StatelessWidget {
                 }
                 return Column(
                   children: events
-                    .map((event) => _buildReminderCard(
-                      title: event.title,
-                      date: event.date,
-                      status:event.status.first, 
-                      cardColor: viewModel.getStatusColor(event.status.first).withOpacity(0.3),
-                        statusColor: viewModel.getStatusColor(
-                        event.status.first,
-                      ),
-                    ),
-                  ).toList(),
+                      .map(
+                        (event) => Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 12.0,
+                          ), // space between cards
+                          child: _buildReminderCard(
+                            title: event.title,
+                            date: event.date,
+                            status: event.status.first,
+                            cardColor: viewModel
+                                .getStatusColor(event.status.first)
+                                .withOpacity(0.3),
+                            statusColor: viewModel.getStatusColor(
+                              event.status.first,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 );
               },
             ),

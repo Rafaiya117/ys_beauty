@@ -134,6 +134,10 @@ class SignUpPage extends StatelessWidget {
                                       'assets/icons/reg_user_icon.svg',
                                       width: 14.w,
                                       height: 12.h,
+                                      // ignore: deprecated_member_use
+                                      color: Color(0xFF363636), 
+                                      // ignore: deprecated_member_use
+                                      colorBlendMode: BlendMode.modulate,
                                     ),
                                   ),
                                   // Icon(
@@ -180,6 +184,10 @@ class SignUpPage extends StatelessWidget {
                                       'assets/icons/reg_phone.svg',
                                       width: 14.w,
                                       height: 12.h,
+                                      // ignore: deprecated_member_use
+                                      color: Color(0xFF363636), 
+                                      // ignore: deprecated_member_use
+                                      colorBlendMode: BlendMode.modulate,
                                     ),
                                   ),
                                   // Icon(
@@ -224,6 +232,10 @@ class SignUpPage extends StatelessWidget {
                                       'assets/icons/login_email_icon.svg',
                                       width: 14.w,
                                       height: 12.h,
+                                      // ignore: deprecated_member_use
+                                      color: Color(0xFF363636), 
+                                      // ignore: deprecated_member_use
+                                      colorBlendMode: BlendMode.modulate,
                                     ),
                                   ),
                                   // Icon(
@@ -270,6 +282,10 @@ class SignUpPage extends StatelessWidget {
                                       'assets/icons/login_password.svg',
                                       width: 14.w,
                                       height: 12.h,
+                                      // ignore: deprecated_member_use
+                                      color: Color(0xFF363636), 
+                                      // ignore: deprecated_member_use
+                                      colorBlendMode: BlendMode.modulate,
                                     ),
                                   ),
                                   // Icon(
@@ -284,7 +300,9 @@ class SignUpPage extends StatelessWidget {
                                       viewModel.isPasswordVisible
                                           ? Icons.visibility_off_outlined
                                           : Icons.visibility_outlined,
-                                      color: const Color(0xFFFF8A00),
+                                      // color: const Color(0xFFFF8A00),
+                                      // ignore: deprecated_member_use
+                                      color: Color(0xFF363636), 
                                       size: 20.sp,
                                     ),
                                   ),
