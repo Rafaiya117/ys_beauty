@@ -100,8 +100,8 @@ class LoginPage extends StatelessWidget {
                                     'Made for market entrepreneurs',
                                     style: GoogleFonts.playfair(
                                       fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF424242),
+                                      fontWeight: FontWeight.w900,
+                                      color: const Color(0xFF1B1B1B),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),

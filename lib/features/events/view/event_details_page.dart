@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/event_details_viewmodel.dart';
@@ -228,7 +229,7 @@ class EventDetailsPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 16.h),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
+                          colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                         ),
@@ -236,9 +237,9 @@ class EventDetailsPage extends StatelessWidget {
                       ),
                       child: Text(
                         'Edit Event',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
+                        style: GoogleFonts.poppins(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
                           color: Colors.black,
                         ),
                         textAlign: TextAlign.center,

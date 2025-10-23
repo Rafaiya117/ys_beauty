@@ -765,9 +765,9 @@ class HomePage extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Text(
                   'Add New Event',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.poppins(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.normal,
                     color: Colors.black,
                   ),
                 ),

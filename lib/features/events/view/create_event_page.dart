@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/create_event_viewmodel.dart';
@@ -100,7 +101,7 @@ class CreateEventPage extends StatelessWidget {
                               label: 'Choose Location',
                               iconPath: 'assets/icons/create_location.svg',
                               controller: viewModel.locationController,
-                              hasArrow: true,
+                              hasArrow: false,
                             ),
 
                             SizedBox(height: 20.h),
@@ -157,17 +158,17 @@ class CreateEventPage extends StatelessWidget {
                               viewModel: viewModel,
                             ),
 
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
 
                             // Status section
                             _buildStatusSection(viewModel),
 
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
 
                             // Paid section
                             _buildPaidSection(viewModel),
 
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
 
                             // Description section
                             _buildDescriptionSection(viewModel),
@@ -212,9 +213,9 @@ class CreateEventPage extends StatelessWidget {
           Expanded(
             child: Text(
               'Create Event',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.poppins(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
               textAlign: TextAlign.center,
@@ -257,16 +258,18 @@ class CreateEventPage extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: controller,
-            style: TextStyle(
+            style: GoogleFonts.roboto(
               fontSize: 16.sp,
-              color: const Color(0xFF424242),
+              // color: const Color(0xFF424242),
+              color:Colors.black,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: label,
-              hintStyle: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+              hintStyle: GoogleFonts.roboto(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.normal,
+                color: Colors.black
               ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
@@ -294,7 +297,7 @@ class CreateEventPage extends StatelessWidget {
   Widget _buildDateField({
   required BuildContext context,
   required String label,
-  required String iconPath, // changed from IconData
+  required String iconPath, 
   required TextEditingController controller,
   required CreateEventViewModel viewModel,
 }) {
@@ -323,8 +326,8 @@ class CreateEventPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 color: controller.text.isEmpty
-                  ? Color.fromARGB(255, 70, 69, 69)
-                  : const Color(0xFF424242),
+                  ? Colors.black
+                  : Colors.black,
                 fontWeight: controller.text.isEmpty
                   ? FontWeight.w400
                   : FontWeight.w500,
@@ -374,8 +377,8 @@ class CreateEventPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 color: controller.text.isEmpty
-                    ? const Color(0xFF424242)
-                    : const Color(0xFF424242),
+                    ? Colors.black
+                    : Colors.black,
                 fontWeight: controller.text.isEmpty
                     ? FontWeight.w400
                     : FontWeight.w500,
@@ -438,7 +441,8 @@ class CreateEventPage extends StatelessWidget {
                       'Start',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: const Color(0xFF424242),
+                        // color: const Color(0xFF424242),
+                        color:Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -447,7 +451,8 @@ class CreateEventPage extends StatelessWidget {
                     'Time:',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: const Color(0xFF424242),
+                      // color: const Color(0xFF424242),
+                      color:Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -497,8 +502,8 @@ class CreateEventPage extends StatelessWidget {
                 children: [
                   // End dot
                   Container(
-                    width: 8.w,
-                    height: 8.h,
+                    width: 10.w,
+                    height: 10.h,
                     decoration: const BoxDecoration(
                       color: Color(0xFFFF8A00),
                       shape: BoxShape.circle,
@@ -510,7 +515,8 @@ class CreateEventPage extends StatelessWidget {
                       'End',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: const Color(0xFF424242),
+                        // color: const Color(0xFF424242),
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -519,7 +525,8 @@ class CreateEventPage extends StatelessWidget {
                     'Time:',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: const Color(0xFF424242),
+                      // color: const Color(0xFF424242),
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -566,9 +573,9 @@ class CreateEventPage extends StatelessWidget {
           children: [
             Text(
               'Status',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
@@ -579,13 +586,27 @@ class CreateEventPage extends StatelessWidget {
                 color: _getStatusColor(viewModel.selectedStatus ?? 'Pending'),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Text(
-                viewModel.selectedStatus ?? 'Pending',
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min, 
+                children: [
+                  Container(
+                    width: 8.w, 
+                    height: 8.w, 
+                    margin: EdgeInsets.only(right: 4.w,), 
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF9A825), 
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Text(
+                    viewModel.selectedStatus ?? 'Pending',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black, // <-- CHANGE: Use black text color
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -680,8 +701,8 @@ class CreateEventPage extends StatelessWidget {
           SizedBox(width: 8.w),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12.sp,
+            style: GoogleFonts.roboto(
+              fontSize: 14.sp,
               color: const Color(0xFF424242),
               fontWeight: FontWeight.w500,
             ),
@@ -699,26 +720,60 @@ class CreateEventPage extends StatelessWidget {
           children: [
             Text(
               'Paid',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
             SizedBox(width: 8.w),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+            //   decoration: BoxDecoration(
+            //     color: viewModel.isPaid == true ? Colors.green : Colors.red,
+            //     borderRadius: BorderRadius.circular(12.r),
+            //   ),
+            //   child: Text(
+            //     viewModel.isPaid == true ? 'Yes' : 'No',
+            //     style: TextStyle(
+            //       fontSize: 10.sp,
+            //       fontWeight: FontWeight.w500,
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: viewModel.isPaid == true ? Colors.green : Colors.red,
+                color: viewModel.isPaid == true
+                    ? Colors.green.shade100
+                    : Colors.red.shade100,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Text(
-                viewModel.isPaid == true ? 'Yes' : 'No',
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 8.w,
+                    height: 8.w,
+                    margin: EdgeInsets.only(right: 4.w),
+                    decoration: BoxDecoration(
+                      // Use the solid color for the dot
+                      color: viewModel.isPaid == true
+                          ? Colors.green
+                          : Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Text(
+                    viewModel.isPaid == true ? 'Yes' : 'No',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -770,17 +825,17 @@ class CreateEventPage extends StatelessWidget {
               color: isSelected ? Colors.black : Colors.transparent,
             ),
             child: isSelected
-                ? Center(
-                    child: Container(
-                      width: 8.w,
-                      height: 8.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  )
-                : null,
+              ? Center(
+                child: Container(
+                  width: 8.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              )
+            : null,
           ),
           SizedBox(width: 8.w),
           Container(
@@ -792,7 +847,7 @@ class CreateEventPage extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 14.sp,
               color: const Color(0xFF424242),
               fontWeight: FontWeight.w500,
             ),
@@ -808,9 +863,9 @@ class CreateEventPage extends StatelessWidget {
       children: [
         Text(
           'Add Description (Optional)',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
           ),
         ),
@@ -854,28 +909,28 @@ class CreateEventPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: viewModel.isLoading ? null : viewModel.saveEvent,
-          borderRadius: BorderRadius.circular(12.r),
-          child: Center(
-            child: viewModel.isLoading
-                ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 2,
-                    ),
-                  )
-                : Text(
-                    'Save',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: viewModel.isLoading ? null : viewModel.saveEvent,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Center(
+          child: viewModel.isLoading
+            ? SizedBox(
+              width: 24.w,
+              height: 24.h,
+              child: const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                strokeWidth: 2,
+              ),
+            )
+            : Text(
+              'Save',
+              style: GoogleFonts.poppins(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
           ),
         ),
       ),
@@ -885,7 +940,8 @@ class CreateEventPage extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Pending':
-        return Colors.yellow;
+         return Color(0xFFFFE8A2);
+        // return Colors.yellow;
       case 'Denied':
         return Colors.red;
       case 'Approved':

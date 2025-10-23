@@ -670,94 +670,135 @@ class FinancesViewPage extends StatelessWidget {
   }
 
   // ----------------------- EXISTING METHODS UNCHANGED -----------------------
-  Widget _buildFinanceCard(financesData,FinancesViewViewModel viewModel) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage(AppConstants.cardBgPath),
-          fit: BoxFit.cover,
+  Widget _buildFinanceCard(financesData, FinancesViewViewModel viewModel) {
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(20.w), // slightly smaller padding
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFF4CC), // ✅ soft yellow background like the image
+      borderRadius: BorderRadius.circular(16.r),
+      border: Border.all(color: const Color(0xFFFFF3C9), width: 1), // subtle yellow border
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 8.r,
+          offset: Offset(0, 3.h),
         ),
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10.r,
-            offset: Offset(0, 4.h),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header Row (Event Name + Date)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              financesData.eventName,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Date: ${financesData.date}',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 16.h),
+
+        // Two-column details
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left Column
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow('Booth Size:', financesData.boothSize),
+                  SizedBox(height: 8.h),
+                  _buildDetailRow('Booth Fee:',
+                      '\$${financesData.boothFee.toStringAsFixed(0)}'),
+                ],
+              ),
+            ),
+
+            // Right Column
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow('Event Sales:',
+                      '\$${financesData.eventSales.toStringAsFixed(0)}'),
+                  SizedBox(height: 8.h),
+                  _buildDetailRow('Event Expenses:',
+                      '\$${financesData.eventExpenses.toStringAsFixed(0)}'),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 12.h),
+
+        // Net Profit
+        Text(
+          'Net Profit: \$${financesData.netProfit.toStringAsFixed(0)}',
+          style: TextStyle(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                financesData.eventName,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                'Date: ${financesData.date}',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+        ),
+
+        SizedBox(height: 16.h),
+
+        // Edit Button
+        Container(
+          width: double.infinity,
+          height: 38.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.r),
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
           ),
-          SizedBox(height: 24.h),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailRow('Booth Size:', financesData.boothSize),
-                    SizedBox(height: 16.h),
-                    _buildDetailRow('Booth Fee:',
-                        '\$${financesData.boothFee.toStringAsFixed(0)}'),
-                    SizedBox(height: 24.h),
-                    Text(
-                      'Net Profit: \$${financesData.netProfit.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+          child: TextButton(
+            onPressed: () => _buildEditButton(viewModel),
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
               ),
-              SizedBox(width: 20.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDetailRow('Event Sales:','\$${financesData.eventSales.toStringAsFixed(0)}'),
-                    SizedBox(height: 16.h),
-                    _buildDetailRow('Event Expenses:','\$${financesData.eventExpenses.toStringAsFixed(0)}'),
-                  ],
-                ),
+              padding: EdgeInsets.zero,
+            ),
+            child: Text(
+              "Edit",
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
-          SizedBox(height: 32.h),
-          Center(child: _buildEditButton(viewModel)),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildDetailRow(String label, String value) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -767,7 +808,7 @@ class FinancesViewPage extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.7),
           ),
         ),
-        SizedBox(height: 4.h),
+        SizedBox(width: 4.w),
         Text(
           value,
           style: TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/edit_password_viewmodel.dart';
@@ -103,10 +104,11 @@ class EditPasswordPage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.lock_outline,
-                                          color: const Color(0xFFFF8A00),
-                                          size: 20.sp,
+                                        SvgPicture.asset(
+                                          'assets/icons/login_password.svg',
+                                          width: 14.w,
+                                          height: 16.h,
+                                          color:Color(0xFF363636),
                                         ),
                                         SizedBox(width: 12.w),
                                         Flexible(
@@ -158,10 +160,11 @@ class EditPasswordPage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.lock_outline,
-                                          color: const Color(0xFFFF8A00),
-                                          size: 20.sp,
+                                        SvgPicture.asset(
+                                          'assets/icons/login_password.svg',
+                                          width: 14.w,
+                                          height: 16.h,
+                                          color:Color(0xFF363636),
                                         ),
                                         SizedBox(width: 12.w),
                                         Flexible(
@@ -213,10 +216,11 @@ class EditPasswordPage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.lock_outline,
-                                          color: const Color(0xFFFF8A00),
-                                          size: 20.sp,
+                                        SvgPicture.asset(
+                                          'assets/icons/login_password.svg',
+                                          width: 14.w,
+                                          height: 16.h,
+                                          color:Color(0xFF363636),
                                         ),
                                         SizedBox(width: 12.w),
                                         Flexible(
@@ -294,10 +298,10 @@ class EditPasswordPage extends StatelessWidget {
                                           )
                                         : Text(
                                             'Update Password',
-                                            style: TextStyle(
-                                              color: const Color(0xFF424242),
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
+                                            style: GoogleFonts.poppins(
+                                              color: const Color(0xFF1B1B1B),
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                   ),

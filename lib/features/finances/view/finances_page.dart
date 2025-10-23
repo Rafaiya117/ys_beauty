@@ -726,7 +726,7 @@ class FinancesPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Event History',
+            'Finance History',
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
@@ -848,6 +848,8 @@ class FinancesPage extends StatelessWidget {
                 svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.boothDateController,
+                isDatePicker: true,
+                context: context
               ),
 
               SizedBox(height: 12.h),
@@ -872,7 +874,7 @@ class FinancesPage extends StatelessWidget {
               // Add Booth Fee Button
               _buildActionButton(
                 title: 'Add Booth Fee',
-                icon: Icons.add,
+                // icon: '',
                 onTap: () {
                   final name = viewModel.boothEventController.text;
                   final size = viewModel.boothSizeController.text;
@@ -928,6 +930,8 @@ class FinancesPage extends StatelessWidget {
                 svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.salesDateController,
+                isDatePicker: true,
+                context: context
               ),
 
               SizedBox(height: 12.h),
@@ -944,7 +948,7 @@ class FinancesPage extends StatelessWidget {
               // Record Sale Button
               _buildActionButton(
                 title: 'Record Sale',
-                icon: Icons.shopping_bag,
+                // icon: Icons.shopping_bag,
                 onTap: () {
                   viewModel.recordSale();
                 },
@@ -1000,6 +1004,8 @@ class FinancesPage extends StatelessWidget {
                 svgIconPath: 'assets/icons/create_event_date.svg',
                 hintText: 'Enter Date',
                 controller: viewModel.expensesDateController,
+                isDatePicker: true,
+                context: context
               ),
 
               SizedBox(height: 12.h),
@@ -1016,7 +1022,7 @@ class FinancesPage extends StatelessWidget {
               // Add Expenses Button
               _buildActionButton(
                 title: 'Add Expenses',
-                icon: Icons.add_circle,
+                // icon: Icons.add_circle,
                 onTap: () {
                   viewModel.addExpense();
                 },
@@ -1094,13 +1100,15 @@ class FinancesPage extends StatelessWidget {
 Widget _buildInputField({
   required String hintText,
   required TextEditingController controller,
-  IconData? icon, 
-  String? svgIconPath, 
+  IconData? icon,
+  String? svgIconPath,
   bool isRequired = false,
   TextInputType? keyboardType,
-  bool isDropdown = false, 
-  List<String>? dropdownItems, 
-  Function(String)? onDropdownChanged, 
+  bool isDropdown = false,
+  List<String>? dropdownItems,
+  Function(String)? onDropdownChanged,
+  bool isDatePicker = false, // ✅ New flag
+  BuildContext? context, // ✅ Needed to show date picker
 }) {
   return Container(
     height: 48.h,
@@ -1122,7 +1130,7 @@ Widget _buildInputField({
                 width: 18.w,
                 height: 18.h,
                 colorFilter: const ColorFilter.mode(
-                  Color(0xFFFFA268),
+                  Color(0xFF363636),
                   BlendMode.srcIn,
                 ),
               )
@@ -1180,36 +1188,87 @@ Widget _buildInputField({
                     }
                   },
                 )
-              : TextField(
-                  controller: controller,
-                  keyboardType: keyboardType ?? TextInputType.text,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: const Color(0xFF424242),
-                    height: 1.2,
-                  ),
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: TextStyle(
-                fontSize: 13.sp,
-                color: const Color(0xFF757575),
-                height: 1.2,
-              ),
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
-              isDense: true,
-            ),
-          ),
+              // ✅ Date Picker
+              : isDatePicker
+                  ? GestureDetector(
+                      onTap: () async {
+                        if (context == null) return;
+
+                        FocusScope.of(context!).unfocus();
+
+                        final pickedDate = await showDatePicker(
+                          context: context!,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+
+                        if (pickedDate != null) {
+                          controller.text =
+                              "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: controller,
+                          readOnly: true,
+                          textAlignVertical: TextAlignVertical.center, // ✅ Center align fix
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: const Color(0xFF424242),
+                            height: 1.2,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: hintText,
+                            hintStyle: TextStyle(
+                              fontSize: 13.sp,
+                              color: const Color(0xFF757575),
+                              height: 1.2,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                            suffixIcon: Icon(
+                              Icons.calendar_today_rounded,
+                              size: 16.sp,
+                              color: const Color(0xFF757575),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  // ✅ Default TextField
+                  : TextField(
+                      controller: controller,
+                      keyboardType: keyboardType ?? TextInputType.text,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: const Color(0xFF424242),
+                        height: 1.2,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: hintText,
+                        hintStyle: TextStyle(
+                          fontSize: 13.sp,
+                          color: const Color(0xFF757575),
+                          height: 1.2,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
+                      ),
+                    ),
         ),
       ],
     ),
   );
 }
 
+
   Widget _buildActionButton({
     required String title,
-    required IconData icon,
+    IconData? icon,
     required VoidCallback onTap,
   }) {
     return Container(
@@ -1236,9 +1295,9 @@ Widget _buildInputField({
                 SizedBox(width: 8.w),
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../viewmodel/feedback_viewmodel.dart';
@@ -93,9 +94,9 @@ class FeedbackPage extends StatelessWidget {
           // Main Feedback Section
           Text(
             'Feedback',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.poppins(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
           ),
@@ -105,10 +106,11 @@ class FeedbackPage extends StatelessWidget {
           // Description text
           Text(
             'Let us know how we can improve Market Pop! If you have a feature request, can you also share how you would use it and why it\'s important to you?',
-            style: TextStyle(
-              fontSize: 16.sp,
+            style: GoogleFonts.poppins(
+              fontSize: 12.sp,
               color: Colors.black,
-              height: 1.4,
+              fontWeight: FontWeight.normal,
+              //height: 1.4,
             ),
           ),
           
@@ -117,14 +119,15 @@ class FeedbackPage extends StatelessWidget {
           // Feedback input field
           _buildFeedbackInputField(viewModel),
           
-          SizedBox(height: 24.h),
+          SizedBox(height: 20.h),
           
           // Email contact text
           Text(
             'You can also email us at support@marketpop.com.',
             style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 12.sp,
               color: Colors.black,
+              fontWeight: FontWeight.w400
             ),
           ),
           
@@ -148,13 +151,13 @@ class FeedbackPage extends StatelessWidget {
 
   Widget _buildFeedbackInputField(FeedbackViewModel viewModel) {
     return Container(
-      height: 200.h,
+      height: 131.h,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3C4), // Slightly darker yellow
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: const Color(0xFFE0E0E0),
+          color: const Color(0xFFFFF3C7),
           width: 1.w,
         ),
       ),
@@ -171,9 +174,10 @@ class FeedbackPage extends StatelessWidget {
         decoration: InputDecoration(
           hintText: 'Enter Your Feedback',
           hintStyle: TextStyle(
-            fontSize: 16.sp,
-            color: const Color(0xFF757575),
-            height: 1.4,
+            fontSize: 13.sp,
+            color:Colors.black,
+            fontWeight: FontWeight.normal
+            // height: 1.4,
           ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,

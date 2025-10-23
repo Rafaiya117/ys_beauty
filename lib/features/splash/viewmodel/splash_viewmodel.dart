@@ -51,7 +51,8 @@ class SplashViewModel extends ChangeNotifier {
     _timer = Timer(
       _repository.getSplashDuration(),
       () {
-        _navigateToAnimation();
+        AppRouter.navigateToAuth();
+        //_navigateToAnimation();
       },
     );
   }

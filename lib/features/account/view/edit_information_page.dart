@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -405,10 +406,10 @@ class EditInformationPage extends StatelessWidget {
                                         ),
                                       ): Text(
                                           'Save',
-                                        style: TextStyle(
-                                          color: const Color(0xFF424242),
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.bold,
+                                        style: GoogleFonts.poppins(
+                                          color: const Color(0xFF1B1B1B),
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
