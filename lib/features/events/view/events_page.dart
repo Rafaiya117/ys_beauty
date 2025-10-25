@@ -663,25 +663,30 @@ class EventsPage extends StatelessWidget {
               ),
 
               // Details button
-              GestureDetector(
-                onTap: () => AppRouter.navigateToEventDetails(event.id),
-                child: Container(
-                  // REDUCED: Horizontal padding from 12.w to 10.w
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+              SizedBox(
+                width: 96.86.w,
+                height: 32.27.h,
+                child: GestureDetector(
+                  onTap: () => AppRouter.navigateToEventDetails(event.id),
+                  child: Container(
+                    // REDUCED: Horizontal padding from 12.w to 10.w
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(30.r),
                     ),
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Text(
-                    'Details',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: const Color(0xFF1B1B1B),
-                      fontWeight: FontWeight.bold,
+                    child: Text(
+                      'Details',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: const Color(0xFF1B1B1B),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -947,9 +952,9 @@ class EventsPage extends StatelessWidget {
                             title: event.title,
                             date: event.date,
                             status: event.status.first,
-                            cardColor: viewModel
-                                .getStatusColor(event.status.first)
-                                .withOpacity(0.3),
+                            cardColor: viewModel.getStatusColor(event.status.first)
+                                // ignore: deprecated_member_use
+                            .withOpacity(0.3),
                             statusColor: viewModel.getStatusColor(
                               event.status.first,
                             ),
@@ -1001,7 +1006,7 @@ class EventsPage extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                //SizedBox(height: 4.h),
                 Text(
                   date,
                   style: TextStyle(fontSize: 14.sp, color: Colors.black),

@@ -165,7 +165,7 @@ class RemindersPage extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                //SizedBox(height: 4.h),
                 Text(
                   reminder.date,
                   style: TextStyle(

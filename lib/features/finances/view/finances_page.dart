@@ -464,13 +464,8 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTab(
-  String title,
-  dynamic icon,
-  int index,
-  bool isSelected,
-  VoidCallback onTap, {
-  bool preserveSvgColor = false, // 👈 optional flag
+  Widget _buildTab(String title,dynamic icon,int index,bool isSelected,VoidCallback onTap, {
+ bool preserveSvgColor = false, 
 }) {
   return GestureDetector(
     onTap: onTap,

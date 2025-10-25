@@ -785,7 +785,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildEventCard({
-  required String eventId, // ✅ Added eventId
+  required String eventId, 
   required String title,
   required List<String> status,
   required String date,
@@ -799,11 +799,16 @@ class HomePage extends StatelessWidget {
   final eventDate = DateTime.tryParse(date);
   final monthText = eventDate != null ? DateFormat('MMM').format(eventDate) : ''; // Abbreviated month
   final dayText = eventDate != null ? DateFormat.d().format(eventDate) : '';
+
   final startDateTime = DateTime.tryParse(startTime);
   final endDateTime = DateTime.tryParse(endTime);
 
-  final formattedStartTime = startDateTime != null ? DateFormat('h:mm a').format(startDateTime) : startTime;
-final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDateTime) : endTime;
+  final formattedStartTime = startDateTime != null
+      ? DateFormat('h:mm a').format(startDateTime)
+      : startTime;
+  final formattedEndTime = endDateTime != null
+      ? DateFormat('h:mm a').format(endDateTime)
+      : endTime;
 
   return Container(
     padding: EdgeInsets.all(12.w),
@@ -840,12 +845,16 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
                     ),
                   ),
                   SizedBox(width: 8.w),
+
                   // Status badges beside title
                   ...status.map((statusText) {
                     Color statusColor = _getStatusColor(statusText);
                     return Container(
                       margin: EdgeInsets.only(right: 4.w),
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: statusColor,
                         borderRadius: BorderRadius.circular(8.r),
@@ -863,14 +872,19 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
                 ],
               ),
             ),
+
+            // 🔹 Circular date container
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+              width: 40.w,
+              height: 40.w,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10.r),
+                shape: BoxShape.circle,
                 border: Border.all(color: const Color(0xFFE0E0E0)),
               ),
+              alignment: Alignment.center,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     monthText,
@@ -892,7 +906,6 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
             ),
           ],
         ),
-
         SizedBox(height: 2.h),
 
         // Location
@@ -917,23 +930,51 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
             ),
           ],
         ),
-
         SizedBox(height: 3.h),
 
-        // Booth size
-        Text(
-          'Booth Size: $boothSize',
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF424242),
-          ),
+        // 🔹 Booth Size + Space + Cost
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Booth Size: $boothSize',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Space #: $spaceNumber',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF424242),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Cost: $cost',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF424242),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
 
         SizedBox(height: 8.h),
 
-        // Time and details row
+        // 🔹 Time row + Details button side by side
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Time stepper
             Column(
@@ -961,10 +1002,9 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
                 ),
               ],
             ),
-
             SizedBox(width: 8.w),
 
-            // Time details
+            // Start & End time
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -990,327 +1030,317 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
               ),
             ),
 
-            // Space and cost
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Space #: $spaceNumber',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF424242),
+            // 🔹 Details button (moved here)
+            SizedBox(
+              width:86.7.w,
+              height: 28.64.h,
+              child: GestureDetector(
+                onTap: () => AppRouter.navigateToEventDetails(eventId),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30.r),
+                  ),
+                  child: Text(
+                    'Details',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xFF1B1B1B),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  'Cost: $cost',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF424242),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
-        ),
-
-        SizedBox(height: 8.h),
-
-        // Details button
-        Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: () => AppRouter.navigateToEventDetails(eventId), // ✅ Updated
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Text(
-                'Details',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: const Color(0xFF1B1B1B),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     ),
   );
 }
 
-  Widget _buildUpcomingEventCard({
-    required String eventId,
-    required String title,
-    required List<String> status,
-    required String date,
-    required String location,
-    required String boothSize,
-    required String spaceNumber,
-    required String cost,
-    required String startTime,
-    required String endTime,
-  }) {
+
+ Widget _buildUpcomingEventCard({
+  required String eventId,
+  required String title,
+  required List<String> status,
+  required String date,
+  required String location,
+  required String boothSize,
+  required String spaceNumber,
+  required String cost,
+  required String startTime,
+  required String endTime,
+}) {
   final eventDate = DateTime.tryParse(date);
-  final monthText = eventDate != null ? DateFormat('MMM').format(eventDate) : ''; // Abbreviated month
+  final monthText =
+      eventDate != null ? DateFormat('MMM').format(eventDate) : ''; // Abbreviated month
   final dayText = eventDate != null ? DateFormat.d().format(eventDate) : '';
   final startDateTime = DateTime.tryParse(startTime);
   final endDateTime = DateTime.tryParse(endTime);
 
-  final formattedStartTime = startDateTime != null ? DateFormat('h:mm a').format(startDateTime) : startTime;
-final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDateTime) : endTime;
+  final formattedStartTime =
+      startDateTime != null ? DateFormat('h:mm a').format(startDateTime) : startTime;
+  final formattedEndTime =
+      endDateTime != null ? DateFormat('h:mm a').format(endDateTime) : endTime;
 
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage(AppConstants.cardBgPath),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
+  return Container(
+    padding: EdgeInsets.all(14.w),
+    decoration: BoxDecoration(
+      image: const DecorationImage(
+        image: AssetImage(AppConstants.cardBgPath),
+        fit: BoxFit.cover,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with title, status, and date
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1B1B1B),
-                      ),
+      borderRadius: BorderRadius.circular(12.r),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 8.r,
+          offset: Offset(0, 2.h),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 🔹 Header Row
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
                     ),
-                    SizedBox(width: 8.w),
-                    // Status badges beside title
-                    ...status.map((statusText) {
-                      Color statusColor = _getStatusColor(statusText);
-                      return Container(
-                        margin: EdgeInsets.only(right: 6.w),
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Text(
-                          _getStatusLabel(statusText),
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      monthText,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: const Color(0xFF000000),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      dayText,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF000000),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 6.h),
-          
-          // Location
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                size: 16.sp,
-                color: const Color(0xFF1B1B1B),
-              ),
-              SizedBox(width: 4.w),
-              Expanded(
-                child: Text(
-                  location,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: const Color(0xFF1B1B1B),
                   ),
+                  SizedBox(width: 8.w),
+                  ...status.map((statusText) {
+                    Color statusColor = _getStatusColor(statusText);
+                    return Container(
+                      margin: EdgeInsets.only(right: 6.w),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        _getStatusLabel(statusText),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),
+            Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFE0E0E0)),
+              ),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    monthText,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: const Color(0xFF000000),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    dayText,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF000000),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 6.h),
+
+        // 🔹 Location Row
+        Row(
+          children: [
+            Icon(
+              Icons.location_on,
+              size: 16.sp,
+              color: const Color(0xFF1B1B1B),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                location,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: const Color(0xFF1B1B1B),
                 ),
               ),
-            ],
-          ),
-          
-          SizedBox(height: 4.h),
-          
-          // Booth size
-          Text(
-            'Booth Size: $boothSize',
+            ),
+          ],
+        ),
+
+        SizedBox(height: 6.h),
+
+        // 🔹 Booth Size + Space Row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Booth Size: $boothSize',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
+              ),
+            ),
+            Text(
+              'Space #: $spaceNumber',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 4.h),
+
+        // 🔹 Cost below Space
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'Cost: $cost',
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF424242),
+              color: const Color(0xFF1B1B1B),
             ),
           ),
-          
-          SizedBox(height: 8.h),
-          
-          // Time and details row
-          Row(
-            children: [
-              // Time stepper
-              Column(
-                children: [
-                  Container(
-                    width: 8.w,
-                    height: 8.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
+        ),
+
+        SizedBox(height: 10.h),
+
+        // 🔹 Start / End Time + Details Button Row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Time stepper
+            Column(
+              children: [
+                Container(
+                  width: 8.w,
+                  height: 8.h,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
                   ),
-                  Container(
-                    width: 1.w,
-                    height: 20.h,
-                    color: Colors.black.withValues(alpha: 0.3),
-                  ),
-                  Container(
-                    width: 12.w,
-                    height: 12.h,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-              ),
-              
-              SizedBox(width: 12.w),
-              
-              // Time details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Start: $formattedStartTime',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1B1B1B),
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      'End: $formattedEndTime',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1B1B1B),
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-              
-              // Space and cost
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                Container(
+                  width: 1.w,
+                  height: 20.h,
+                  color: Colors.black.withValues(alpha: 0.3),
+                ),
+                Container(
+                  width: 12.w,
+                  height: 12.h,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(width: 12.w),
+
+            // Start and End times
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Space #: $spaceNumber',
+                    'Start: $formattedStartTime',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF1B1B1B),
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 8.h),
                   Text(
-                    'Cost: $cost',
+                    'End: $formattedEndTime',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF1B1B1B),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Details button
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => AppRouter.navigateToEventDetails(eventId),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+            ),
+
+            // 🔹 Details button (in same row)
+            SizedBox(
+              width:96.86.w,
+              height: 32.27.h,
+              child: GestureDetector(
+                onTap: () => AppRouter.navigateToEventDetails(eventId),
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30.r),
                   ),
-                  borderRadius: BorderRadius.circular(30.r),
-                ),
-                child: Text(
-                  'Details',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Color(0xFF1B1B1B),
-                    fontWeight: FontWeight.bold,
+                  child: Text(
+                    'Details',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: const Color(0xFF1B1B1B),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 
  Color _getStatusColor(String status) {
   final normalized = status.toLowerCase().trim();
@@ -1318,19 +1348,19 @@ final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDa
   switch (normalized) {
     case 'pen':
     case 'pending':
-      return const Color(0xFFEEBC20); // Yellow background for Pending
+      return const Color(0xFFEEBC20); 
     case 'app':
     case 'approved':
-      return const Color(0xFF00BF63); // Green background for Approved
+      return const Color(0xFF00BF63);
     case 'paid':
-      return const Color(0xFF00703A); // Dark green background for Paid
+      return const Color(0xFF00703A);
     case 'den':
     case 'denied':
-      return const Color(0xFFFF5151); // Red background for Denied
+      return const Color(0xFFFF5151);
     case 'unpaid':
-      return const Color(0xFFEF4444); // Red background for Unpaid
+      return const Color(0xFFEF4444); 
     case 'transfer':
-      return const Color(0xFF007AFF); // Blue background for Transfer
+      return const Color(0xFF007AFF);
     default:
       return Colors.grey;
   }
@@ -1356,7 +1386,7 @@ String _getStatusLabel(String status) {
     case 'transfer':
       return 'Transfer';
     default:
-      return status; // fallback to original text
+      return status; 
   }
 }
 
