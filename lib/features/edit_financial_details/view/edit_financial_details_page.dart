@@ -358,7 +358,11 @@ class EditFinancialDetailsPage extends StatelessWidget {
   );
 }
 
-Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUpdate, required BuildContext context}) {
+Widget _buildSaveButton(
+  EditFinancialDetailsViewModel viewModel, {
+  Function? onUpdate,
+  required BuildContext context,
+}) {
   return Container(
     width: double.infinity,
     height: 56.h,
@@ -371,26 +375,24 @@ Widget _buildSaveButton(EditFinancialDetailsViewModel viewModel, {Function? onUp
       child: InkWell(
         borderRadius: BorderRadius.circular(12.r),
         onTap: () async {
-          if (viewModel.financialDetails != null) {
-            // Call the repository directly
-            bool success = await viewModel.repository.updateFinancialDetails(viewModel.financialDetails!);
-            if (success) {
-              // Pop the page
-              Navigator.of(context).pop();
-              // Call the onUpdate callback if provided
-              if (onUpdate != null) onUpdate();
-            } else {
-              // Optional: show a snackbar if saving failed
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Failed to update financial details'))
-              );
-            }
+          await viewModel.saveFinancialDetails(); // ✅ Use existing function
+          if (viewModel.isSuccess) {                // ✅ Use your existing success flag
+            Navigator.of(context).pop();
+            if (onUpdate != null) onUpdate();
+          } else if (viewModel.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(viewModel.error!)),
+            );
           }
         },
         child: Center(
           child: Text(
             'Save',
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
         ),
       ),

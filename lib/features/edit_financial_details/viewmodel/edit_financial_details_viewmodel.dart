@@ -255,14 +255,14 @@ class EditFinancialDetailsViewModel extends ChangeNotifier {
         netProfit: double.tryParse(_netProfitController.text) ?? 0.0,
       );
 
-      final success = await _repository.updateFinancialDetails(updatedDetails);
-      if (success) {
-        _financialDetails = updatedDetails;
+    final updatedDetailsFromApi = await _repository.updateFinancialDetails(updatedDetails);
+      if (updatedDetailsFromApi != null) {
+        _financialDetails = updatedDetailsFromApi; 
         _populateFormFields();
-        _setSuccess(true);
-      } else {
-        _setError('Failed to save financial details');
-      }
+      _setSuccess(true);
+    } else {
+      _setError('Failed to save financial details'); 
+    }
     } catch (e) {
       _setError('Failed to save financial details: $e');
     } finally {

@@ -673,11 +673,11 @@ class FinancesViewPage extends StatelessWidget {
   Widget _buildFinanceCard(financesData, FinancesViewViewModel viewModel) {
   return Container(
     width: double.infinity,
-    padding: EdgeInsets.all(20.w), // slightly smaller padding
+    padding: EdgeInsets.all(20.w),
     decoration: BoxDecoration(
-      color: const Color(0xFFFFF4CC), // ✅ soft yellow background like the image
+      color: const Color(0xFFFFF4CC), 
       borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(color: const Color(0xFFFFF3C9), width: 1), // subtle yellow border
+      border: Border.all(color: const Color(0xFFFFF3C9), width: 1),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.05),
@@ -736,8 +736,7 @@ class FinancesViewPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow('Event Sales:',
-                      '\$${financesData.eventSales.toStringAsFixed(0)}'),
+                  _buildDetailRow('Event Sales:','\$${financesData.eventSales.toStringAsFixed(0)}'),
                   SizedBox(height: 8.h),
                   _buildDetailRow('Event Expenses:',
                       '\$${financesData.eventExpenses.toStringAsFixed(0)}'),
@@ -773,23 +772,7 @@ class FinancesViewPage extends StatelessWidget {
               end: Alignment.centerRight,
             ),
           ),
-          child: TextButton(
-            onPressed: () => _buildEditButton(viewModel),
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              padding: EdgeInsets.zero,
-            ),
-            child: Text(
-              "Edit",
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
+          child:_buildEditButton(viewModel),
         ),
       ],
     ),
@@ -809,12 +792,14 @@ class FinancesViewPage extends StatelessWidget {
           ),
         ),
         SizedBox(width: 4.w),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
           ),
         ),
       ],
@@ -889,9 +874,9 @@ class FinancesViewPage extends StatelessWidget {
       child: Center(
         child: Text(
           'Edit',
-          style: TextStyle(
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.poppins(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
           ),
         ),

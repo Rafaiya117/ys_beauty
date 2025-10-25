@@ -954,41 +954,43 @@ class CreateEventPage extends StatelessWidget {
   }
 
   Future<void> _showTimePicker(
-    BuildContext context,
-    bool isStartTime,
-    CreateEventViewModel viewModel,
-  ) async {
-    // Parse current time to get initial time for picker
-    String currentTime = isStartTime ? viewModel.startTime : viewModel.endTime;
-    TimeOfDay initialTime = _parseTimeString(currentTime);
+  BuildContext context,
+  bool isStartTime,
+  CreateEventViewModel viewModel,
+) async {
+  // Parse current time to get initial time for picker
+  String currentTime = isStartTime ? viewModel.startTime : viewModel.endTime;
+  TimeOfDay initialTime = _parseTimeString(currentTime);
 
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: const Color(0xFFFF8A00),
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: initialTime,
+    initialEntryMode: TimePickerEntryMode.input, // ✅ Added this line
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: const Color(0xFFFF8A00),
+            onPrimary: Colors.white,
+            surface: Colors.white,
+            onSurface: Colors.black,
           ),
-          child: child!,
-        );
-      },
-    );
+        ),
+        child: child!,
+      );
+    },
+  );
 
-    if (picked != null) {
-      String formattedTime = _formatTimeOfDay(picked);
-      if (isStartTime) {
-        viewModel.setStartTime(formattedTime);
-      } else {
-        viewModel.setEndTime(formattedTime);
-      }
+  if (picked != null) {
+    String formattedTime = _formatTimeOfDay(picked);
+    if (isStartTime) {
+      viewModel.setStartTime(formattedTime);
+    } else {
+      viewModel.setEndTime(formattedTime);
     }
   }
+}
+
 
   TimeOfDay _parseTimeString(String timeString) {
     try {

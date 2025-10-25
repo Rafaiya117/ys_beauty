@@ -417,6 +417,14 @@ class FinancesViewModel extends ChangeNotifier {
     );
   }
 
+  //!--------------new added ------------!
+  double getDynamicMaxY() {
+  if (_monthlyData.isEmpty) return 100;
+  final maxSales = _monthlyData.map((e) => e.sales).reduce((a, b) => a > b ? a : b);
+  return (maxSales * 1.2).clamp(100, double.infinity); // adds 20% headroom
+}
+
+
   @override
   void dispose() {
     _boothEventController.dispose();

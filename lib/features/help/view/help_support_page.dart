@@ -180,7 +180,7 @@ class HelpSupportPage extends StatelessWidget {
           // Orange envelope icon
           Icon(
             Icons.email_outlined,
-            color: const Color(0xFFFF8A00),
+            color:Color(0xFF1B1B1B), //const Color(0xFFFF8A00),
             size: 20.sp,
           ),
           SizedBox(width: 12.w),

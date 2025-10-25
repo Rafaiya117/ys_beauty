@@ -188,7 +188,7 @@ class MainNavigationPage extends StatelessWidget {
           width: 56.w,
           height: 56.h,
           decoration: BoxDecoration(
-            color: const Color(0xFFFFA066), // Orange background
+            color:Color(0xFF1B1B1B),//Colors.black, //const Color(0xFFFFA066), 
             shape: BoxShape.circle,
             // boxShadow: [
             //   BoxShadow(

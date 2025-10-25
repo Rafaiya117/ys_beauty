@@ -432,30 +432,31 @@ class FinancesPage extends StatelessWidget {
           Expanded(
             child: _buildTab(
               'Booth Fees',
-              Icons.storefront_outlined, // closer to screenshot
+              'assets/icons/create_event_booth.svg', 
               1,
               viewModel.selectedTabIndex == 1,
-                  () => viewModel.selectTab(1),
+              () => viewModel.selectTab(1),
             ),
           ),
           SizedBox(width: 8.w),
           Expanded(
             child: _buildTab(
               'Sales',
-              Icons.show_chart, // bar chart style
+              'assets/icons/sales.svg', // bar chart style
               2,
               viewModel.selectedTabIndex == 2,
-                  () => viewModel.selectTab(2),
+              () => viewModel.selectTab(2),
             ),
           ),
           SizedBox(width: 8.w),
           Expanded(
             child: _buildTab(
               'Expenses',
-              Icons.attach_money, // cash icon
+              'assets/icons/expenses_1.svg',
               3,
               viewModel.selectedTabIndex == 3,
-                  () => viewModel.selectTab(3),
+              () => viewModel.selectTab(3),
+              preserveSvgColor: true,
             ),
           ),
         ],
@@ -463,47 +464,66 @@ class FinancesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTab(String title,IconData icon,int index,bool isSelected,VoidCallback onTap,) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFFE58A) : Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 6.r,
-              offset: Offset(0, 3.h),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 16.sp,
-              color: isSelected ? Colors.black : Colors.black87,
-            ),
-            SizedBox(width: 3.w),
-            Flexible(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 8.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isSelected ? Colors.black : Colors.black87,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
+  Widget _buildTab(
+  String title,
+  dynamic icon,
+  int index,
+  bool isSelected,
+  VoidCallback onTap, {
+  bool preserveSvgColor = false, // 👈 optional flag
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFFFFE58A) : Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 6.r,
+            offset: Offset(0, 3.h),
+          ),
+        ],
       ),
-    );
-  }
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon is IconData
+              ? Icon(
+                  icon,
+                  size: 16.sp,
+                  color: isSelected ? Colors.black : Colors.black87,
+                )
+              : SvgPicture.asset(
+                  icon,
+                  width: 16.w,
+                  height: 16.h,
+                  colorFilter: preserveSvgColor
+                    ? null
+                    : ColorFilter.mode(
+                      isSelected ? Colors.black : Colors.black87,
+                      BlendMode.srcIn,
+                  ),
+                ),
+              SizedBox(width: 3.w),
+              Flexible(
+              child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 8.sp,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.black : Colors.black87,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _buildTabContent(FinancesViewModel viewModel) {
     switch (viewModel.selectedTabIndex) {
@@ -520,14 +540,16 @@ class FinancesPage extends StatelessWidget {
     }
   }
 
-  Widget _buildOverviewContent(FinancesViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Monthly Financial Overview
-          Text(
+ Widget _buildOverviewContent(FinancesViewModel viewModel) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Monthly Financial Overview
+        Padding(
+          padding: const EdgeInsets.only(left:12.0),
+          child: Text(
             'Monthly Financial Overview',
             style: TextStyle(
               fontSize: 18.sp,
@@ -535,188 +557,189 @@ class FinancesPage extends StatelessWidget {
               color: const Color(0xFF424242),
             ),
           ),
+        ),
 
-          SizedBox(height: 16.h),
+        SizedBox(height: 16.h),
 
-          // Chart
-          Container(
-            height: 200.h,
-            padding: EdgeInsets.all(16.w),
-            child: LineChart(
-              LineChartData(
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 200,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: const Color(0xFFE0E0E0).withValues(alpha: 0.5),
-                      strokeWidth: 1.w,
-                      dashArray: [5, 5],
-                    );
-                  },
+        // Chart
+        Container(
+          height: 260.h,
+          width: double.infinity, 
+          padding: EdgeInsets.all(18.w), 
+          child: LineChart(
+            LineChartData(
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: 100, // dashed line every 100
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: const Color(0xFFE0E0E0).withOpacity(0.5),
+                    strokeWidth: 1.w,
+                    dashArray: [5, 5], // dashed line
+                  );
+                },
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
                 ),
-                titlesData: FlTitlesData(
-                  show: true,
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 30.h,
-                      interval: 1,
-                      getTitlesWidget: (double value, TitleMeta meta) {
-                        const style = TextStyle(
-                          color: Color(0xFF757575),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        );
-                        Widget text;
-                        switch (value.toInt()) {
-                          case 0:
-                            text = const Text('Jan', style: style);
-                            break;
-                          case 1:
-                            text = const Text('Feb', style: style);
-                            break;
-                          case 2:
-                            text = const Text('Mar', style: style);
-                            break;
-                          case 3:
-                            text = const Text('Apr', style: style);
-                            break;
-                          case 4:
-                            text = const Text('May', style: style);
-                            break;
-                          case 5:
-                            text = const Text('Jun', style: style);
-                            break;
-                          case 6:
-                            text = const Text('Jul', style: style);
-                            break;
-                          case 7:
-                            text = const Text('Aug', style: style);
-                            break;
-                          case 8:
-                            text = const Text('Sep', style: style);
-                            break;
-                          case 9:
-                            text = const Text('Oct', style: style);
-                            break;
-                          case 10:
-                            text = const Text('Nov', style: style);
-                            break;
-                          case 11:
-                            text = const Text('Dec', style: style);
-                            break;
-                          default:
-                            text = const Text('', style: style);
-                            break;
-                        }
-                        return SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          child: text,
-                        );
-                      },
-                    ),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      interval: 200,
-                      getTitlesWidget: (double value, TitleMeta meta) {
-                        return Text(
-                          value.toInt().toString(),
-                          style: TextStyle(
-                            color: const Color(0xFF757575),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12.sp,
-                          ),
-                        );
-                      },
-                      reservedSize: 40.w,
-                    ),
-                  ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
                 ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
-                ),
-                minX: 0,
-                maxX: 11,
-                minY: 0,
-                maxY: 900,
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: viewModel.getChartData(),
-                    isCurved: true,
-                    color: const Color(0xFF2E7D32), // Dark green line
-                    barWidth: 3.w,
-                    isStrokeCapRound: true,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) {
-                        // Get current month index (1–12) → convert to 0-based index
-                        final currentMonthIndex = DateTime.now().month - 1;
-                        if (index == currentMonthIndex) {
-                          // Highlight the current month dot
-                          return FlDotCirclePainter(
-                            radius: 6.r,
-                            color: Colors.black,
-                            strokeWidth: 2.w,
-                            strokeColor: Colors.white,
-                          );
-                        }
-                        return FlDotCirclePainter(
-                          radius: 4.r,
-                          color: const Color(0xFF2E7D32),
-                        );
-                      },
-                    ),
-                    belowBarData: BarAreaData(
-                      show: false,
-                    ),
-                  ),
-                ],
-                lineTouchData: LineTouchData(
-                  enabled: true,
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) => const Color(0xFFFFE8E8),
-                    tooltipBorder: BorderSide(
-                      color: const Color(0xFFE0E0E0),
-                      width: 1.w,
-                    ),
-                    getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-                      return touchedBarSpots.map((barSpot) {
-                        final flSpot = barSpot.x;
-                        final monthData = viewModel.monthlyData[flSpot.toInt()];
-                        return LineTooltipItem(
-                          '${monthData.month}\nSales : \$${monthData.sales.toStringAsFixed(2)}\nExpenses : \$${monthData.expenses.toStringAsFixed(2)}\nProfit : \$${monthData.profit.toStringAsFixed(2)}',
-                          TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.sp,
-                          ),
-                        );
-                      }).toList();
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30.h,
+                    interval: 1,
+                    getTitlesWidget: (double value, TitleMeta meta) {
+                      const style = TextStyle(
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      );
+                      Widget text;
+                      switch (value.toInt()) {
+                        case 0:
+                          text = const Text('Jan', style: style);
+                          break;
+                        case 1:
+                          text = const Text('Feb', style: style);
+                          break;
+                        case 2:
+                          text = const Text('Mar', style: style);
+                          break;
+                        case 3:
+                          text = const Text('Apr', style: style);
+                          break;
+                        case 4:
+                          text = const Text('May', style: style);
+                          break;
+                        case 5:
+                          text = const Text('Jun', style: style);
+                          break;
+                        case 6:
+                          text = const Text('Jul', style: style);
+                          break;
+                        case 7:
+                          text = const Text('Aug', style: style);
+                          break;
+                        case 8:
+                          text = const Text('Sep', style: style);
+                          break;
+                        case 9:
+                          text = const Text('Oct', style: style);
+                          break;
+                        case 10:
+                          text = const Text('Nov', style: style);
+                          break;
+                        case 11:
+                          text = const Text('Dec', style: style);
+                          break;
+                        default:
+                          text = const Text('', style: style);
+                          break;
+                      }
+                      return SideTitleWidget(
+                        axisSide: meta.axisSide,
+                        child: text,
+                      );
                     },
                   ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: 100, // match horizontal dashed line
+                    getTitlesWidget: (double value, TitleMeta meta) {
+                      return Text(
+                        value.toInt().toString(),
+                        style: TextStyle(
+                          color: const Color(0xFF757575),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.sp,
+                        ),
+                      );
+                    },
+                    reservedSize: 40.w,
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(color: const Color(0xFFE0E0E0)),
+              ),
+              minX: 0,
+              maxX: 11,
+              minY: 0,
+              maxY: viewModel.getDynamicMaxY().clamp(900, double.infinity),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: viewModel.getChartData(),
+                  isCurved: true,
+                  preventCurveOverShooting: true,
+                  color: const Color(0xFF2E7D32),
+                  barWidth: 3.w,
+                  isStrokeCapRound: true,
+                  dotData: FlDotData(
+                    show: true,
+                    getDotPainter: (spot, percent, barData, index) {
+                      final currentMonthIndex = DateTime.now().month - 1;
+                      if (index == currentMonthIndex) {
+                        return FlDotCirclePainter(
+                          radius: 6.r,
+                          color: Colors.black,
+                          strokeWidth: 2.w,
+                          strokeColor: Colors.white,
+                        );
+                      }
+                      return FlDotCirclePainter(
+                        radius: 4.r,
+                        color: const Color(0xFF2E7D32),
+                      );
+                    },
+                  ),
+                  belowBarData: BarAreaData(show: false),
+                ),
+              ],
+              lineTouchData: LineTouchData(
+                enabled: true,
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipColor: (touchedSpot) => const Color(0xFFFFE8E8),
+                  tooltipBorder: BorderSide(
+                    color: const Color(0xFFE0E0E0),
+                    width: 1.w,
+                  ),
+                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                    return touchedBarSpots.map((barSpot) {
+                      final flSpot = barSpot.x;
+                      final monthData = viewModel.monthlyData[flSpot.toInt()];
+                      return LineTooltipItem(
+                        '${monthData.month}\nSales : \$${monthData.sales.toStringAsFixed(2)}\nExpenses : \$${monthData.expenses.toStringAsFixed(2)}\nProfit : \$${monthData.profit.toStringAsFixed(2)}',
+                        TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12.sp,
+                        ),
+                      );
+                    }).toList();
+                  },
                 ),
               ),
             ),
           ),
+        ),
 
-          SizedBox(height: 24.h),
-          // Event History
-          _buildEventHistory(viewModel),
-        ],
-      ),
-    );
-  }
+        SizedBox(height: 24.h),
+
+        // Event History
+        _buildEventHistory(viewModel),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildEventHistory(FinancesViewModel viewModel) {
   return Column(
@@ -725,12 +748,15 @@ class FinancesPage extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Finance History',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF424242),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Finance History',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF424242),
+              ),
             ),
           ),
           GestureDetector(
@@ -747,67 +773,70 @@ class FinancesPage extends StatelessWidget {
         ],
       ),
       SizedBox(height: 16.h),
-      Column(
-        children: viewModel.eventHistory.map((event) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 10.h),
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF3C4),
-              borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: const Color(0xFFFFE793), width: 1.w),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: viewModel.eventHistory.map((event) {
+            return Container(
+              margin: EdgeInsets.only(bottom: 10.h),
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF3C4),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFFFE793), width: 1.w),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.title,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF424242),
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          event.date,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: const Color(0xFF757575),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        event.title,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF424242),
+                      GestureDetector(
+                        onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
+                        child: Icon(
+                          Icons.visibility,
+                          size: 18.sp,
+                          color: Colors.black,
                         ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        event.date,
+                        '\$${event.amount.toStringAsFixed(0)}',
                         style: TextStyle(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF757575),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () => AppRouter.navigateToFinancesView(eventId: event.id),
-                      child: Icon(
-                        Icons.visibility,
-                        size: 18.sp,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      '\$${event.amount.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }).toList(),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     ],
   );

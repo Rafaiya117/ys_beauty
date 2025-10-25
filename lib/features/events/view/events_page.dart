@@ -83,18 +83,29 @@ class EventsPage extends StatelessWidget {
         children: [
           // App logo
           Center(
-            child: Container(
-              child:GestureDetector(
-                onTap: () => AppRouter.navigateToHome(),
-                child: CircleAvatar(
-                  radius: 20.w,
-                  backgroundImage: userImage != null
-                    ? NetworkImage('http://10.10.13.36$userImage')
-                    : AssetImage(AppConstants.appLogoPath) as ImageProvider,
-                  ),
+            child: GestureDetector(
+              onTap: () => AppRouter.navigateToHome(),
+              child: CircleAvatar(
+                radius: 20.w,
+                backgroundColor: Colors.transparent, // keep transparency
+                child: ClipOval(
+                  child: userImage != null
+                      ? Image.network(
+                          'http://10.10.13.36$userImage',
+                          width: 40.w,
+                          height: 40.w,
+                          fit: BoxFit.cover, // fills circle, may crop
+                        )
+                      : Image.asset(
+                          AppConstants.appLogoPath,
+                          width: 40.w,
+                          height: 40.w,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
+          ),
           SizedBox(width: 16.w),
 
           // Greeting text
@@ -442,7 +453,8 @@ class EventsPage extends StatelessWidget {
 
   Widget _buildEventCard(event, EventsViewModel viewModel) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      // REDUCED: Padding from 12.w to 10.w
+      padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
         image: const DecorationImage(
           image: AssetImage(AppConstants.cardBgPath),
@@ -480,10 +492,7 @@ class EventsPage extends StatelessWidget {
                       Color statusColor = viewModel.getStatusColor(statusText);
                       return Container(
                         margin: EdgeInsets.only(right: 4.w),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.h,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 2.h,),
                         decoration: BoxDecoration(
                           color: statusColor,
                           borderRadius: BorderRadius.circular(10.r),
@@ -531,7 +540,8 @@ class EventsPage extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 8.h),
+          // REDUCED: Spacing from 8.h to 6.h
+          SizedBox(height: 6.h),
 
           // Location
           Row(
@@ -553,23 +563,48 @@ class EventsPage extends StatelessWidget {
               ),
             ],
           ),
-
-          SizedBox(height: 6.h),
-
-          // Booth size
-          Text(
-            'Booth Size: ${event.boothSize}',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1B1B1B),
-            ),
-          ),
-
-          SizedBox(height: 8.h),
-
-          // Time and details row
+          SizedBox(height: 4.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Booth size
+              Text(
+                'Booth Size: ${event.boothSize}',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1B1B1B),
+                ),
+              ),
+              // Space and cost
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Space #: ${event.spaceNumber}',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    'Cost: ${event.cost}',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B1B1B),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end, 
             children: [
               // Time stepper
               Column(
@@ -584,8 +619,9 @@ class EventsPage extends StatelessWidget {
                   ),
                   Container(
                     width: 1.w,
-                    height: 15.h,
-                    color: Colors.black.withValues(alpha: 0.3),
+                    height: 12.h,
+                    // ignore: deprecated_member_use
+                    color: Colors.black.withOpacity(0.3),
                   ),
                   Container(
                     width: 6.w,
@@ -626,65 +662,36 @@ class EventsPage extends StatelessWidget {
                 ),
               ),
 
-              // Space and cost
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Space #: ${event.spaceNumber}',
+              // Details button
+              GestureDetector(
+                onTap: () => AppRouter.navigateToEventDetails(event.id),
+                child: Container(
+                  // REDUCED: Horizontal padding from 12.w to 10.w
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFA167), Color(0xFFFFDF6F)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30.r),
+                  ),
+                  child: Text(
+                    'Details',
                     style: TextStyle(
                       fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
                       color: const Color(0xFF1B1B1B),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    'Cost: ${event.cost}',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1B1B1B),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
-          ),
-
-          SizedBox(height: 10.h),
-
-          // Details button
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => AppRouter.navigateToEventDetails(event.id),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFF8A00), Color(0xFFFFC107)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  'Details',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Color(0xFF1B1B1B),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
     );
   }
-
   void _showFilterModal(BuildContext context, EventsViewModel viewModel) {
     showGeneralDialog(
       context: context,

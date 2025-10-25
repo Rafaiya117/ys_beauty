@@ -57,29 +57,48 @@ class EditFinancialDetailsRepository {
   }
 
   // Update financial details
-  Future<bool> updateFinancialDetails(EditFinancialDetailsModel financialDetails) async {
-    final accessToken = await TokenStorage.getAccessToken();
-    try {
-      final response = await http.put(
-        Uri.parse("$_baseUrl/finance/finance/edit/${financialDetails.id}/"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-        body: jsonEncode({
-          "event": financialDetails.event,
-          "date": financialDetails.date,
-          "booth_size": financialDetails.boothSize,
-          "booth_fee": financialDetails.boothFee,
-          "gross_sales": financialDetails.grossSales,
-          "expenses": financialDetails.expenses,
-          "net_profit": financialDetails.netProfit,
-        }),
-      );
+  Future<EditFinancialDetailsModel?> updateFinancialDetails(EditFinancialDetailsModel financialDetails) async {
+  final accessToken = await TokenStorage.getAccessToken();
+  try {
+    final response = await http.put(
+      Uri.parse("$_baseUrl/finance/finance/edit/${financialDetails.id}/"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: jsonEncode({
+        "name": financialDetails.event,
+        "date": financialDetails.date,
+        "booth_size": financialDetails.boothSize,
+        "booth_fee": financialDetails.boothFee,
+        "gross_sale": financialDetails.grossSales,
+        "expenses": financialDetails.expenses,
+      }),
+    );
 
-      return response.statusCode == 200 || response.statusCode == 201;
-    } catch (e) {
-      return false;
+    print("API Response Code: ${response.statusCode}");
+    print("API Response Body: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = jsonDecode(response.body);
+      final data = body['data'];
+      return EditFinancialDetailsModel(
+        id: data['id'].toString(),
+        event: data['name']?.toString() ?? '',
+        date: data['date']?.toString() ?? '',
+        boothSize: data['booth_size']?.toString() ?? '',
+        boothFee: (data['booth_fee'] as num).toDouble(),
+        grossSales: (data['gross_sale'] != null ? (data['gross_sale'] as num).toDouble() : 0.0),
+        expenses: (data['expenses'] != null ? (data['expenses'] as num).toDouble() : 0.0),
+        netProfit: ((data['gross_sale'] != null ? (data['gross_sale'] as num).toDouble() : 0.0)
+        - (data['expenses'] != null ? (data['expenses'] as num).toDouble() : 0.0)),
+      );
+    } else {
+      return null;
     }
+  } catch (e) {
+    print("Update financial details error: $e");
+    return null;
   }
+}
 }

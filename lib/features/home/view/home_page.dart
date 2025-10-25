@@ -118,21 +118,30 @@ class HomePage extends StatelessWidget {
         children: [
           // App logo
           Center(
-            child: Container(
-              child:GestureDetector(
-                onTap: () => AppRouter.navigateToHome(),
-                child: CircleAvatar(
-                  radius: 20.w,
-                  backgroundImage: userImage != null
-                    ? NetworkImage('http://10.10.13.36$userImage')
-                    : AssetImage(AppConstants.appLogoPath) as ImageProvider,
+            child: GestureDetector(
+              onTap: () => AppRouter.navigateToHome(),
+              child: CircleAvatar(
+                radius: 20.w,
+                backgroundColor: Colors.transparent, 
+                child: ClipOval(
+                  child: userImage != null
+                  ? Image.network(
+                    'http://10.10.13.36$userImage',
+                    width: 40.w,
+                    height: 40.w,
+                    fit: BoxFit.cover,
+                  )
+                  : Image.asset(
+                    AppConstants.appLogoPath,
+                    width: 40.w,
+                    height: 40.w,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-          
+          ),
           SizedBox(width: 16.w),
-          
           // Greeting text
           Expanded(
             child: Column(
@@ -143,8 +152,7 @@ class HomePage extends StatelessWidget {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 16.sp,
                     color: const Color(0xFF424242),
-                    fontWeight: FontWeight.bold,
-                    
+                    fontWeight: FontWeight.bold,                    
                   ),
                 ),
                 // Name
@@ -336,241 +344,238 @@ class HomePage extends StatelessWidget {
 
 
   Widget _buildBookingCalendar(HomeViewModel viewModel) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with title and has event indicator
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'My Booking Calendar',
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        color:Colors.black //const Color(0xFF424242),
-                      ),
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 24.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header with title and has event indicator
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'My Booking Calendar',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Select a date → add an event.',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color:Colors.black //const Color(0xFF757575),
-                      ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Select a date → add an event.',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.black,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3C4),
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 8.w,
-                      height: 8.h,
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF3C4),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 8.w,
+                    height: 8.h,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
                     ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      'Has Event',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: const Color(0xFF424242),
-                      ),
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    'Has Event',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xFF424242),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(height: 16.h),
+
+        // Calendar widget
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20.w),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFAF5E7),
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
               ),
             ],
           ),
-          
-          SizedBox(height: 16.h),
-          
-           // Calendar widget
-           Container(
-             width: double.infinity,
-             padding: EdgeInsets.all(20.w),
-             decoration: BoxDecoration(
-               color: const Color(0xFFFAF5E7),
-               borderRadius: BorderRadius.circular(16.r),
-               boxShadow: [
-                 BoxShadow(
-                   color: Colors.black.withValues(alpha: 0.05),
-                   blurRadius: 8.r,
-                   offset: Offset(0, 2.h),
-                 ),
-               ],
-             ),
-            child: 
-            Column(
-  children: [
-    // Custom Header (to match "July 2025" style)
-    Padding(
-  padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Row(
-        children: [
-          Text(
-            DateFormat.MMMM().format(viewModel.focusedDay),
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.black, // black text for month
-            ),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            DateFormat.y().format(viewModel.focusedDay),
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black, // black text for year
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              viewModel.onPageChanged(
-                DateTime(
-                  viewModel.focusedDay.year,
-                  viewModel.focusedDay.month - 1,
+          child: Column(
+            children: [
+              // Custom Header (to match "July 2025" style)
+              Padding(
+                padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          DateFormat.MMMM().format(viewModel.focusedDay),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          DateFormat.y().format(viewModel.focusedDay),
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.onPageChanged(
+                              DateTime(
+                                viewModel.focusedDay.year,
+                                viewModel.focusedDay.month - 1,
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.chevron_left,
+                            size: 22.sp,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        GestureDetector(
+                          onTap: () {
+                            viewModel.onPageChanged(
+                              DateTime(
+                                viewModel.focusedDay.year,
+                                viewModel.focusedDay.month + 1,
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.chevron_right,
+                            size: 22.sp,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            },
-            child: Icon(
-              Icons.chevron_left,
-              size: 22.sp,
-              color: Colors.black,
-            ),
-          ),
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: () {
-              viewModel.onPageChanged(
-                DateTime(
-                  viewModel.focusedDay.year,
-                  viewModel.focusedDay.month + 1,
-                ),
-              );
-            },
-            child: Icon(
-              Icons.chevron_right,
-              size: 22.sp,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    ],
-  ),
-),
+              ),
 
-    // Dynamic Calendar
-    TableCalendar<dynamic>(
-      firstDay: DateTime.utc(2020, 1, 1),
-      lastDay: DateTime.utc(2030, 12, 31),
-      focusedDay: viewModel.focusedDay,
-      calendarFormat: viewModel.calendarFormat,
-      eventLoader: (day) {
-        return viewModel.hasEvents(day) ? [day] : [];
-      },
-      startingDayOfWeek: StartingDayOfWeek.sunday,
-      calendarStyle: CalendarStyle(
-        outsideDaysVisible: false,
-        weekendTextStyle: TextStyle(
-          color: const Color(0xFF424242),
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
-        defaultTextStyle: TextStyle(
-          color: const Color(0xFF424242),
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
-        selectedDecoration: BoxDecoration(
-          color: Colors.transparent,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.black,
-            width: 2.w,
+              // ✅ Fixed Calendar (no expand/unexpand)
+              TableCalendar<dynamic>(
+                firstDay: DateTime.utc(2020, 1, 1),
+                lastDay: DateTime.utc(2030, 12, 31),
+                focusedDay: viewModel.focusedDay,
+
+                // 🔒 Fixed calendar format
+                calendarFormat: CalendarFormat.month,
+
+                eventLoader: (day) {
+                  return viewModel.hasEvents(day) ? [day] : [];
+                },
+                startingDayOfWeek: StartingDayOfWeek.sunday,
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  weekendTextStyle: TextStyle(
+                    color: const Color(0xFF424242),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  defaultTextStyle: TextStyle(
+                    color: const Color(0xFF424242),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black, width: 2.w),
+                  ),
+                  selectedTextStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  markersMaxCount: 1,
+                  markerDecoration: BoxDecoration(
+                    color: const Color(0xFFFFF3C4),
+                    shape: BoxShape.circle,
+                  ),
+                  markerMargin: EdgeInsets.symmetric(horizontal: 1.w),
+                  markerSize: 6.w,
+                ),
+                headerStyle: HeaderStyle(
+                  formatButtonVisible: false,
+                  titleTextFormatter: (_, __) => '',
+                  titleCentered: false,
+                  leftChevronVisible: false,
+                  rightChevronVisible: false,
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF757575),
+                  ),
+                  weekendStyle: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF757575),
+                  ),
+                ),
+                onDaySelected: viewModel.onDaySelected,
+                // 🚫 Removed onFormatChanged to prevent expansion
+                onPageChanged: viewModel.onPageChanged,
+                selectedDayPredicate: (day) {
+                  return isSameDay(viewModel.selectedDay, day);
+                },
+              ),
+
+              SizedBox(height: 16.h),
+
+              // Legend
+              _buildCalendarLegend(),
+            ],
           ),
         ),
-        selectedTextStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
-        todayDecoration: BoxDecoration(
-          color: Colors.green.withValues(alpha: 0.3),
-          shape: BoxShape.circle,
-        ),
-        markersMaxCount: 1,
-        markerDecoration: BoxDecoration(
-          color: const Color(0xFFFFF3C4),
-          shape: BoxShape.circle,
-        ),
-        markerMargin: EdgeInsets.symmetric(horizontal: 1.w),
-        markerSize: 6.w,
-      ),
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        titleTextFormatter:  (_, __) => '',
-        titleCentered: false,
-        leftChevronVisible: false,
-        rightChevronVisible: false,
-        //headerPadding: EdgeInsets.zero,
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle: TextStyle(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF757575),
-        ),
-        weekendStyle: TextStyle(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF757575),
-        ),
-      ),
-      onDaySelected: viewModel.onDaySelected,
-      onFormatChanged: viewModel.onFormatChanged,
-      onPageChanged: viewModel.onPageChanged,
-      selectedDayPredicate: (day) {
-        return isSameDay(viewModel.selectedDay, day);
-      },
+      ],
     ),
-
-    SizedBox(height: 16.h),
-
-    // Legend
-    _buildCalendarLegend(),
-  ],
-),
-
-          ),
-        ],
-      ),
-    );
-  }
+  );
+}
 
 
   Widget _buildCalendarLegend() {
@@ -791,6 +796,15 @@ class HomePage extends StatelessWidget {
   required String startTime,
   required String endTime,
 }) {
+  final eventDate = DateTime.tryParse(date);
+  final monthText = eventDate != null ? DateFormat('MMM').format(eventDate) : ''; // Abbreviated month
+  final dayText = eventDate != null ? DateFormat.d().format(eventDate) : '';
+  final startDateTime = DateTime.tryParse(startTime);
+  final endDateTime = DateTime.tryParse(endTime);
+
+  final formattedStartTime = startDateTime != null ? DateFormat('h:mm a').format(startDateTime) : startTime;
+final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDateTime) : endTime;
+
   return Container(
     padding: EdgeInsets.all(12.w),
     decoration: BoxDecoration(
@@ -859,14 +873,14 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'July',
+                    monthText,
                     style: TextStyle(
                       fontSize: 8.sp,
                       color: const Color(0xFF000000),
                     ),
                   ),
                   Text(
-                    '22',
+                    dayText,
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
@@ -956,7 +970,7 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Start: $startTime',
+                    'Start: $formattedStartTime',
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
@@ -965,7 +979,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'End: $endTime',
+                    'End: $formattedEndTime',
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
@@ -1036,7 +1050,7 @@ class HomePage extends StatelessWidget {
 }
 
   Widget _buildUpcomingEventCard({
-     required String eventId,
+    required String eventId,
     required String title,
     required List<String> status,
     required String date,
@@ -1047,6 +1061,15 @@ class HomePage extends StatelessWidget {
     required String startTime,
     required String endTime,
   }) {
+  final eventDate = DateTime.tryParse(date);
+  final monthText = eventDate != null ? DateFormat('MMM').format(eventDate) : ''; // Abbreviated month
+  final dayText = eventDate != null ? DateFormat.d().format(eventDate) : '';
+  final startDateTime = DateTime.tryParse(startTime);
+  final endDateTime = DateTime.tryParse(endTime);
+
+  final formattedStartTime = startDateTime != null ? DateFormat('h:mm a').format(startDateTime) : startTime;
+final formattedEndTime = endDateTime != null ? DateFormat('h:mm a').format(endDateTime) : endTime;
+
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -1114,7 +1137,7 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'July',
+                      monthText,
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: const Color(0xFF000000),
@@ -1122,7 +1145,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '25',
+                      dayText,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -1210,7 +1233,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Start: $startTime',
+                      'Start: $formattedStartTime',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
@@ -1219,7 +1242,7 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      'End: $endTime',
+                      'End: $formattedEndTime',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
