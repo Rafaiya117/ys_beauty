@@ -511,13 +511,16 @@ class EventsPage extends StatelessWidget {
                 ),
               ),
               Container(
+                width: 40.w,
+                height: 40.w,
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
+                  shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFFE0E0E0)),
                 ),
                 child: Column(
+                  mainAxisAlignment:MainAxisAlignment.center, 
                   children: [
                     Text(
                       _getEventMonth(event.date),

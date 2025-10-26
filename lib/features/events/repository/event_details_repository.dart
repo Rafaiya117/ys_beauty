@@ -68,20 +68,32 @@ class EventDetailsRepository {
     final formattedCost = '\$${event.boothFee.toString()}';
     
     // Create status list based on payment and approval
-    final List<String> statusList = [];
-    if (event.status == 'Approved') {
-      statusList.add('Approved');
-    } else if (event.status == 'Pending') {
-      statusList.add('Pending');
-    } else if (event.status == 'Denied') {
-      statusList.add('Denied');
-    }
+    // final List<String> statusList = [];
+    // if (event.status == 'Approved') {
+    //   statusList.add('Approved');
+    // } else if (event.status == 'Pending') {
+    //   statusList.add('Pending');
+    // } else if (event.status == 'Denied') {
+    //   statusList.add('Denied');
+    // }
     
-    if (event.paid) {
-      statusList.add('Paid');
-    } else {
-      statusList.add('Unpaid');
-    }
+    // if (event.paid) {
+    //   statusList.add('Paid');
+    // } else {
+    //   statusList.add('Unpaid');
+    // }
+    final List<String> statusList = [];
+  if (event.status?.toLowerCase() == 'PEN' || event.status == 'Pending') {
+    statusList.add('Pending');
+  } else if (event.status?.toLowerCase() == 'APP' || event.status == 'Approved') {
+    statusList.add('Approved');
+  } else if (event.status?.toLowerCase() == 'DEN' || event.status == 'Denied') {
+    statusList.add('Denied');
+  }
+  if (event.paid == true) {
+    statusList.add('Paid');
+  }
+
 
     // Format date for display
     String displayDate;
