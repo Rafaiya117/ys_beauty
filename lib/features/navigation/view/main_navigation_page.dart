@@ -168,41 +168,34 @@ class MainNavigationPage extends StatelessWidget {
   }
 
   Widget _buildFloatingButton(
-    BuildContext context,
-    NavigationViewModel viewModel,
-  ) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          print('✅ Custom floating button tapped successfully!');
-          try {
-            AppRouter.navigateToCreateEvent();
-            print('✅ Navigation to CreateEvent initiated');
-          } catch (e) {
-            print('❌ Navigation error: $e');
-          }
-        },
-        borderRadius: BorderRadius.circular(32.r),
-        child: Container(
-          width: 56.w,
-          height: 56.h,
-          decoration: BoxDecoration(
-            color:Color(0xFF1B1B1B),//Colors.black, //const Color(0xFFFFA066), 
-            shape: BoxShape.circle,
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: const Color(0xFFFF8A00).withValues(alpha: 0.4),
-            //     blurRadius: 12.r,
-            //     offset: Offset(0, 6.h),
-            //   ),
-            // ],
-          ),
-          child: Icon(Icons.add, size: 28.sp, color: Colors.white),
-        ),
+  BuildContext context,
+  NavigationViewModel viewModel,
+) {
+  return GestureDetector(
+    onTap: () {
+      print('✅ Floating button tapped successfully!');
+      try {
+        AppRouter.navigateToCreateEvent();
+        print('✅ Navigation to CreateEvent initiated');
+      } catch (e) {
+        print('❌ Navigation error: $e');
+      }
+    },
+    child: Container(
+      width: 56.w,
+      height: 56.h,
+      decoration: const BoxDecoration(
+        color: Color(0xFF1B1B1B),
+        shape: BoxShape.circle,
       ),
-    );
-  }
+      child: Icon(
+        Icons.add,
+        size: 28.sp,
+        color: Colors.white,
+      ),
+    ),
+  );
+}
 
   void _showAddNewOptions(BuildContext context, NavigationViewModel viewModel) {
     showModalBottomSheet(
