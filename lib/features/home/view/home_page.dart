@@ -435,18 +435,18 @@ class HomePage extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.MMMM().format(viewModel.focusedDay),
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14.52.sp,
+                            fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           DateFormat.y().format(viewModel.focusedDay),
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
+                          style: GoogleFonts.poppins(
+                            fontSize: 24.21.sp,
+                            fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                         ),
@@ -772,7 +772,7 @@ class HomePage extends StatelessWidget {
                   'Add New Event',
                   style: GoogleFonts.poppins(
                     fontSize: 18.sp,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                 ),

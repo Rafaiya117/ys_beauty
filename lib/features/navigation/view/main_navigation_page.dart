@@ -35,7 +35,7 @@ class MainNavigationPage extends StatelessWidget {
                 color: const Color(0xFFFBECBD), // Light yellow background
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: Color(0xFF1B1B1B).withValues(alpha: 0.1),
                     blurRadius: 8.r,
                     offset: Offset(0, -2.h),
                   ),

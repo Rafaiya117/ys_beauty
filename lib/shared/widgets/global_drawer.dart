@@ -71,6 +71,7 @@ class GlobalDrawer extends StatelessWidget {
                   _buildMenuItem(
                     iconPath: 'assets/icons/menu_home.svg',
                     title: 'Home',
+                    isFirst: true,
                     onTap: () {
                       Navigator.of(context).pop();
                       Future.delayed(const Duration(milliseconds: 100), () {
@@ -149,15 +150,16 @@ class GlobalDrawer extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
-  required String iconPath, // changed from IconData
+  required String iconPath,
   required String title,
   required VoidCallback onTap,
   bool showDivider = true,
+  bool isFirst = false, // NEW PARAMETER
 }) {
   return Column(
     children: [
       Container(
-        margin: EdgeInsets.only(bottom: 8.h),
+        margin: EdgeInsets.only(bottom: 1.h),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -171,14 +173,13 @@ class GlobalDrawer extends StatelessWidget {
                     iconPath,
                     width: 14.w,
                     height: 14.h,
-                    //color: Colors.black, // keeps same visual style
                   ),
-                  SizedBox(width: 16.w),
+                  SizedBox(width: 10.w),
                   Text(
                     title,
                     style: GoogleFonts.poppins(
                       fontSize: 14.sp,
-                      color: Colors.black,
+                      color: Color(0xFF1B1B1B),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -191,7 +192,9 @@ class GlobalDrawer extends StatelessWidget {
       if (showDivider)
         Container(
           height: 1.h,
-          color: Colors.black,
+          color: isFirst
+              ? const Color(0xFF1B1B1B)
+              : const Color(0x801B1B1B), // 50% opacity
           margin: EdgeInsets.symmetric(horizontal: 12.w),
         ),
     ],
