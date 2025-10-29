@@ -30,19 +30,24 @@ class EventDetailsViewModel extends ChangeNotifier {
   }
 
   Color getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return const Color(0xFFEEBC20); // Yellow background for Pending
-      case 'approved':
-        return const Color(0xFF00BF63); // Green background for Approved
-      case 'paid':
-        return const Color(0xFF00703A); // Dark green background for Paid
-      case 'denied':
-        return const Color(0xFFFF5151); // Red background for Denied
-      case 'unpaid':
-        return const Color(0xFFEF4444); // Red background for Unpaid
-      default:
-        return Colors.grey;
-    }
+  switch (status.toLowerCase().trim()) {
+    case 'PEN':
+    case 'pending':
+      return const Color(0xFFEEBC20);
+    case 'app':
+    case 'approved':
+      return const Color(0xFF00BF63);
+    case 'paid':
+      return const Color(0xFF00703A);
+    case 'den':
+    case 'denied':
+      return const Color(0xFFFF5151);
+    case 'unpaid':
+    case 'unp':
+      return const Color(0xFFEF4444);
+    default:
+      return Colors.grey;
   }
+}
+
 }

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 // class EventDetailsModel {
 //   final String id;
 //   final String title;
@@ -97,26 +95,30 @@ class EventDetailsModel {
   static List<String> _mapStatus(dynamic status, dynamic paid) {
   List<String> statuses = [];
 
-  // Always show event status first
-  switch (status?.toString().toUpperCase()) {
-    case 'PEN':
-      statuses.add('Pending');
-      break;
-    case 'APP':
-      statuses.add('Approved');
-      break;
-    case 'DEN':
-      statuses.add('Denied');
-      break;
-    case 'UNP':
-      statuses.add('Unpaid');
-      break;
-    default:
-      if (status != null) statuses.add(status.toString());
+  if (status != null) {
+    final normalized = status.toString().trim().toUpperCase();
+    switch (normalized) {
+      case 'PEN':
+        statuses.add('Pending');
+        break;
+      case 'APP':
+        statuses.add('Approved');
+        break;
+      case 'DEN':
+        statuses.add('Denied');
+        break;
+      case 'UNP':
+        statuses.add('Unpaid');
+        break;
+      case 'PAID':
+        statuses.add('Paid');
+        break;
+      default:
+        statuses.add(normalized); // fallback
+    }
   }
 
-  // Then add payment info
-  if (paid == true) {
+  if (paid == true && !statuses.contains('Paid')) {
     statuses.add('Paid');
   }
 

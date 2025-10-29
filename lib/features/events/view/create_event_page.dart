@@ -98,7 +98,7 @@ class CreateEventPage extends StatelessWidget {
 
                             // Location field
                             _buildInputField(
-                              label: 'Choose Location',
+                              label: 'Enter Location',
                               iconPath: 'assets/icons/create_location.svg',
                               controller: viewModel.locationController,
                               hasArrow: false,

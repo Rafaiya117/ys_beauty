@@ -125,7 +125,7 @@ class EditEventPage extends StatelessWidget {
                                       
                                       // Location field
                                       _buildInputField(
-                                        label: 'Choose Location',
+                                        label: 'Enter Location',
                                         icon: Icons.location_on_outlined,
                                         controller: viewModel.locationController,
                                         hasArrow: true,
